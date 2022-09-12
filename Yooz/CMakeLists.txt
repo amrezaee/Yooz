@@ -1,4 +1,5 @@
 find_package(SDL2 REQUIRED)
+find_package(glad REQUIRED)
 
 add_executable(Yooz)
 
@@ -49,4 +50,4 @@ target_sources(Yooz PRIVATE
 	"Graphics/yzColor.cpp"
 	
 	"Math/yzFunctions.cpp"
-	"Math/yzTransform.cpp" "Platform/SDL/yzMessageBox.SDL.cpp" "Core/yzAssert.cpp" "Platform/SDL/yzWindow.SDL.cpp" "Core/yzApplication.cpp" )
+	"Math/yzTransform.cpp" "Platform/SDL/yzMessageBox.SDL.cpp" "Core/yzAssert.cpp" "Platform/SDL/yzWindow.SDL.cpp" "Core/yzApplication.cpp"  "Platform/GL/yzGraphicsDevice.GL.cpp")
