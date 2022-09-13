@@ -1,11 +1,12 @@
 #include <Core/yzApplication.hpp>
+#include <Core/yzLogger.hpp>
 
 namespace yz
 {
 Application::Application(const std::string& name, std::uint32_t width,
                          std::uint32_t height):
         m_name(name),
-        m_bounds(0, 0, width, height)
+        m_bounds(0, 0, width, height), m_window(*this)
 {
 }
 void Application::Execute()
@@ -13,9 +14,14 @@ void Application::Execute()
 	Init();
 	Update();
 	Exit();
+	YZ_INFO("Application Closed.");
 }
 
-void Application::Close() { m_running = false; }
+void Application::Close()
+{
+	m_running = false;
+	YZ_INFO("Closing Application.");
+}
 void Application::Kill() { std::exit(EXIT_SUCCESS); }
 
 rectu Application::GetBounds() const { return m_bounds; }
@@ -26,8 +32,8 @@ void Application::Init()
 {
 	if(m_inited) return;
 
-	m_window.Init(*this);
-	m_window.ExitingEvent.Add(this, &Application::Close);
+	m_window.Init();
+	m_window.ClosingEvent.Add(this, &Application::Close);
 
 
 

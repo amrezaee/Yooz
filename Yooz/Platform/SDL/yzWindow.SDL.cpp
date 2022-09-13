@@ -1,18 +1,21 @@
+#include <Core/yzWindow.hpp>
+
 #include <Core/yzApplication.hpp>
 #include <Core/yzAssert.hpp>
 #include <Core/yzLogger.hpp>
-#include <Core/yzWindow.hpp>
 
 #include <yzDeps.hpp>
 
 namespace yz
 {
-void Window::Init(const Application& app)
+Window::Window(Application& app): m_app(app) {}
+
+void Window::Init()
 {
 	if(m_inited) return;
 
-	m_title  = app.GetName();
-	m_bounds = app.GetBounds();
+	m_title  = m_app.GetName();
+	m_bounds = m_app.GetBounds();
 
 	YZ_INFO("Creating window {%s %dx%d}...", m_title, m_bounds.w, m_bounds.h);
 
@@ -26,6 +29,9 @@ void Window::Init(const Application& app)
 	                            flags);
 	YZ_ASSERT(m_handle, SDL_GetError());
 
+	SDL_GetWindowPosition(static_cast<SDL_Window*>(m_handle),
+	                      reinterpret_cast<int*>(&m_bounds.x),
+	                      reinterpret_cast<int*>(&m_bounds.y));
 
 	m_id = SDL_GetWindowID(static_cast<SDL_Window*>(m_handle));
 
@@ -47,7 +53,7 @@ void Window::Update()
 	{
 		switch(e.type)
 		{
-		case SDL_QUIT: ExitingEvent.Raise(); break;
+		case SDL_QUIT: ClosingEvent.Raise(); break;
 
 		case SDL_WINDOWEVENT:
 			if(e.window.windowID != m_id) break;
@@ -107,13 +113,28 @@ void Window::SetResizable(bool enable)
 	                       m_resizable ? SDL_TRUE : SDL_FALSE);
 }
 
+vec2u Window::GetPosition() const { return vec2u {m_bounds.x, m_bounds.y}; }
+
+
 void Window::Resized(std::uint32_t width, std::uint32_t height)
 {
+	SDL_GetWindowSize(static_cast<SDL_Window*>(m_handle),
+	                  reinterpret_cast<int*>(&m_bounds.w),
+	                  reinterpret_cast<int*>(&m_bounds.h));
+
+	MovedEvent.Raise(m_bounds.x, m_bounds.y);
+
 	YZ_TRACE("Resized %dx%d", width, height);
 }
 
 void Window::Moved(std::uint32_t x, std::uint32_t y)
 {
+	SDL_GetWindowPosition(static_cast<SDL_Window*>(m_handle),
+	                      reinterpret_cast<int*>(&m_bounds.x),
+	                      reinterpret_cast<int*>(&m_bounds.y));
+
+	MovedEvent.Raise(m_bounds.x, m_bounds.y);
+
 	YZ_TRACE("Moved %dx%d", x, y);
 }
 

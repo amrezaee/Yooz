@@ -12,6 +12,7 @@ class Application
 public:
 	Application(const std::string& name, std::uint32_t width,
 	            std::uint32_t height);
+
 	void Execute();
 	void Close();
 	void Kill();
