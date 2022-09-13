@@ -75,10 +75,33 @@ void GraphicsDevice::Init()
 #endif  // YZ_DEBUG_BUILD
 
 	YZ_INFO("OpenGL Context Created.");
-	YZ_INFO("\tVendor:        %s", glGetString(GL_VENDOR));
-	YZ_INFO("\tRenderer:      %s", glGetString(GL_RENDERER));
-	YZ_INFO("\tVersion:       %s", glGetString(GL_VERSION));
-	YZ_INFO("\tGLSL Version:  %s", glGetString(GL_SHADING_LANGUAGE_VERSION));
+	YZ_INFO("\tVendor:       %s", glGetString(GL_VENDOR));
+	YZ_INFO("\tRenderer:     %s", glGetString(GL_RENDERER));
+	YZ_INFO("\tProfile:      Core");
+	YZ_INFO("\tVersion:      %s", glGetString(GL_VERSION));
+	YZ_INFO("\tGLSL Version: %s", glGetString(GL_SHADING_LANGUAGE_VERSION));
+
+	m_features.Init();
+
+	YZ_INFO("\tDXT1:         %s",
+	        m_features.HasDXT1() ? "Supported" : "Not supported");
+
+	YZ_INFO("\tS3TC:         %s",
+	        m_features.HasS3TC() ? "Supported" : "Not supported");
+
+	YZ_INFO("\tPVRTC:        %s",
+	        m_features.HasPVRTC() ? "Supported" : "Not supported");
+
+	YZ_INFO("\tETC1:         %s",
+	        m_features.HasETC1() ? "Supported" : "Not supported");
+
+	YZ_INFO("\tETC2:         %s",
+	        m_features.HasETC2() ? "Supported" : "Not supported");
+
+	YZ_INFO("\tATITC:        %s",
+	        m_features.HasATITC() ? "Supported" : "Not supported");
+
+
 
 	m_inited = true;
 }

@@ -50,4 +50,4 @@ target_sources(Yooz PRIVATE
 	"Graphics/yzColor.cpp"
 	
 	"Math/yzFunctions.cpp"
-	"Math/yzTransform.cpp" "Platform/SDL/yzMessageBox.SDL.cpp" "Core/yzAssert.cpp" "Platform/SDL/yzWindow.SDL.cpp" "Core/yzApplication.cpp"  "Platform/GL/yzGraphicsDevice.GL.cpp")
+	"Math/yzTransform.cpp" "Platform/SDL/yzMessageBox.SDL.cpp" "Core/yzAssert.cpp" "Platform/SDL/yzWindow.SDL.cpp" "Core/yzApplication.cpp"  "Platform/GL/yzGraphicsDevice.GL.cpp" "Platform/GL/yzGraphicsFeatures.GL.cpp")

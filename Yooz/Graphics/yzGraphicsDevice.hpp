@@ -3,6 +3,7 @@
 #include <Core/yzBase.hpp>
 #include <Graphics/yzColor.hpp>
 #include <Graphics/yzGraphicsStates.hpp>
+#include <Graphics/yzGraphicsFeatures.hpp>
 
 namespace yz
 {
@@ -26,6 +27,7 @@ public:
 	Handle      GetHandle() const;
 
 private:
+	GraphicsFeatures  m_features;
 	Color             m_color_buffer_color;
 	bool              m_inited {false};
 	Application&      m_app;
