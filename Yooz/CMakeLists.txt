@@ -3,7 +3,7 @@ find_package(glad REQUIRED)
 
 add_executable(Yooz)
 
-target_link_libraries(Yooz PRIVATE SDL2::SDL2 SDL2::SDL2main SDL2::SDL2-static)
+target_link_libraries(Yooz PRIVATE SDL2::SDL2 SDL2::SDL2main SDL2::SDL2-static glad::glad)
 
 set_target_properties(Yooz PROPERTIES	MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL"
 										WIN32_EXECUTABLE     $<IF:$<CONFIG:Release>,TRUE,FALSE> 
