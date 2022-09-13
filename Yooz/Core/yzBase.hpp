@@ -3,7 +3,7 @@
 
 namespace yz
 {
-using handle = void*;
+using Handle = void*;
 }
 
 #define YZ_STR(s)    #s

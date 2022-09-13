@@ -18,14 +18,14 @@ void yzOutputAssertionFailure(const char* const expr, const char* const msg,
 			}                                                        \
 		}
 
-	#define YZ_ASSERT_MSG_IMPL_(expr, msg)                            \
-		{                                                             \
-			if(!(expr))                                               \
-			{                                                         \
-				yzOutputAssertionFailure(YZ_STR(expr), msg, __FILE__, \
-				                         __LINE__);                   \
-				YZ_DEBUGBREAK();                                      \
-			}                                                         \
+	#define YZ_ASSERT_MSG_IMPL_(expr, msg)                              \
+		{                                                               \
+			if(!(expr))                                                 \
+			{                                                           \
+				yzOutputAssertionFailure(YZ_STR(expr), (msg), __FILE__, \
+				                         __LINE__);                     \
+				YZ_DEBUGBREAK();                                        \
+			}                                                           \
 		}
 
 	#define YZ_GET_MACRO_NAME_(_1, _2, macro, ...) macro

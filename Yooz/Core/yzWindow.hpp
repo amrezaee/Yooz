@@ -26,7 +26,7 @@ public:
 
 	void Update();
 
-	handle GetHandle() const;
+	Handle GetHandle() const;
 
 	std::string GetTitle() const;
 	void        SetTitle(const std::string& title);
@@ -50,7 +50,7 @@ private:
 	bool          m_resizable {true};
 	bool          m_borderless {false};
 	bool          m_is_active {true};
-	handle        m_handle {nullptr};
+	Handle        m_handle {nullptr};
 	std::uint32_t m_id {0};
 };
 }  // namespace yz

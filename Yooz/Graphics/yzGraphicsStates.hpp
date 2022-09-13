@@ -3,6 +3,13 @@
 
 namespace yz
 {
+enum class GraphicsAPI
+{
+	GL,
+	ES,
+	VK
+};
+
 enum class BlendMode
 {
 	ONE,

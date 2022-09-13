@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Core/yzWindow.hpp>
+#include <Graphics/yzGraphicsDevice.hpp>
 #include <Math/yzRectangle.hpp>
 
 #include <yzStds.hpp>
@@ -21,15 +22,20 @@ public:
 
 	const std::string GetName() const;
 
+	GraphicsDevice GetGraphicsDevice() const;
+
+	Window GetWindow() const;
+
 private:
 	void Init();
 	void Update();
 	void Exit();
 
 private:
-	Window      m_window;
-	rectu       m_bounds;
-	std::string m_name;
+	Window         m_window;
+	GraphicsDevice m_graphics_device;
+	rectu          m_bounds;
+	std::string    m_name;
 	// bool   m_allow_alt_f4 {true};
 	bool m_inited {false};
 	bool m_running {true};

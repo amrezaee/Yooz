@@ -16,13 +16,24 @@ void Window::Init()
 
 	m_title  = m_app.GetName();
 	m_bounds = m_app.GetBounds();
-
 	YZ_INFO("Creating window {%s %dx%d}...", m_title, m_bounds.w, m_bounds.h);
+
+	SDL_SetHint("SDL_VIDEO_MINIMIZE_ON_FOCUS_LOSS", "0");
+	SDL_SetHint("SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS", "1");
+
+
 
 	int flags = 0;
 	flags |= (m_resizable ? SDL_WINDOW_RESIZABLE : 0);
 	flags |= (m_borderless ? SDL_WINDOW_BORDERLESS : 0);
 	flags |= (SDL_WINDOW_INPUT_FOCUS | SDL_WINDOW_MOUSE_FOCUS);
+
+	switch(m_app.GetGraphicsDevice().GetAPI())
+	{
+	case GraphicsAPI::GL:
+	case GraphicsAPI::ES: flags |= SDL_WINDOW_OPENGL; break;
+	case GraphicsAPI::VK: flags |= SDL_WINDOW_VULKAN; break;
+	}
 
 	m_handle = SDL_CreateWindow(m_title.c_str(), SDL_WINDOWPOS_CENTERED,
 	                            SDL_WINDOWPOS_CENTERED, m_bounds.w, m_bounds.h,
@@ -34,6 +45,9 @@ void Window::Init()
 	                      reinterpret_cast<int*>(&m_bounds.y));
 
 	m_id = SDL_GetWindowID(static_cast<SDL_Window*>(m_handle));
+
+	// TODO: move somewhere else
+	SDL_DisableScreenSaver();
 
 	m_inited = true;
 	YZ_INFO("Window Created successfully.");
@@ -85,7 +99,7 @@ void Window::Update()
 }
 
 
-handle Window::GetHandle() const { return m_handle; }
+Handle Window::GetHandle() const { return m_handle; }
 
 std::string Window::GetTitle() const { return m_title; }
 
