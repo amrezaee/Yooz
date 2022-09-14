@@ -19,7 +19,7 @@ public:
 	Event<std::uint32_t, std::uint32_t> MovedEvent;
 
 public:
-	Window(Application& app);
+	Window(Application& app, std::uint32_t width, std::uint32_t height);
 
 	void Init();
 	void Destroy();

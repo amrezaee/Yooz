@@ -1,4 +1,5 @@
 #include <Core/yzApplication.hpp>
+
 #include <Core/yzLogger.hpp>
 
 namespace yz
@@ -6,7 +7,8 @@ namespace yz
 Application::Application(const std::string& name, std::uint32_t width,
                          std::uint32_t height):
         m_name(name),
-        m_bounds(0, 0, width, height), m_window(*this), m_graphics_device(*this)
+        m_bounds(0, 0, width, height), m_window(*this, width, height),
+        m_graphics_device(m_graphics_params)
 {
 }
 
@@ -36,6 +38,8 @@ GraphicsDevice Application::GetGraphicsDevice() const
 
 Window Application::GetWindow() const { return m_window; }
 
+bool Application::IsCursorVisible() const { return m_show_cursor; }
+void Application::ShowCursor(bool show) { SDL_ShowCursor(show); }
 
 void Application::Init()
 {
@@ -45,6 +49,7 @@ void Application::Init()
 	m_window.Init();
 	m_window.ClosingEvent.Add(this, &Application::Close);
 
+	m_graphics_device.GetParams().SetWindowHandle(m_window.GetHandle());
 	m_graphics_device.Init();
 	m_graphics_device.SetColorBufferColor(Color::CYAN);
 

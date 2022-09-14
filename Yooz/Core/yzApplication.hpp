@@ -2,6 +2,7 @@
 
 #include <Core/yzWindow.hpp>
 #include <Graphics/yzGraphicsDevice.hpp>
+#include <Graphics/yzGraphicsParams.hpp>
 #include <Math/yzRectangle.hpp>
 
 #include <yzStds.hpp>
@@ -26,19 +27,23 @@ public:
 
 	Window GetWindow() const;
 
+	bool IsCursorVisible() const;
+	void ShowCursor(bool show);
+
 private:
 	void Init();
 	void Update();
 	void Exit();
 
 private:
+	bool           m_inited {false};
+	bool           m_show_cursor {true};
+	bool           m_running {true};
+	bool           m_suspended {false};
+	std::string    m_name;
 	Window         m_window;
 	GraphicsDevice m_graphics_device;
+	GraphicsParams m_graphics_params;
 	rectu          m_bounds;
-	std::string    m_name;
-	// bool   m_allow_alt_f4 {true};
-	bool m_inited {false};
-	bool m_running {true};
-	bool m_suspended {false};
 };
 }  // namespace yz

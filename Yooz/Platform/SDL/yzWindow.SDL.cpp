@@ -8,20 +8,21 @@
 
 namespace yz
 {
-Window::Window(Application& app): m_app(app) {}
+Window::Window(Application& app, std::uint32_t width, std::uint32_t height):
+        m_app(app), m_bounds(rectu(0, 0, width, height))
+{
+}
 
 void Window::Init()
 {
 	if(m_inited) return;
 
-	m_title  = m_app.GetName();
-	m_bounds = m_app.GetBounds();
+	m_title = m_app.GetName();
 	YZ_INFO("Creating window {%s %dx%d}...", m_title, m_bounds.w, m_bounds.h);
 
 	SDL_SetHint("SDL_VIDEO_MINIMIZE_ON_FOCUS_LOSS", "0");
+	SDL_SetHint("SDL_HINT_WINDOWS_NO_CLOSE_ON_ALT_F4", "1");
 	SDL_SetHint("SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS", "1");
-
-
 
 	int flags = 0;
 	flags |= (m_resizable ? SDL_WINDOW_RESIZABLE : 0);
@@ -48,6 +49,11 @@ void Window::Init()
 
 	// TODO: move somewhere else
 	SDL_DisableScreenSaver();
+
+	if(m_app.IsCursorVisible())
+		SDL_ShowCursor(SDL_ENABLE);
+	else
+		SDL_ShowCursor(SDL_DISABLE);
 
 	m_inited = true;
 	YZ_INFO("Window Created successfully.");
@@ -151,5 +157,4 @@ void Window::Moved(std::uint32_t x, std::uint32_t y)
 
 	YZ_TRACE("Moved %dx%d", x, y);
 }
-
 }  // namespace yz
