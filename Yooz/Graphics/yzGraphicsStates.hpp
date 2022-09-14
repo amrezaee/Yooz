@@ -10,6 +10,13 @@ enum class GraphicsAPI
 	VK
 };
 
+enum class FullscreenMode
+{
+	WINDOWED,
+	BORDERLESS,
+	EXCLUSIVE
+};
+
 enum class BlendMode
 {
 	ONE,

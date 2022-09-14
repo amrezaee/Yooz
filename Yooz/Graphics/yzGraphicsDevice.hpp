@@ -2,8 +2,9 @@
 
 #include <Core/yzBase.hpp>
 #include <Graphics/yzColor.hpp>
-#include <Graphics/yzGraphicsStates.hpp>
 #include <Graphics/yzGraphicsFeatures.hpp>
+#include <Graphics/yzGraphicsParams.hpp>
+#include <Graphics/yzGraphicsStates.hpp>
 
 namespace yz
 {
@@ -12,7 +13,7 @@ class Application;
 class GraphicsDevice
 {
 public:
-	GraphicsDevice(Application& app);
+	GraphicsDevice(GraphicsParams& params);
 
 	// must be called before Init
 	void BeforeInit();
@@ -23,15 +24,16 @@ public:
 
 	void SetColorBufferColor(Color color);
 
-	GraphicsAPI GetAPI() const;
-	Handle      GetHandle() const;
+	GraphicsAPI     GetAPI() const;
+	Handle          GetHandle() const;
+	GraphicsParams& GetParams();
 
 private:
-	GraphicsFeatures  m_features;
-	Color             m_color_buffer_color;
 	bool              m_inited {false};
-	Application&      m_app;
 	const GraphicsAPI m_api;
+	GraphicsFeatures  m_features;
+	GraphicsParams    m_params;
+	Color             m_color_buffer_color;
 	Handle            m_handle {nullptr};
 };
 }  // namespace yz

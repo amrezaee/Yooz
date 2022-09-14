@@ -13,8 +13,8 @@ void GLDebugOutput(GLenum, GLenum, GLuint, GLenum, GLsizei, const char*,
                    const void*);
 #endif  // YZ_DEBUG_BUILD
 
-GraphicsDevice::GraphicsDevice(Application& app):
-        m_api(GraphicsAPI::GL), m_app(app)
+GraphicsDevice::GraphicsDevice(GraphicsParams& params):
+        m_api(GraphicsAPI::GL), m_params(params)
 {
 }
 
@@ -55,11 +55,11 @@ void GraphicsDevice::Init()
 	if(m_inited) return;
 
 	m_handle = SDL_GL_CreateContext(
-	        static_cast<SDL_Window*>(m_app.GetWindow().GetHandle()));
+	        static_cast<SDL_Window*>(m_params.GetWindowHandle()));
 	YZ_ASSERT(m_handle, SDL_GetError());
 
 	int code = SDL_GL_MakeCurrent(
-	        static_cast<SDL_Window*>(m_app.GetWindow().GetHandle()),
+	        static_cast<SDL_Window*>(m_params.GetWindowHandle()),
 	        static_cast<SDL_GLContext>(m_handle));
 	YZ_ASSERT(code == 0, SDL_GetError());
 
@@ -101,8 +101,6 @@ void GraphicsDevice::Init()
 	YZ_INFO("\tATITC:        %s",
 	        m_features.HasATITC() ? "Supported" : "Not supported");
 
-
-
 	m_inited = true;
 }
 
@@ -113,7 +111,7 @@ void GraphicsDevice::BeforeUpdate()
 
 void GraphicsDevice::Update()
 {
-	SDL_GL_SwapWindow(static_cast<SDL_Window*>(m_app.GetWindow().GetHandle()));
+	SDL_GL_SwapWindow(static_cast<SDL_Window*>(m_params.GetWindowHandle()));
 }
 
 void GraphicsDevice::Destroy()
@@ -137,6 +135,9 @@ void GraphicsDevice::SetColorBufferColor(Color color)
 GraphicsAPI GraphicsDevice::GetAPI() const { return m_api; }
 
 Handle GraphicsDevice::GetHandle() const { return m_handle; }
+
+GraphicsParams& GraphicsDevice::GetParams() { return m_params; }
+
 
 #ifdef YZ_DEBUG_BUILD
 void GLDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severity,
