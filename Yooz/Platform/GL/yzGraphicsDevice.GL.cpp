@@ -22,8 +22,7 @@ void GraphicsDevice::BeforeInit()
 {
 	if(m_inited) return;
 
-	int code = SDL_InitSubSystem(SDL_INIT_VIDEO);
-	YZ_ASSERT(code == 0, SDL_GetError());
+	YZ_INFO("Initializing graphics device...");
 
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK,
 	                    SDL_GL_CONTEXT_PROFILE_CORE);
@@ -74,7 +73,6 @@ void GraphicsDevice::Init()
 	                      GL_TRUE);
 #endif  // YZ_DEBUG_BUILD
 
-	YZ_INFO("OpenGL Context Created.");
 	YZ_INFO("\tVendor:       %s", glGetString(GL_VENDOR));
 	YZ_INFO("\tRenderer:     %s", glGetString(GL_RENDERER));
 	YZ_INFO("\tProfile:      Core");
@@ -82,6 +80,8 @@ void GraphicsDevice::Init()
 	YZ_INFO("\tGLSL Version: %s", glGetString(GL_SHADING_LANGUAGE_VERSION));
 
 	m_features.Init();
+
+	YZ_INFO("\tDriver:       %s", m_features.GetDriverName());
 
 	YZ_INFO("\tDXT1:         %s",
 	        m_features.HasDXT1() ? "Supported" : "Not supported");
@@ -100,6 +100,7 @@ void GraphicsDevice::Init()
 
 	YZ_INFO("\tATITC:        %s",
 	        m_features.HasATITC() ? "Supported" : "Not supported");
+	YZ_INFO("Graphics device created.");
 
 	m_inited = true;
 }
@@ -116,11 +117,10 @@ void GraphicsDevice::Update()
 
 void GraphicsDevice::Destroy()
 {
-	if(m_inited)
-	{
-		SDL_GL_DeleteContext(static_cast<SDL_GLContext>(m_handle));
-		SDL_QuitSubSystem(SDL_INIT_VIDEO);
-	}
+	if(!m_inited) return;
+
+	SDL_GL_DeleteContext(static_cast<SDL_GLContext>(m_handle));
+
 	m_inited = false;
 }
 

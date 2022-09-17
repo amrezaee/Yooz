@@ -23,7 +23,7 @@ void Application::Execute()
 void Application::Close()
 {
 	m_running = false;
-	YZ_INFO("Closing Application.");
+	YZ_INFO("Closing Application...");
 }
 void Application::Kill() { std::exit(EXIT_SUCCESS); }
 
@@ -44,6 +44,8 @@ void Application::ShowCursor(bool show) { SDL_ShowCursor(show); }
 void Application::Init()
 {
 	if(m_inited) return;
+	m_platform.Init();
+
 	m_graphics_device.BeforeInit();
 
 	m_window.Init();
@@ -71,11 +73,10 @@ void Application::Update()
 
 void Application::Exit()
 {
-	if(m_inited)
-	{
-		m_graphics_device.Destroy();
-		m_window.Destroy();
-	}
+	if(!m_inited) return;
+	m_graphics_device.Destroy();
+	m_window.Destroy();
+	m_platform.Shutdown();
 }
 
 }  // namespace yz

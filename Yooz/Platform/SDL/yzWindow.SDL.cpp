@@ -20,10 +20,6 @@ void Window::Init()
 	m_title = m_app.GetName();
 	YZ_INFO("Creating window {%s %dx%d}...", m_title, m_bounds.w, m_bounds.h);
 
-	SDL_SetHint("SDL_VIDEO_MINIMIZE_ON_FOCUS_LOSS", "0");
-	SDL_SetHint("SDL_HINT_WINDOWS_NO_CLOSE_ON_ALT_F4", "1");
-	SDL_SetHint("SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS", "1");
-
 	int flags = 0;
 	flags |= (m_resizable ? SDL_WINDOW_RESIZABLE : 0);
 	flags |= (m_borderless ? SDL_WINDOW_BORDERLESS : 0);
@@ -47,16 +43,13 @@ void Window::Init()
 
 	m_id = SDL_GetWindowID(static_cast<SDL_Window*>(m_handle));
 
-	// TODO: move somewhere else
-	SDL_DisableScreenSaver();
-
 	if(m_app.IsCursorVisible())
 		SDL_ShowCursor(SDL_ENABLE);
 	else
 		SDL_ShowCursor(SDL_DISABLE);
 
 	m_inited = true;
-	YZ_INFO("Window Created successfully.");
+	YZ_INFO("Window created.");
 }
 
 void Window::Destroy()
