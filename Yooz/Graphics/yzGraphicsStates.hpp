@@ -3,6 +3,20 @@
 
 namespace yz
 {
+enum class GraphicsAPI
+{
+	GL,
+	ES,
+	VK
+};
+
+enum class FullscreenMode
+{
+	WINDOWED,
+	BORDERLESS,
+	EXCLUSIVE
+};
+
 enum class BlendMode
 {
 	ONE,

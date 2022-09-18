@@ -12,12 +12,12 @@ char                  buffer[buffer_size] = {'\0'};
 void yzOutputAssertionFailure(const char* const expr, const char* const msg,
                               const char* const file, const int line)
 {
-	if(*msg)
+	if(*msg != '\0')  // with message
 	{
 		std::snprintf(buffer, buffer_size, "ASSERTION FAILED\n %s", msg);
 		yz::MessageBoxFatal(buffer);
 	}
-	else
+	else  // without message
 	{
 		// TODO: REMOVE THIS
 		const char* filename = std::strrchr(file, '/');
