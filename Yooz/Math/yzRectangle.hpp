@@ -9,7 +9,7 @@ struct Rectangle
 {
 public:
 	T x, y, w, h;
-	// TODO: add default ctor
+
 	Rectangle(): x(0), y(0), w(0), h(0) {}
 	Rectangle(const Rectangle&)            = default;
 	Rectangle(Rectangle&&)                 = default;

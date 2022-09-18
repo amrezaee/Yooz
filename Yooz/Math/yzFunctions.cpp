@@ -2,11 +2,6 @@
 
 namespace yz
 {
-float Deg2Rad(float deg) { return deg * CPI_180; }
-float Rad2Deg(float rad) { return rad * C180_PI; }
-
-float Lerp(float a, float b, float t) { return (1.0f - t) * a + t * b; }
-
 float SmoothStep(float a, float b, float t)
 {
 	t = Clamp((t - a) / (b - a), 0.0f, 1.0f);
