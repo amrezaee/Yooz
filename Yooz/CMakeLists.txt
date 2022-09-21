@@ -45,10 +45,21 @@ target_precompile_headers(Yooz PRIVATE "yzStds.hpp" "yzDeps.hpp")
 
 
 target_sources(Yooz PRIVATE
-	"Core/yzLogger.cpp"
+	"Core/yzApplication.cpp"
+	"Core/yzAssert.cpp"
 	"Core/yzEntryPoint.cpp"
+	"Core/yzLogger.cpp"
 
+	"Graphics/yzCamera.cpp"
 	"Graphics/yzColor.cpp"
-	
+
 	"Math/yzFunctions.cpp"
-	"Math/yzTransform.cpp" "Platform/SDL/yzMessageBox.SDL.cpp" "Core/yzAssert.cpp" "Platform/SDL/yzWindow.SDL.cpp" "Core/yzApplication.cpp"  "Platform/GL/yzGraphicsDevice.GL.cpp" "Platform/GL/yzGraphicsFeatures.GL.cpp" "Platform/SDL/yzPlatform.SDL.cpp" "Platform/GL/yzShader.GL.cpp")
+	"Math/yzTransform.cpp"
+
+	"Platform/GL/yzGraphicsDevice.GL.cpp"
+	"Platform/GL/yzGraphicsFeatures.GL.cpp"
+	"Platform/GL/yzShader.GL.cpp"
+
+	"Platform/SDL/yzMessageBox.SDL.cpp"
+	"Platform/SDL/yzPlatform.SDL.cpp"
+	"Platform/SDL/yzWindow.SDL.cpp")
