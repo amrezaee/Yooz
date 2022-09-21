@@ -126,7 +126,7 @@ void Window::SetResizable(bool enable)
 	                       m_resizable ? SDL_TRUE : SDL_FALSE);
 }
 
-vec2u Window::GetPosition() const { return vec2u {m_bounds.x, m_bounds.y}; }
+Vec2u Window::GetPosition() const { return Vec2u {m_bounds.x, m_bounds.y}; }
 
 
 void Window::Resized(std::uint32_t width, std::uint32_t height)

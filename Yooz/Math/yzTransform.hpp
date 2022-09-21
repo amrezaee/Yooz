@@ -10,10 +10,10 @@ private:
 	float m[6];
 
 public:
-	constexpr Transform(const Transform&) = default;
-	constexpr Transform(Transform&&)      = default;
+	constexpr Transform(const Transform&)            = default;
+	constexpr Transform(Transform&&)                 = default;
 	constexpr Transform& operator=(const Transform&) = default;
-	constexpr Transform& operator=(Transform&&) = default;
+	constexpr Transform& operator=(Transform&&)      = default;
 
 	constexpr Transform(): m {1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f} {}
 
@@ -41,25 +41,25 @@ public:
 
 	void print()
 	{
-		printf("\n%.2f  %.2f  %.2f \n%.2f  %.2f  %.2f\n\n", double(m[0]), double(m[1]), double(m[2]), double(m[3]), double(m[4]),
+		printf("\n%.2f  %.2f  %.2f \n%.2f  %.2f  %.2f\n\n", double(m[0]),
+		       double(m[1]), double(m[2]), double(m[3]), double(m[4]),
 		       double(m[5]));
 	}
 
-	inline const float* GetPtr() const { return m; }
+	constexpr const float* GetPtr() const { return m; }
 
 	Transform&        Translate(const float x, const float y);
-	inline Transform& Translate(const vec2 v) { return Translate(v.x, v.y); }
+	inline Transform& Translate(const Vec2 v) { return Translate(v.x, v.y); }
 	inline Transform& Translate(const float s) { return Translate(s, s); }
 
 	Transform&        Scale(const float x, const float y);
-	inline Transform& Scale(const vec2 v) { return Scale(v.x, v.y); }
+	inline Transform& Scale(const Vec2 v) { return Scale(v.x, v.y); }
 	inline Transform& Scale(const float s) { return Scale(s, s); }
 
 	// angle in radians
 	Transform& Rotate(float angle);
 
-	Transform& Project(float width, float height);
-	// TODO: fix this
-	inline Transform& Project(vec2 v) { return Project(v.x, v.y); }
+	Transform&        Project(float width, float height);
+	inline Transform& Project(Vec2 v) { return Project(v.x, v.y); }
 };
 }  // namespace yz

@@ -36,7 +36,7 @@ public:
 	void SetBorders(bool show);
 	void SetResizable(bool enable);
 
-	vec2u GetPosition() const;
+	Vec2u GetPosition() const;
 
 private:
 	void Resized(std::uint32_t width, std::uint32_t height);

@@ -217,15 +217,12 @@ inline Vector2<T>& operator/=(Vector2<T>& l, const Vector2<T>& r)
 // scalar-vec or vec-scalar operations also use this overloadings
 // because of implicit conversion
 
-using vec2 = Vector2<float>;
-static_assert(sizeof(vec2) == (2 * sizeof(float)), "wrong size");
+using Vec2 = Vector2<float>;
+static_assert(sizeof(Vec2) == (2 * sizeof(float)), "wrong size");
 
-using vec2i = Vector2<std::int32_t>;
-static_assert(sizeof(vec2i) == (2 * sizeof(std::int32_t)), "wrong size");
+using Vec2i = Vector2<std::int32_t>;
+static_assert(sizeof(Vec2i) == (2 * sizeof(std::int32_t)), "wrong size");
 
-using vec2u = Vector2<std::uint32_t>;
-static_assert(sizeof(vec2u) == (2 * sizeof(std::uint32_t)), "wrong size");
-
-using vec2b = Vector2<bool>;
-static_assert(sizeof(vec2b) == (2 * sizeof(bool)), "wrong size");
+using Vec2u = Vector2<std::uint32_t>;
+static_assert(sizeof(Vec2u) == (2 * sizeof(std::uint32_t)), "wrong size");
 }  // namespace yz
