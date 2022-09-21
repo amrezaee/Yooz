@@ -18,23 +18,37 @@ Transform& Transform::Scale(const float x, const float y)
 	return *this;
 }
 
-Transform& Transform::Rotate(float angle)
+Transform& Transform::Shear(const float x, const float y)
 {
-	float c  = std::cos(angle);
-	float s  = std::sin(angle);
-	float sx = m[0];
-	float m1 = m[1];
-	float m2 = m[3];
-	float sy = m[4];
+	float a = m[0];
+	float b = m[1];
+	float d = m[3];
+	float e = m[4];
 
-	m[0] = c * sx + s * m1;
-	m[1] = -s * sx + c * m1;
-	m[3] = c * m2 + s * sy;
-	m[4] = -s * m2 + c * sy;
+	m[0] += b * y;
+	m[1] += a * x;
+	m[3] += e * y;
+	m[4] += d * x;
 	return *this;
 }
 
-Transform& Transform::Project(float width, float height)
+Transform& Transform::Rotate(const float angle)
+{
+	float c = std::cos(angle);
+	float s = std::sin(angle);
+	float a = m[0];
+	float b = m[1];
+	float d = m[3];
+	float e = m[4];
+
+	m[0] = +a * c + b * s;
+	m[1] = -a * s + b * c;
+	m[3] = +d * c + e * s;
+	m[4] = -d * s + e * c;
+	return *this;
+}
+
+Transform& Transform::Project(const float width, const float height)
 {
 	float tw = 2.0f / width;
 	float th = -2.0f / height;
@@ -46,6 +60,25 @@ Transform& Transform::Project(float width, float height)
 	m[3] *= tw;
 	m[4] *= th;
 	return *this;
+}
+
+Transform& Transform::operator*=(const Transform& r)
+{
+	*this = Transform(
+	        m[0] * r.m[0] + m[1] * r.m[3], m[0] * r.m[1] + m[1] * r.m[4],
+	        m[0] * r.m[2] + m[1] * r.m[5] + m[2], m[3] * r.m[0] + m[4] * r.m[3],
+	        m[3] * r.m[1] + m[4] * r.m[4],
+	        m[3] * r.m[2] + m[4] * r.m[5] + m[5]);
+	return *this;
+}
+
+Transform Transform::operator*(const Transform& r) const
+{
+	return Transform(
+	        m[0] * r.m[0] + m[1] * r.m[3], m[0] * r.m[1] + m[1] * r.m[4],
+	        m[0] * r.m[2] + m[1] * r.m[5] + m[2], m[3] * r.m[0] + m[4] * r.m[3],
+	        m[3] * r.m[1] + m[4] * r.m[4],
+	        m[3] * r.m[2] + m[4] * r.m[5] + m[5]);
 }
 
 }  // namespace yz
