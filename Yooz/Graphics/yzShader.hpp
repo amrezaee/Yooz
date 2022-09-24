@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Graphics/yzColor.hpp>
 #include <Math/yzTransform.hpp>
 #include <Math/yzVector2.hpp>
 
@@ -28,8 +29,6 @@ public:
 
 	void SetTransform(const std::string& name, const Transform& t) const;
 
-private:
-	struct Pimpl;
-	std::unique_ptr<Pimpl> m_impl;
+	void SetColor(const std::string& name, const Color color) const;
 };
 }  // namespace yz
