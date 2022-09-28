@@ -13,6 +13,20 @@ Camera::Camera(const Vec2 origin, const Vec2 position, const float rotation,
 	Calculate();
 }
 
+void Camera::Update(const Vec2 origin, const Vec2 pos, const float rot,
+                    const float zoom)
+{
+	if((m_position == pos) && (m_rotation == rot) && (m_origin == origin) &&
+	   (m_zoom == zoom))
+		return;
+
+	m_origin   = origin;
+	m_position = pos;
+	m_rotation = rot;
+	m_zoom     = zoom;
+	Calculate();
+}
+
 void Camera::SetOrigin(const Vec2 v)
 {
 	if(v == m_origin) return;

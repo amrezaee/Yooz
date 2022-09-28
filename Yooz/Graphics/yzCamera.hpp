@@ -12,6 +12,9 @@ public:
 	Camera(const Vec2 origin, const Vec2 position, const float rotation,
 	       const float zoom);
 
+	void Update(const Vec2 origin, const Vec2 pos, const float rot,
+	            const float zoom);
+
 	void SetOrigin(const Vec2 v);
 	void SetPosition(const Vec2 pos);
 	void SetRotation(const float angle);
