@@ -27,7 +27,7 @@ void Application::Close()
 }
 void Application::Kill() { std::exit(EXIT_SUCCESS); }
 
-rectu Application::GetBounds() const { return m_bounds; }
+Rectu Application::GetBounds() const { return m_bounds; }
 
 const std::string Application::GetName() const { return m_name; }
 

@@ -45,7 +45,7 @@ private:
 private:
 	Application&  m_app;
 	std::string   m_title;
-	rectu         m_bounds;
+	Rectu         m_bounds;
 	bool          m_inited {false};
 	bool          m_resizable {true};
 	bool          m_borderless {false};

@@ -20,7 +20,7 @@ public:
 	void Close();
 	void Kill();
 
-	rectu GetBounds() const;
+	Rectu GetBounds() const;
 
 	const std::string GetName() const;
 
@@ -46,6 +46,6 @@ private:
 	Window         m_window;
 	GraphicsDevice m_graphics_device;
 	GraphicsParams m_graphics_params;
-	rectu          m_bounds;
+	Rectu          m_bounds;
 };
 }  // namespace yz

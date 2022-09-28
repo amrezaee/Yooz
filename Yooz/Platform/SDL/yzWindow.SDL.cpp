@@ -9,7 +9,7 @@
 namespace yz
 {
 Window::Window(Application& app, std::uint32_t width, std::uint32_t height):
-        m_app(app), m_bounds(rectu(0, 0, width, height))
+        m_app(app), m_bounds(Rectu(0, 0, width, height))
 {
 }
 
