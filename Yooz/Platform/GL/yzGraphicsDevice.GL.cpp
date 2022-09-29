@@ -83,6 +83,10 @@ void GraphicsDevice::Init()
 
 	YZ_INFO("\tDriver:       %s", m_features.GetDriverName());
 
+	YZ_INFO("\tTotal texture units: %i", m_features.TotalTextureUnits());
+	YZ_INFO("\tTotal texture units available in fragment shader: %i",
+	        m_features.FragmentShaderTextureUnits());
+
 	YZ_INFO("\tDXT1:         %s",
 	        m_features.HasDXT1() ? "Supported" : "Not supported");
 
@@ -100,6 +104,7 @@ void GraphicsDevice::Init()
 
 	YZ_INFO("\tATITC:        %s",
 	        m_features.HasATITC() ? "Supported" : "Not supported");
+
 	YZ_INFO("Graphics device created.");
 
 	m_inited = true;

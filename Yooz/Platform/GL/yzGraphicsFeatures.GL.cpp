@@ -18,6 +18,9 @@ void GraphicsFeatures::Init()
 	m_etc2   = GLAD_GL_ARB_ES3_compatibility;
 	m_atitc  = GLAD_GL_AMD_compressed_ATC_texture;
 
+	glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &m_total_texture_units);
+	glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &m_fragment_shader_texture_units);
+
 	m_inited = true;
 }
 
@@ -28,5 +31,15 @@ bool        GraphicsFeatures::HasPVRTC() const { return m_pvrtc; }
 bool        GraphicsFeatures::HasETC1() const { return m_etc1; }
 bool        GraphicsFeatures::HasETC2() const { return m_etc2; }
 bool        GraphicsFeatures::HasATITC() const { return m_atitc; }
+
+std::int32_t GraphicsFeatures::TotalTextureUnits() const
+{
+	return m_total_texture_units;
+}
+
+std::int32_t GraphicsFeatures::FragmentShaderTextureUnits() const
+{
+	return m_fragment_shader_texture_units;
+}
 
 }  // namespace yz
