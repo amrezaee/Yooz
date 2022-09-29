@@ -1,14 +1,18 @@
 {
-  "name": "yooz",
-  "version": "0.0.0",
+    "name": "yooz2d",
+    "version": "0.0.0",
 
-  "dependencies": [
-    "sdl2",
-    {
-      "name": "glad",
-      "default-features": false,
-      "features": [ "gl-api-45", "gles2-api-31", "extensions", "loader" ]
+    "features": {
+        "yooz": {
+            "description": "Core system of Yooz2D",
+            "dependencies": [
+                "sdl2",
+                {
+                    "name": "glad",
+                    "default-features": false,
+                    "features": [ "gl-api-45", "gles2-api-31", "extensions", "loader" ]
+                }
+            ]
+        }
     }
-  ]
-
 }

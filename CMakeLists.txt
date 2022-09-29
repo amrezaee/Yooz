@@ -5,8 +5,21 @@ if(${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_BINARY_DIR})
     message(FATAL_ERROR "in-tree build is prevented.")
 endif()
 
+set(VCPKG_MANIFEST_FEATURES "yooz")
+#set(VCPKG_INSTALL_OPTIONS "--no-print-usage")
+
 #--------------------------------------------------------------------------------------------------
-# PROJECT INFO
+# OPTIONS
+#--------------------------------------------------------------------------------------------------
+option(YZ_STATIC_CRT  "Use static CRT. (msvc only)" OFF)
+option(YZ_BUILD_TESTS "Build tests"                 OFF)
+
+if(YZ_BUILD_TEST)
+	list(APPEND VCPKG_MANIFEST_FEATURES "tests")
+endif()
+
+#--------------------------------------------------------------------------------------------------
+# PROJECT INFO AND SETUP
 #--------------------------------------------------------------------------------------------------
 project(Yooz2D DESCRIPTION "Yooz2D is a 2D game engine"
 			   LANGUAGES   CXX C)
@@ -24,13 +37,6 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)
-
-#--------------------------------------------------------------------------------------------------
-# OPTIONS
-#--------------------------------------------------------------------------------------------------
-option(YZ_STATIC_CRT  "Use static CRT. (msvc only)" OFF)
-option(YZ_BUILD_TESTS "Build tests"                 OFF)
-
 
 if(MSVC AND YZ_STATIC_CRT)
 	if(NOT (VCPKG_TARGET_TRIPLET MATCHES "windows-yooz-mt$"))
