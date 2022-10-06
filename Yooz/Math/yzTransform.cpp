@@ -81,4 +81,15 @@ Transform Transform::operator*(const Transform& r) const
 	        m[3] * r.m[2] + m[4] * r.m[5] + m[5]);
 }
 
+Vec2 Transform::operator*(const Vec2 v) const
+{
+	return Vec2(v.x * m[0] + v.y * m[1] + m[2],
+				v.x * m[3] + v.y * m[4] + m[5]);
+}
+
+void Transform::TransformVec2 ( const Vec2 v, Vec2& out ) const
+{
+	out.x = v.x * m[0] + v.y * m[1] + m[2];
+	out.y = v.x * m[3] + v.y * m[4] + m[5];
+}
 }  // namespace yz
