@@ -2,12 +2,18 @@
 
 #include <Math/yzConstants.hpp>
 
-#include <yzStds.hpp>
+#include <yzSTD.hpp>
 
 namespace yz
 {
-constexpr float Deg2Rad(const float deg) { return deg * CPI_180; }
-constexpr float Rad2Deg(const float rad) { return rad * C180_PI; }
+constexpr float Deg2Rad(const float deg)
+{
+	return deg * CPI_180;
+}
+constexpr float Rad2Deg(const float rad)
+{
+	return rad * C180_PI;
+}
 
 template<typename T>
 constexpr const T& Clamp(const T& v, const T& l, const T& h)
@@ -58,25 +64,27 @@ float EaseInSin(const float x);
 float EaseOutSin(const float x);
 float EaseInOutSin(const float x);
 
-constexpr float EaseInQuad(const float x) { return x * x; }
-constexpr float EaseOutQuad(const float x) { return x * (2.0f - x); }
-constexpr float EaseInOutQuad(const float x)
-{
-	return (x < 0.5f) ? (2.0f * x * x) : (x * (4.0f - 2.0f * x) - 1.0f);
-}
+float EaseInQuad(const float x);
+float EaseOutQuad(const float x);
+float EaseInOutQuad(const float x);
 
-constexpr float EaseInCubic(const float x) { return x * x * x; }
-constexpr float EaseOutCubic(const float x)
-{
-	return x * (x * x - 3.0f * x + 3.0f);
-}
-constexpr float EaseInOutCubic(const float x)
-{
-	return (x < 0.5f) ? (4.0f * x * x * x) :
-	                    (x * (4.0f * x * x - 12.0f * x + 12.0f) - 3.0f);
-}
+float EaseInCubic(const float x);
+float EaseOutCubic(const float x);
+float EaseInOutCubic(const float x);
 
-constexpr float EaseInQuart(const float x) { return x * x * x * x; }
-float           EaseOutQuart(const float x);
-float           EaseInOutQuart(const float x);
+float EaseInQuart(const float x);
+float EaseOutQuart(const float x);
+float EaseInOutQuart(const float x);
+
+float EaseInQuint(const float x);
+float EaseOutQuint(const float x);
+float EaseInOutQuint(const float x);
+
+float EaseInExpo(const float x);
+float EaseOutExpo(const float x);
+float EaseInOutExpo(const float x);
+
+float EaseInCirc(const float x);
+float EaseOutCirc(const float x);
+float EaseInOutCirc(const float x);
 }  // namespace yz
