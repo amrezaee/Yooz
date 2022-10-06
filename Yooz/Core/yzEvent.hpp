@@ -3,7 +3,7 @@
 #include <Core/yzDelegate.hpp>
 #include <Core/yzLogger.hpp>
 
-#include <yzStds.hpp>
+#include <yzSTD.hpp>
 
 namespace yz
 {
@@ -23,7 +23,8 @@ public:
 
 	this_type& operator=(const this_type& rhs)
 	{
-		if(this != &rhs) Clear();
+		if(this != &rhs)
+			Clear();
 		return *this;
 	}
 
@@ -31,7 +32,8 @@ public:
 
 	this_type& operator=(this_type&& other)
 	{
-		if(this != &other) m_handlers = std::move(other.m_handlers);
+		if(this != &other)
+			m_handlers = std::move(other.m_handlers);
 		return *this;
 	}
 
@@ -40,7 +42,8 @@ public:
 	// Romoves all handlers.
 	void Clear()
 	{
-		if(!m_handlers.empty()) m_handlers.clear();
+		if(!m_handlers.empty())
+			m_handlers.clear();
 	}
 
 	// Adds a new handler.
@@ -80,8 +83,7 @@ public:
 	void RemoveAll(Args&&... args)
 	{
 		handler_type toremove = handler_type(std::forward<Args>(args)...);
-		const auto   it =
-		        std::remove(m_handlers.begin(), m_handlers.end(), toremove);
+		const auto it = std::remove(m_handlers.begin(), m_handlers.end(), toremove);
 
 		if(it != m_handlers.end())
 			m_handlers.erase(it, m_handlers.cend());
@@ -113,10 +115,7 @@ public:
 		return m_handlers == rhs.m_handlers;
 	}
 
-	inline bool operator!=(const this_type& rhs) const
-	{
-		return !operator==(rhs);
-	}
+	inline bool operator!=(const this_type& rhs) const { return !operator==(rhs); }
 
 private:
 	container_type m_handlers;

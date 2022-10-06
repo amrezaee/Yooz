@@ -1,6 +1,6 @@
 #pragma once
 
-#include <yzStds.hpp>
+#include <yzSTD.hpp>
 
 namespace yz
 {
@@ -48,8 +48,8 @@ struct Vector2
 	explicit constexpr Vector2(T* p): x(p[0]), y(p[1]) {}
 
 	template<typename A>
-	explicit constexpr Vector2(A* pa):
-	        x(static_cast<T>(pa[0])), y(static_cast<T>(pa[1]))
+	explicit constexpr Vector2(A* pa)
+	        : x(static_cast<T>(pa[0])), y(static_cast<T>(pa[1]))
 	{
 	}
 
@@ -64,12 +64,13 @@ struct Vector2
 	constexpr T Dot(const Vector2<T> r) const { return x * r.x + y * r.y; }
 
 	constexpr T LengthSqrd() const { return x * x + y * y; }
-	T Length() const { return static_cast<T>(std::sqrt(x * x + y * y)); }
+	T           Length() const { return static_cast<T>(std::sqrt(x * x + y * y)); }
 
 	void Normalize()
 	{
 		T t = Length();
-		if(t == static_cast<T>(0)) return;
+		if(t == static_cast<T>(0))
+			return;
 		x /= t;
 		y /= t;
 	}

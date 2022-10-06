@@ -1,19 +1,19 @@
 #pragma once
 
-#include <yzStds.hpp>
+#include <yzSTD.hpp>
 
 namespace yz
 {
 enum class LogLevel
 {
-	MAX,  // NOTE: don't pass this to Log
-	TRACE,
-	DEBUG,
-	INFO,
-	WARN,
-	ERROR,
-	FATAL,
-	NONE  // NOTE: don't pass this to Log
+	Max,  // NOTE: don't pass this to Log
+	Trace,
+	Debug,
+	Info,
+	Warn,
+	Error,
+	Fatal,
+	None  // NOTE: don't pass this to Log
 };
 
 class Logger
@@ -40,9 +40,8 @@ public:
 	void SetLinePreamble(bool on);
 
 	template<typename... Args>
-	void Log(const LogLevel target, const char* const func,
-	         const char* const file, int line, const char* const fmt,
-	         const Args&... args);
+	void Log(const LogLevel target, const char* const func, const char* const file,
+	         int line, const char* const fmt, const Args&... args);
 
 	inline void Log(const LogLevel target, const char* const func,
 	                const char* const file, int line, const char* const str)
@@ -85,7 +84,7 @@ private:
 	static constexpr std::size_t m_buffer_size {512};
 	char                         m_buffer[m_buffer_size] = {};
 
-	LogLevel m_level {LogLevel::MAX};
+	LogLevel m_level {LogLevel::Max};
 
 	bool m_preamble_level {true};
 	bool m_preamble_func {true};
@@ -111,7 +110,8 @@ inline void Logger::Log(const LogLevel target, const char* const func,
                         const char* const file, int line, const char* const fmt,
                         const Args&... args)
 {
-	if(IsLevelDisabled(target)) return;
+	if(IsLevelDisabled(target))
+		return;
 	FormatString(target, file, func, line, fmt, args...);
 
 	if(m_console_logging)
@@ -150,8 +150,7 @@ inline void Logger::FormatString(const LogLevel target, const char* const file,
 		preamble_len += l - 1;
 		if(m_preamble_file || m_preamble_line)
 		{
-			l = static_cast<std::size_t>(
-			        std::snprintf((buf += l), (s -= l), ":"));
+			l = static_cast<std::size_t>(std::snprintf((buf += l), (s -= l), ":"));
 			++preamble_len;
 		}
 	}
@@ -163,8 +162,7 @@ inline void Logger::FormatString(const LogLevel target, const char* const file,
 		preamble_len += l - 1;
 		if(m_preamble_line)
 		{
-			l = static_cast<std::size_t>(
-			        std::snprintf((buf += l), (s -= l), ":"));
+			l = static_cast<std::size_t>(std::snprintf((buf += l), (s -= l), ":"));
 			++preamble_len;
 		}
 	}
@@ -185,9 +183,9 @@ inline void Logger::FormatString(const LogLevel target, const char* const file,
 	int width = 50 - static_cast<int>(preamble_len) - 5;
 
 	if(m_preamble_level)
-		l = static_cast<std::size_t>(
-		        std::snprintf((buf += l), (s -= l), "%*s | ", width,
-		                      m_level_names[int(target) - 1]));
+		l = static_cast<std::size_t>(std::snprintf((buf += l), (s -= l), "%*s | ",
+		                                           width,
+		                                           m_level_names[int(target) - 1]));
 	else
 		l = static_cast<std::size_t>(
 		        std::snprintf((buf += l), (s -= l), "%*s", width, "| "));
@@ -196,26 +194,26 @@ inline void Logger::FormatString(const LogLevel target, const char* const file,
 }  // namespace yz
 
 #define YZ_TRACE(...)                                                        \
-	yz::Logger::Get().Log(yz::LogLevel::TRACE, __func__, __FILE__, __LINE__, \
+	yz::Logger::Get().Log(yz::LogLevel::Trace, __func__, __FILE__, __LINE__, \
 	                      __VA_ARGS__)
 
 #define YZ_DEBUG(...)                                                        \
-	yz::Logger::Get().Log(yz::LogLevel::DEBUG, __func__, __FILE__, __LINE__, \
+	yz::Logger::Get().Log(yz::LogLevel::Debug, __func__, __FILE__, __LINE__, \
 	                      __VA_ARGS__)
 
 #define YZ_INFO(...)                                                        \
-	yz::Logger::Get().Log(yz::LogLevel::INFO, __func__, __FILE__, __LINE__, \
+	yz::Logger::Get().Log(yz::LogLevel::Info, __func__, __FILE__, __LINE__, \
 	                      __VA_ARGS__)
 
 #define YZ_WARN(...)                                                        \
-	yz::Logger::Get().Log(yz::LogLevel::WARN, __func__, __FILE__, __LINE__, \
+	yz::Logger::Get().Log(yz::LogLevel::Warn, __func__, __FILE__, __LINE__, \
 	                      __VA_ARGS__)
 
 
 #define YZ_ERROR(...)                                                        \
-	yz::Logger::Get().Log(yz::LogLevel::ERROR, __func__, __FILE__, __LINE__, \
+	yz::Logger::Get().Log(yz::LogLevel::Error, __func__, __FILE__, __LINE__, \
 	                      __VA_ARGS__)
 
 #define YZ_FATAL(...)                                                        \
-	yz::Logger::Get().Log(yz::LogLevel::FATAL, __func__, __FILE__, __LINE__, \
+	yz::Logger::Get().Log(yz::LogLevel::Fatal, __func__, __FILE__, __LINE__, \
 	                      __VA_ARGS__)
