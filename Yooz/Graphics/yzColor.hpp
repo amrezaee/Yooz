@@ -1,6 +1,6 @@
 #pragma once
 
-#include <yzStds.hpp>
+#include <yzSTD.hpp>
 
 namespace yz
 {
@@ -19,42 +19,42 @@ public:
 
 	constexpr Color(const std::uint32_t color): m_value(color) {}
 
-	constexpr Color(const std::uint8_t r, const std::uint8_t g,
-	                const std::uint8_t b, const std::uint8_t a):
+	constexpr Color(const std::uint8_t r, const std::uint8_t g, const std::uint8_t b,
+	                const std::uint8_t a)
+	        :
 
-	        m_value(static_cast<std::uint32_t>(r << 24u) |
-	                static_cast<std::uint32_t>(g << 16u) |
-	                static_cast<std::uint32_t>(b << 8u) |
-	                static_cast<std::uint32_t>(a))
+	          m_value(static_cast<std::uint32_t>(r << 24u) |
+	                  static_cast<std::uint32_t>(g << 16u) |
+	                  static_cast<std::uint32_t>(b << 8u) |
+	                  static_cast<std::uint32_t>(a))
 	{
 	}
 
-	constexpr Color(const float r, const float g, const float b, const float a):
-	        Color(static_cast<std::uint8_t>(r * 255u),
-	              static_cast<std::uint8_t>(g * 255u),
-	              static_cast<std::uint8_t>(b * 255u),
-	              static_cast<std::uint8_t>(a * 255u))
+	constexpr Color(const float r, const float g, const float b, const float a)
+	        : Color(static_cast<std::uint8_t>(r * 255u),
+	                static_cast<std::uint8_t>(g * 255u),
+	                static_cast<std::uint8_t>(b * 255u),
+	                static_cast<std::uint8_t>(a * 255u))
 	{
 	}
 
-	constexpr Color(const std::uint8_t r, const std::uint8_t g,
-	                const std::uint8_t b):
-	        Color(r, g, b, 255u)
+	constexpr Color(const std::uint8_t r, const std::uint8_t g, const std::uint8_t b)
+	        : Color(r, g, b, 255u)
 	{
 	}
 
-	constexpr Color(const float r, const float g, const float b):
-	        Color(r, g, b, 1.0f)
+	constexpr Color(const float r, const float g, const float b)
+	        : Color(r, g, b, 1.0f)
 	{
 	}
 
-	constexpr Color(const Color color, const std::uint8_t alpha):
-	        m_value((color.m_value << 8) | alpha)
+	constexpr Color(const Color color, const std::uint8_t alpha)
+	        : m_value((color.m_value << 8) | alpha)
 	{
 	}
 
-	constexpr Color(const Color color, const float alpha):
-	        Color(color, static_cast<std::uint8_t>(alpha * 255u))
+	constexpr Color(const Color color, const float alpha)
+	        : Color(color, static_cast<std::uint8_t>(alpha * 255u))
 	{
 	}
 
@@ -67,8 +67,7 @@ public:
 		          static_cast<std::uint32_t>(a);
 	}
 
-	constexpr void Set(const float r, const float g, const float b,
-	                   const float a)
+	constexpr void Set(const float r, const float g, const float b, const float a)
 	{
 		m_value = static_cast<std::uint8_t>(r * 255u) |
 		          static_cast<std::uint8_t>(g * 255u) |
@@ -86,6 +85,8 @@ public:
 	{
 		Set(r, g, b, 1.0f);
 	}
+
+	void GetColors(float* const out) const;
 
 	constexpr std::uint8_t GetRed() const
 	{
@@ -150,7 +151,7 @@ public:
 		SetAlpha(static_cast<std::uint8_t>(a * 255));
 	}
 
-	constexpr void SetPacked(const std::uint32_t pack) { m_value = pack; }
+	constexpr void          SetPacked(const std::uint32_t pack) { m_value = pack; }
 	constexpr std::uint32_t GetPacked() const { return m_value; }
 
 	bool operator==(const Color rhs) const;
@@ -158,6 +159,7 @@ public:
 
 public:
 	static const Color WHITE;
+	static const Color TRANS_WHITE;
 	static const Color BLACK;
 	static const Color RED;
 	static const Color GREEN;
@@ -165,5 +167,43 @@ public:
 	static const Color YELLOW;
 	static const Color CYAN;
 	static const Color MAGENTA;
+	static const Color BROWN;
+	static const Color PURPLE;
+
+	static const Color ALICE_BLUE;
+	static const Color ANTIQUE_WHITE;
+	static const Color AQUA;
+	static const Color AQUAMARINE;
+	static const Color AZURE;
+	static const Color BLUE_VIOLET;
+	static const Color BURLYWOOD;
+	static const Color CADET_BLUE;
+	static const Color CHARTREUSE;
+	static const Color CHOCOLATE;
+	static const Color CORNFLOWER_BLUE;
+	static const Color CORNSILK;
+	static const Color CRIMSON;
+	static const Color DARK_ORCHID;
+	static const Color DARK_SALAMON;
+	static const Color DEEP_PINK;
+	static const Color FLORAL_WHITE;
+	static const Color GHOST_WHITE;
+	static const Color GOLD;
+	static const Color INDIGO;
+	static const Color IVORY;
+	static const Color LAVENDER;
+	static const Color LAWN_GREEN;
+	static const Color LIGHT_CORAL;
+	static const Color MOCCASIN;
+	static const Color PLUM;
+	static const Color POWDER_BLUE;
+	static const Color ROYAL_BLUE;
+	static const Color ROSY_BROWN;
+	static const Color SLATE_BLUE;
+	static const Color SNOW;
+	static const Color TEAL;
+	static const Color TURQUOISE;
+	static const Color WHITE_SMOKE;
+	static const Color YELLOW_GREEN;
 };
 }  // namespace yz
