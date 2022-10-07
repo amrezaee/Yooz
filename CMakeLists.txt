@@ -6,7 +6,7 @@ if(${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_BINARY_DIR})
 endif()
 
 set(VCPKG_MANIFEST_FEATURES "yooz")
-#set(VCPKG_INSTALL_OPTIONS "--no-print-usage")
+set(VCPKG_INSTALL_OPTIONS "--no-print-usage")
 
 #--------------------------------------------------------------------------------------------------
 # OPTIONS
