@@ -2,7 +2,7 @@
 # FIND PACKAGES
 #--------------------------------------------------------------------------------------------------
 find_package(SDL2 REQUIRED QUIET)
-find_package(glad REQUIRED QUIET)
+find_package(ghc_filesystem REQUIRED QUIET)
 
 
 #--------------------------------------------------------------------------------------------------
@@ -10,13 +10,26 @@ find_package(glad REQUIRED QUIET)
 #--------------------------------------------------------------------------------------------------
 add_executable(Yooz)
 
+#--------------------------------------------------------------------------------------------------
+# OPENGL SPECIFIC
+#--------------------------------------------------------------------------------------------------
+if(YZ_GL_PLATFORM)
+	include(yooz_gl_platform.cmake)
+endif(YZ_GL_PLATFORM)
+
+
+#--------------------------------------------------------------------------------------------------
+# YOOZ CONFIGS
+#--------------------------------------------------------------------------------------------------
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT "Yooz")
 
-target_precompile_headers(Yooz PRIVATE "yzStds.hpp" "yzDeps.hpp")
+target_precompile_headers(Yooz PRIVATE "yzSTD.hpp" "yzDeps.hpp")
 
-target_include_directories(Yooz PRIVATE "/")
+target_include_directories(Yooz PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/)
 
-target_link_libraries(Yooz PRIVATE SDL2::SDL2 SDL2::SDL2main SDL2::SDL2-static glad::glad)
+target_link_libraries(Yooz PRIVATE 
+							SDL2::SDL2 SDL2::SDL2main SDL2::SDL2-static
+							ghcFilesystem::ghc_filesystem)
 
 set_target_properties(Yooz PROPERTIES WIN32_EXECUTABLE $<IF:$<CONFIG:Release>,TRUE,FALSE>)
 
@@ -25,6 +38,8 @@ target_compile_definitions(Yooz PRIVATE
 	$<$<CONFIG:RelWithDebInfo>:YZ_PROFILE_BUILD>
 	$<$<CONFIG:Release>:YZ_RELEASE_BUILD>
 	
+	$<$<BOOL:${YZ_GL_PLATFORM}>:YZ_GL_PLATFORM>
+	$<$<BOOL:${YZ_VK_PLATFORM}>:YZ_VK_PLATFORM>
 	$<$<BOOL:${YZ_PLATFORM_UNIX}>:YZ_PLATFORM_UNIX>
 	$<$<BOOL:${YZ_PLATFORM_APPLE}>:YZ_PLATFORM_APPLE>
 	$<$<BOOL:${YZ_PLATFORM_DESKTOP}>:YZ_PLATFORM_DESKTOP>
@@ -49,7 +64,13 @@ if(YZ_COMPILER_MSVC)
 	target_compile_definitions(Yooz PRIVATE _HAS_EXCEPTIONS=0 
 											_CRT_SECURE_NO_WARNINGS
 											_CRT_SECURE_NO_DEPRECATE
-											WIN32_LEAN_AND_MEAN)
+											WIN32_LEAN_AND_MEAN
+											NOMINMAX
+											NOCOMM
+											NOMENU
+											NORASTEROPS
+											NOGDI
+	)
 
 	if(CMAKE_CXX_FLAGS MATCHES "/EHsc ")
         string(REPLACE "/EHsc" "/EHs-c-" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
@@ -57,8 +78,7 @@ if(YZ_COMPILER_MSVC)
         string(REPLACE "/EHsc" "/EHs-c-" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
     endif()
 
-elseif(NOT YZ_COMPILER_MSVC)
-
+else()
 	target_compile_options(Yooz PRIVATE -Wall -Wextra -Wno-c++98-compat
 										-Wno-c++98-compat-pedantic 
 										-Wno-format-nonliteral -Wc++11-compat)
@@ -75,6 +95,7 @@ target_sources(Yooz PRIVATE
 
 	"Graphics/yzCamera.cpp"
 	"Graphics/yzColor.cpp"
+	"Graphics/yzGraphicsParams.cpp"
 
 	"Math/yzFunctions.cpp"
 	"Math/yzTransform.cpp"
@@ -82,16 +103,3 @@ target_sources(Yooz PRIVATE
 	"Platform/SDL/yzMessageBox.SDL.cpp"
 	"Platform/SDL/yzPlatform.SDL.cpp"
 	"Platform/SDL/yzWindow.SDL.cpp")
-
-#--------------------------------------------------------------------------------------------------
-# OPENGL SOURCES
-#--------------------------------------------------------------------------------------------------
-if(YZ_GL_PLATFORM)
-	
-	target_sources(Yooz PRIVATE 	
-	
-		"Platform/GL/yzGraphicsDevice.GL.cpp"
-		"Platform/GL/yzGraphicsFeatures.GL.cpp"
-		"Platform/GL/yzShader.GL.cpp")
-
-endif(YZ_GL_PLATFORM)
