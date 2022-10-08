@@ -42,7 +42,7 @@ public:
 
 	Transform(const float width, const float height): Transform()
 	{
-		Project(width, height);
+		Project(0.0f, 0.0f, width, height);
 	}
 
 	Transform(const Vec2 size): Transform(size.x, size.y) {}
@@ -54,6 +54,8 @@ public:
 	void TransformVec2(const Vec2 v, Vec2& out) const;
 
 	constexpr const float* GetPtr() const { return m; }
+
+	void Reset();
 
 	Transform&        Translate(const float x, const float y);
 	inline Transform& Translate(const Vec2 v) { return Translate(v.x, v.y); }
@@ -74,7 +76,6 @@ public:
 		return Rotate(Deg2Rad(angle));
 	}
 
-	Transform&        Project(const float width, const float height);
-	inline Transform& Project(const Vec2 v) { return Project(v.x, v.y); }
+	Transform& Project(const float l, const float r, const float u, const float d);
 };
 }  // namespace yz
