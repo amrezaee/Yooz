@@ -53,10 +53,10 @@ const Color Color::YELLOW_GREEN {0x9acd32ff};
 
 void Color::GetColors(float* const out) const
 {
-	out[0] = static_cast<float>(GetRed() / 255);
-	out[1] = static_cast<float>(GetGreen() / 255);
-	out[2] = static_cast<float>(GetBlue() / 255);
-	out[3] = static_cast<float>(GetAlpha() / 255);
+	out[0] = static_cast<float>(GetRed()) / 255.0f;
+	out[1] = static_cast<float>(GetGreen()) / 255.0f;
+	out[2] = static_cast<float>(GetBlue()) / 255.0f;
+	out[3] = static_cast<float>(GetAlpha()) / 255.0f;
 }
 
 bool Color::operator==(const Color rhs) const
