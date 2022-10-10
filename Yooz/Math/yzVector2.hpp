@@ -120,7 +120,7 @@ struct Vector2
 		return v;
 	}
 
-	constexpr operator bool() const
+	constexpr explicit operator bool() const
 	{
 		return (x != static_cast<T>(0)) && (y != static_cast<T>(0));
 	}
