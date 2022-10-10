@@ -1,5 +1,7 @@
 #pragma once
 
+#include <yzSTD.hpp>
+
 namespace yz
 {
 class GraphicsFeatures
@@ -15,6 +17,9 @@ public:
 	bool        HasETC2() const;
 	bool        HasATITC() const;
 
+	std::int32_t TotalTextureUnits() const;
+	std::int32_t FragmentShaderTextureUnits() const;
+
 private:
 	bool        m_inited {false};
 	const char* m_driver {nullptr};
@@ -24,5 +29,8 @@ private:
 	bool        m_etc1 {false};
 	bool        m_etc2 {false};
 	bool        m_atitc {false};
+
+	std::int32_t m_total_texture_units {0};
+	std::int32_t m_fragment_shader_texture_units {0};
 };
 }  // namespace yz

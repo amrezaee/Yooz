@@ -2,7 +2,7 @@
 
 #include <Platform/yzMessageBox.hpp>
 
-#include <yzStds.hpp>
+#include <yzSTD.hpp>
 
 #ifndef YZ_DISABLE_ASSERTION
 
@@ -26,8 +26,8 @@ void yzOutputAssertionFailure(const char* const expr, const char* const msg,
 		else
 			++filename;
 
-		std::snprintf(buffer, buffer_size, "ASSERTION %s FAILED at  %s:%d",
-		              expr, ++filename, line);
+		std::snprintf(buffer, buffer_size, "ASSERTION %s FAILED at  %s:%d", expr,
+		              ++filename, line);
 		yz::MessageBoxFatal(buffer);
 	}
 }

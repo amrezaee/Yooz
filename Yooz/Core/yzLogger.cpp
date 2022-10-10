@@ -43,8 +43,8 @@ void Logger::SetLinePreamble(bool on) { m_preamble_line = on; }
 
 bool Logger::IsLevelDisabled(const LogLevel level)
 {
-	return (m_level == LogLevel::NONE || level < m_level ||
-	        level <= LogLevel::MAX || level >= LogLevel::NONE);
+	return (m_level == LogLevel::None || level < m_level ||
+	        level <= LogLevel::Max || level >= LogLevel::None);
 }
 
 // TODO: remove this and use path type

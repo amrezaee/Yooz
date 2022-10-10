@@ -8,17 +8,22 @@
 
 namespace yz
 {
-Window::Window(Application& app, std::uint32_t width, std::uint32_t height):
-        m_app(app), m_bounds(rectu(0, 0, width, height))
+Window::Window(Application& app): m_app(app), m_handle {nullptr}, m_id(0)
 {
 }
 
-void Window::Init()
+void Window::Init(bool resizable, bool borderless)
 {
-	if(m_inited) return;
+	YZ_ASSERT(!m_inited);
 
-	m_title = m_app.GetName();
-	YZ_INFO("Creating window {%s %dx%d}...", m_title, m_bounds.w, m_bounds.h);
+	YZ_INFO("Creating window...");
+
+	m_title              = m_app.GetSpecs().name;
+	std::uint32_t width  = m_app.GetGraphicsDevice().GetParams().GetBufferWidth();
+	std::uint32_t height = m_app.GetGraphicsDevice().GetParams().GetBufferHeight();
+
+	m_resizable  = resizable;
+	m_borderless = borderless;
 
 	int flags = 0;
 	flags |= (m_resizable ? SDL_WINDOW_RESIZABLE : 0);
@@ -33,60 +38,99 @@ void Window::Init()
 	}
 
 	m_handle = SDL_CreateWindow(m_title.c_str(), SDL_WINDOWPOS_CENTERED,
-	                            SDL_WINDOWPOS_CENTERED, m_bounds.w, m_bounds.h,
-	                            flags);
+	                            SDL_WINDOWPOS_CENTERED, width, height, flags);
 	YZ_ASSERT(m_handle, SDL_GetError());
 
-	SDL_GetWindowPosition(static_cast<SDL_Window*>(m_handle),
-	                      reinterpret_cast<int*>(&m_bounds.x),
-	                      reinterpret_cast<int*>(&m_bounds.y));
+	SDL_Window* sdlwin = static_cast<SDL_Window*>(m_handle);
 
-	m_id = SDL_GetWindowID(static_cast<SDL_Window*>(m_handle));
+	m_id = SDL_GetWindowID(sdlwin);
 
 	if(m_app.IsCursorVisible())
 		SDL_ShowCursor(SDL_ENABLE);
 	else
 		SDL_ShowCursor(SDL_DISABLE);
 
-	m_inited = true;
+	ActiveEvent.Raise();
+
 	YZ_INFO("Window created.");
+
+	m_inited = true;
+}
+
+void Window::Reinit(bool resizable, bool borderless)
+{
+	Destroy();
+	Init(resizable, borderless);
 }
 
 void Window::Destroy()
 {
-	if(m_inited) { SDL_DestroyWindow(static_cast<SDL_Window*>(m_handle)); }
+	YZ_ASSERT(m_inited);
+
+	SDL_DestroyWindow(static_cast<SDL_Window*>(m_handle));
+	m_handle = nullptr;
+
 	m_inited = false;
 }
 
 void Window::Update()
 {
-	SDL_Event e {0};
+	SDL_Event   e {0};
+	SDL_Keycode key {0}, lastkey {0};
 
 	while(SDL_PollEvent(&e))
 	{
 		switch(e.type)
 		{
-		case SDL_QUIT: ClosingEvent.Raise(); break;
+		case SDL_QUIT: CloseEvent.Raise(); break;
+
+		case SDL_KEYDOWN:
+		{
+			// this does not work
+			// is this a bug in SDL?
+			if(m_allow_alt_f4)
+			{
+				lastkey = key;
+				key     = e.key.keysym.sym;
+				if((lastkey == SDLK_LALT || lastkey == SDLK_RALT) && key == SDLK_F4)
+				{
+					e.type = SDL_QUIT;
+					SDL_PushEvent(&e);
+				}
+			}
+		}
+		break;
+
+		case SDL_KEYUP:
+		{
+			// nothing here
+		}
+		break;
 
 		case SDL_WINDOWEVENT:
-			if(e.window.windowID != m_id) break;
+			if(e.window.windowID != m_id)
+				break;
 
 			switch(e.window.event)
 			{
 			case SDL_WINDOWEVENT_RESIZED:
 			case SDL_WINDOWEVENT_SIZE_CHANGED:
-				Resized(static_cast<std::uint32_t>(e.window.data1),
-				        static_cast<std::uint32_t>(e.window.data2));
+				ResizeEvent.Raise(Vec2u {e.window.data1, e.window.data2});
 				break;
 
 			case SDL_WINDOWEVENT_MOVED:
-				Moved(static_cast<std::uint32_t>(e.window.data1),
-				      static_cast<std::uint32_t>(e.window.data2));
+				MoveEvent.Raise(Vec2u {e.window.data1, e.window.data2});
 				break;
 
-			case SDL_WINDOWEVENT_FOCUS_GAINED: m_is_active = true; break;
+			case SDL_WINDOWEVENT_FOCUS_GAINED:
+				m_active = true;
+				ActiveEvent.Raise();
+				break;
 
-			case SDL_WINDOWEVENT_FOCUS_LOST: m_is_active = false; break;
+			case SDL_WINDOWEVENT_FOCUS_LOST:
+				m_active = false;
+				DeactiveEvent.Raise();
+				break;
 
 			case SDL_WINDOWEVENT_CLOSE:
 				e.type = SDL_QUIT;
@@ -97,57 +141,113 @@ void Window::Update()
 	}
 }
 
+Handle Window::GetHandle() const
+{
+	return m_handle;
+}
 
-Handle Window::GetHandle() const { return m_handle; }
+std::uint32_t Window::GetID() const
+{
+	return m_id;
+}
 
-std::string Window::GetTitle() const { return m_title; }
+std::uint32_t Window::GetWidth() const
+{
+	return GetSize().x;
+}
+
+std::uint32_t Window::GetHeight() const
+{
+	return GetSize().y;
+}
+
+Vec2u Window::GetSize() const
+{
+	int w, h;
+	SDL_GetWindowSize(static_cast<SDL_Window*>(m_handle), &w, &h);
+	return {w, h};
+}
+
+void Window::SetSize(Vec2u size)
+{
+	SDL_SetWindowSize(static_cast<SDL_Window*>(m_handle), size.x, size.y);
+	ResizeEvent.Raise(size);
+}
+
+std::uint32_t Window::GetPosX() const
+{
+	return GetPosition().x;
+}
+
+std::uint32_t Window::GetPosY() const
+{
+	return GetPosition().y;
+}
+
+Vec2u Window::GetPosition() const
+{
+	int x, y;
+	SDL_GetWindowPosition(static_cast<SDL_Window*>(m_handle), &x, &y);
+	return {x, y};
+}
+
+void Window::SetPosition(Vec2u pos)
+{
+	SDL_SetWindowPosition(static_cast<SDL_Window*>(m_handle), pos.x, pos.y);
+	MoveEvent.Raise(pos);
+}
+
+const std::string& Window::GetTitle() const
+{
+	return m_title;
+}
 
 void Window::SetTitle(const std::string& title)
 {
+	SDL_SetWindowTitle(static_cast<SDL_Window*>(m_handle), title.c_str());
 	m_title = title;
-	SDL_SetWindowTitle(static_cast<SDL_Window*>(m_handle), m_title.c_str());
 }
 
-bool Window::IsActive() const { return m_is_active; }
-
-void Window::SetBorders(bool show)
+bool Window::IsActive() const
 {
-	if(show == m_borderless) return;
-	m_borderless = show;
-	SDL_SetWindowBordered(static_cast<SDL_Window*>(m_handle),
-	                      m_borderless ? SDL_FALSE : SDL_TRUE);
+	return m_active;
 }
 
-void Window::SetResizable(bool enable)
+bool Window::IsResizable() const
 {
-	if(enable == m_resizable) return;
-	m_resizable = enable;
+	return m_resizable;
+}
+
+void Window::SetResizable(bool resizable)
+{
+	if(m_resizable == resizable)
+		return;
 	SDL_SetWindowResizable(static_cast<SDL_Window*>(m_handle),
-	                       m_resizable ? SDL_TRUE : SDL_FALSE);
+	                       resizable ? SDL_TRUE : SDL_FALSE);
+	m_resizable = resizable;
 }
 
-vec2u Window::GetPosition() const { return vec2u {m_bounds.x, m_bounds.y}; }
-
-
-void Window::Resized(std::uint32_t width, std::uint32_t height)
+bool Window::IsBorderless() const
 {
-	SDL_GetWindowSize(static_cast<SDL_Window*>(m_handle),
-	                  reinterpret_cast<int*>(&m_bounds.w),
-	                  reinterpret_cast<int*>(&m_bounds.h));
-
-	MovedEvent.Raise(m_bounds.x, m_bounds.y);
-
-	YZ_TRACE("Resized %dx%d", width, height);
+	return m_borderless;
 }
 
-void Window::Moved(std::uint32_t x, std::uint32_t y)
+void Window::SetBorderless(bool borderless)
 {
-	SDL_GetWindowPosition(static_cast<SDL_Window*>(m_handle),
-	                      reinterpret_cast<int*>(&m_bounds.x),
-	                      reinterpret_cast<int*>(&m_bounds.y));
+	if(m_borderless == borderless)
+		return;
+	SDL_SetWindowBordered(static_cast<SDL_Window*>(m_handle),
+	                      borderless ? SDL_FALSE : SDL_TRUE);
+	m_borderless = borderless;
+}
 
-	MovedEvent.Raise(m_bounds.x, m_bounds.y);
+bool Window::IsAltF4Enabled() const
+{
+	return m_allow_alt_f4;
+}
 
-	YZ_TRACE("Moved %dx%d", x, y);
+void Window::EnableAltF4(bool enable)
+{
+	m_allow_alt_f4 = enable;
 }
 }  // namespace yz

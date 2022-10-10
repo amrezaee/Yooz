@@ -2,7 +2,7 @@
 
 // C++ 11 Delegate Based on Don Clugston's FastDelegate
 
-#include <yzStds.hpp>
+#include <yzSTD.hpp>
 
 #if defined(_MSC_VER)
 	#define FASTDLGT_MICROSOFT_MFP
@@ -81,19 +81,17 @@ namespace detail
 	class GenericClass;
 #endif
 
-	const int SINGLE_MEMFUNCPTR_SIZE = sizeof(void (GenericClass::*)());
+	const int SINGLE_MEMFUNCPTR_SIZE = sizeof(void(GenericClass::*)());
 
 	template<int N>
 	struct SimplifyMemFunc
 	{
 		template<class X, class XFuncType, class GenericMemFuncType>
-		inline static GenericClass* Convert(X*        pthis,
-		                                    XFuncType function_to_bind,
+		inline static GenericClass* Convert(X* pthis, XFuncType function_to_bind,
 		                                    GenericMemFuncType& bound_func)
 		{
-			static_assert(
-			        N - 100,
-			        "Unsupported member function pointer on this compiler");
+			static_assert(N - 100,
+			              "Unsupported member function pointer on this compiler");
 			return 0;
 		}
 	};
@@ -102,8 +100,7 @@ namespace detail
 	struct SimplifyMemFunc<SINGLE_MEMFUNCPTR_SIZE>
 	{
 		template<class X, class XFuncType, class GenericMemFuncType>
-		inline static GenericClass* Convert(X*        pthis,
-		                                    XFuncType function_to_bind,
+		inline static GenericClass* Convert(X* pthis, XFuncType function_to_bind,
 		                                    GenericMemFuncType& bound_func)
 		{
 			bound_func = reinterpret_cast<GenericMemFuncType>(function_to_bind);
@@ -116,8 +113,7 @@ namespace detail
 	struct SimplifyMemFunc<SINGLE_MEMFUNCPTR_SIZE + sizeof(int)>
 	{
 		template<class X, class XFuncType, class GenericMemFuncType>
-		inline static GenericClass* Convert(X*        pthis,
-		                                    XFuncType function_to_bind,
+		inline static GenericClass* Convert(X* pthis, XFuncType function_to_bind,
 		                                    GenericMemFuncType& bound_func)
 		{
 			union
@@ -136,8 +132,8 @@ namespace detail
 			u.func     = function_to_bind;
 			bound_func = u.s.funcaddress;
 
-			return reinterpret_cast<GenericClass*>(
-			        reinterpret_cast<char*>(pthis) + u.s.delta);
+			return reinterpret_cast<GenericClass*>(reinterpret_cast<char*>(pthis) +
+			                                       u.s.delta);
 		}
 	};
 
@@ -158,8 +154,7 @@ namespace detail
 	struct SimplifyMemFunc<SINGLE_MEMFUNCPTR_SIZE + 2 * sizeof(int)>
 	{
 		template<class X, class XFuncType, class GenericMemFuncType>
-		inline static GenericClass* Convert(X*        pthis,
-		                                    XFuncType function_to_bind,
+		inline static GenericClass* Convert(X* pthis, XFuncType function_to_bind,
 		                                    GenericMemFuncType& bound_func)
 		{
 			union
@@ -179,8 +174,7 @@ namespace detail
 			} u2;
 
 			static_assert(sizeof(function_to_bind) == sizeof(u.s) &&
-			                      sizeof(function_to_bind) ==
-			                              sizeof(u.ProbeFunc) &&
+			                      sizeof(function_to_bind) == sizeof(u.ProbeFunc) &&
 			                      sizeof(u2.virtfunc) == sizeof(u2.s),
 			              "Cannot use horrible_cast<>");
 
@@ -195,8 +189,7 @@ namespace detail
 	struct SimplifyMemFunc<SINGLE_MEMFUNCPTR_SIZE + 3 * sizeof(int)>
 	{
 		template<class X, class XFuncType, class GenericMemFuncType>
-		inline static GenericClass* Convert(X*        pthis,
-		                                    XFuncType function_to_bind,
+		inline static GenericClass* Convert(X* pthis, XFuncType function_to_bind,
 		                                    GenericMemFuncType& bound_func)
 		{
 			union
@@ -228,8 +221,8 @@ namespace detail
 				                        reinterpret_cast<const char*>(vtable) +
 				                        u.s.vtable_index);
 			}
-			return reinterpret_cast<GenericClass*>(
-			        reinterpret_cast<char*>(pthis) + u.s.delta + virtual_delta);
+			return reinterpret_cast<GenericClass*>(reinterpret_cast<char*>(pthis) +
+			                                       u.s.delta + virtual_delta);
 		};
 	};
 
@@ -260,10 +253,11 @@ public:
 
 	inline bool IsLess(const DelegateMemento& right) const
 	{
-		if(m_pthis != right.m_pthis) return m_pthis < right.m_pthis;
+		if(m_pthis != right.m_pthis)
+			return m_pthis < right.m_pthis;
 
-		return std::memcmp(&m_pFunction, &right.m_pFunction,
-		                   sizeof(m_pFunction)) < 0;
+		return std::memcmp(&m_pFunction, &right.m_pFunction, sizeof(m_pFunction)) <
+		       0;
 	}
 
 	inline size_t Hash() const
@@ -283,18 +277,15 @@ public:
 		return *this;
 	}
 
-	inline bool operator<(const DelegateMemento& right)
-	{
-		return IsLess(right);
-	}
+	inline bool operator<(const DelegateMemento& right) { return IsLess(right); }
 
 	inline bool operator>(const DelegateMemento& right)
 	{
 		return right.IsLess(*this);
 	}
 
-	DelegateMemento(const DelegateMemento& right):
-	        m_pthis(right.m_pthis), m_pFunction(right.m_pFunction)
+	DelegateMemento(const DelegateMemento& right)
+	        : m_pthis(right.m_pthis), m_pFunction(right.m_pFunction)
 	{
 	}
 
@@ -308,8 +299,7 @@ protected:
 
 namespace detail
 {
-	template<class GenericMemFunc, class StaticFuncPtr,
-	         class UnvoidStaticFuncPtr>
+	template<class GenericMemFunc, class StaticFuncPtr, class UnvoidStaticFuncPtr>
 	class ClosurePtr: public DelegateMemento
 	{
 	public:
@@ -394,10 +384,7 @@ public:
 	using type = DelegateImpl;
 
 	DelegateImpl() { clear(); }
-	DelegateImpl(const DelegateImpl& x)
-	{
-		m_Closure.CopyFrom(this, x.m_Closure);
-	}
+	DelegateImpl(const DelegateImpl& x) { m_Closure.CopyFrom(this, x.m_Closure); }
 
 	inline void operator=(const DelegateImpl& x)
 	{
@@ -427,15 +414,13 @@ public:
 	template<typename X, typename Y>
 	DelegateImpl(Y* pthis, DesiredRetType (X::*function_to_bind)(A... args))
 	{
-		m_Closure.bindmemfunc(detail::implicit_cast<X*>(pthis),
-		                      function_to_bind);
+		m_Closure.bindmemfunc(detail::implicit_cast<X*>(pthis), function_to_bind);
 	}
 
 	template<typename X, typename Y>
 	inline void Bind(Y* pthis, DesiredRetType (X::*function_to_bind)(A... args))
 	{
-		m_Closure.bindmemfunc(detail::implicit_cast<X*>(pthis),
-		                      function_to_bind);
+		m_Closure.bindmemfunc(detail::implicit_cast<X*>(pthis), function_to_bind);
 	}
 
 	template<typename X, typename Y>
@@ -457,15 +442,13 @@ public:
 	template<typename X, typename Y>
 	DelegateImpl(Y& pthis, DesiredRetType (X::*function_to_bind)(A... args))
 	{
-		m_Closure.bindmemfunc(detail::implicit_cast<X*>(&pthis),
-		                      function_to_bind);
+		m_Closure.bindmemfunc(detail::implicit_cast<X*>(&pthis), function_to_bind);
 	}
 
 	template<typename X, typename Y>
 	inline void Bind(Y& pthis, DesiredRetType (X::*function_to_bind)(A... args))
 	{
-		m_Closure.bindmemfunc(detail::implicit_cast<X*>(&pthis),
-		                      function_to_bind);
+		m_Closure.bindmemfunc(detail::implicit_cast<X*>(&pthis), function_to_bind);
 	}
 
 	template<typename X, typename Y>
@@ -554,10 +537,7 @@ public:
 	void        clear() { m_Closure.clear(); }
 
 	const DelegateMemento& GetMemento() const { return m_Closure; }
-	void                   SetMemento(const DelegateMemento& any)
-	{
-		m_Closure.CopyFrom(this, any);
-	}
+	void SetMemento(const DelegateMemento& any) { m_Closure.CopyFrom(this, any); }
 
 private:
 	inline R InvokeStaticFunction(A... args) const
@@ -579,26 +559,26 @@ public:
 	Delegate(): BaseType() {}
 
 	template<typename X, typename Y>
-	Delegate(Y* pthis, R (X::*function_to_bind)(A... args)):
-	        BaseType(pthis, function_to_bind)
+	Delegate(Y* pthis, R (X::*function_to_bind)(A... args))
+	        : BaseType(pthis, function_to_bind)
 	{
 	}
 
 	template<typename X, typename Y>
-	Delegate(const Y* pthis, R (X::*function_to_bind)(A... args) const):
-	        BaseType(pthis, function_to_bind)
+	Delegate(const Y* pthis, R (X::*function_to_bind)(A... args) const)
+	        : BaseType(pthis, function_to_bind)
 	{
 	}
 
 	template<typename X, typename Y>
-	Delegate(Y& pthis, R (X::*function_to_bind)(A... args)):
-	        BaseType(pthis, function_to_bind)
+	Delegate(Y& pthis, R (X::*function_to_bind)(A... args))
+	        : BaseType(pthis, function_to_bind)
 	{
 	}
 
 	template<typename X, typename Y>
-	Delegate(const Y& pthis, R (X::*function_to_bind)(A... args) const):
-	        BaseType(pthis, function_to_bind)
+	Delegate(const Y& pthis, R (X::*function_to_bind)(A... args) const)
+	        : BaseType(pthis, function_to_bind)
 	{
 	}
 

@@ -2,10 +2,9 @@
 
 #include <Core/yzBase.hpp>
 #include <Core/yzEvent.hpp>
-#include <Math/yzRectangle.hpp>
 #include <Math/yzVector2.hpp>
 
-#include <yzStds.hpp>
+#include <yzSTD.hpp>
 
 namespace yz
 {
@@ -14,43 +13,67 @@ class Application;
 class Window
 {
 public:
-	Event<>                             ClosingEvent;
-	Event<std::uint32_t, std::uint32_t> ResizedEvent;
-	Event<std::uint32_t, std::uint32_t> MovedEvent;
+	Event<Vec2u> ResizeEvent;
+	Event<Vec2u> MoveEvent;
+	Event<>      CloseEvent;
+	Event<>      ActiveEvent;
+	Event<>      DeactiveEvent;
 
 public:
-	Window(Application& app, std::uint32_t width, std::uint32_t height);
+	Window(Application& app);
 
-	void Init();
+	Window(const Window&)            = delete;
+	Window& operator=(const Window&) = delete;
+
+	Window(Window&&)            = delete;
+	Window& operator=(Window&&) = delete;
+
+	void Init(bool resizable = true, bool borderless = false);
+	void Reinit(bool resizable = true, bool borderless = false);
 	void Destroy();
 
 	void Update();
 
 	Handle GetHandle() const;
 
-	std::string GetTitle() const;
-	void        SetTitle(const std::string& title);
+	std::uint32_t GetID() const;
+
+	std::uint32_t GetWidth() const;
+	std::uint32_t GetHeight() const;
+	Vec2u         GetSize() const;
+
+	void SetSize(Vec2u size);
+
+	std::uint32_t GetPosX() const;
+	std::uint32_t GetPosY() const;
+	Vec2u         GetPosition() const;
+
+	void SetPosition(Vec2u pos);
+
+	const std::string& GetTitle() const;
+	void               SetTitle(const std::string& title);
 
 	bool IsActive() const;
 
-	void SetBorders(bool show);
-	void SetResizable(bool enable);
+	bool IsResizable() const;
+	void SetResizable(bool resizable);
 
-	vec2u GetPosition() const;
+	bool IsBorderless() const;
+	void SetBorderless(bool borderless);
+
+	bool IsAltF4Enabled() const;
+	void EnableAltF4(bool enable);
 
 private:
-	void Resized(std::uint32_t width, std::uint32_t height);
-	void Moved(std::uint32_t x, std::uint32_t y);
+	bool m_inited {false};
+	bool m_active {true};
+	bool m_resizable {true};
+	bool m_borderless {false};
+	bool m_allow_alt_f4 {false};
 
-private:
+	Handle        m_handle;
 	Application&  m_app;
 	std::string   m_title;
-	rectu         m_bounds;
-	bool          m_inited {false};
-	bool          m_resizable {true};
-	bool          m_borderless {false};
-	bool          m_is_active {true};
-	Handle        m_handle {nullptr};
-	std::uint32_t m_id {0};
+	std::uint32_t m_id;
 };
 }  // namespace yz

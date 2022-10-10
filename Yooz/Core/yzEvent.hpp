@@ -1,8 +1,9 @@
 #pragma once
 
 #include <Core/yzDelegate.hpp>
+#include <Core/yzLogger.hpp>
 
-#include <yzStds.hpp>
+#include <yzSTD.hpp>
 
 namespace yz
 {
@@ -22,7 +23,8 @@ public:
 
 	this_type& operator=(const this_type& rhs)
 	{
-		if(this != &rhs) Clear();
+		if(this != &rhs)
+			Clear();
 		return *this;
 	}
 
@@ -30,7 +32,8 @@ public:
 
 	this_type& operator=(this_type&& other)
 	{
-		if(this != &other) m_handlers = std::move(other.m_handlers);
+		if(this != &other)
+			m_handlers = std::move(other.m_handlers);
 		return *this;
 	}
 
@@ -39,7 +42,8 @@ public:
 	// Romoves all handlers.
 	void Clear()
 	{
-		if(!m_handlers.empty()) m_handlers.clear();
+		if(!m_handlers.empty())
+			m_handlers.clear();
 	}
 
 	// Adds a new handler.
@@ -68,8 +72,10 @@ public:
 		auto found_it = std::find(begin_it, end_it,
 		                          handler_type(std::forward<Args>(args)...));
 
-		if(found_it != end_it) m_handlers.erase(found_it);
-		// TODO: WARNNING LOG (no such handler found)
+		if(found_it != end_it)
+			m_handlers.erase(found_it);
+		else
+			YZ_WARN("No such event handler found.");
 	}
 
 	// removes all copies of a handler.
@@ -77,10 +83,12 @@ public:
 	void RemoveAll(Args&&... args)
 	{
 		handler_type toremove = handler_type(std::forward<Args>(args)...);
-		const auto   it =
-		        std::remove(m_handlers.begin(), m_handlers.end(), toremove);
-		if(it != m_handlers.end()) m_handlers.erase(it, m_handlers.cend());
-		// TODO: WARNNING LOG (no such handler found)
+		const auto it = std::remove(m_handlers.begin(), m_handlers.end(), toremove);
+
+		if(it != m_handlers.end())
+			m_handlers.erase(it, m_handlers.cend());
+		else
+			YZ_WARN("No such event handler found.");
 	}
 
 	// Raise event. calls all handlers with specified parameters.
@@ -94,8 +102,11 @@ public:
 	template<typename... Args>
 	void operator()(Args... args) const
 	{
-		if(m_handlers.empty()) return;  // event list is empty, so do nothing
-		// TODO: add logging (warnning no handler found)
+		if(m_handlers.empty())
+		{
+			YZ_WARN("Event's handler list is empty.");
+			return;
+		}
 		for(const auto& i : m_handlers) i(args...);
 	}
 
@@ -104,10 +115,7 @@ public:
 		return m_handlers == rhs.m_handlers;
 	}
 
-	inline bool operator!=(const this_type& rhs) const
-	{
-		return !operator==(rhs);
-	}
+	inline bool operator!=(const this_type& rhs) const { return !operator==(rhs); }
 
 private:
 	container_type m_handlers;

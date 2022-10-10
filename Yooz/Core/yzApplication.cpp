@@ -1,82 +1,157 @@
 #include <Core/yzApplication.hpp>
 
 #include <Core/yzLogger.hpp>
+#include <Core/yzTimer.hpp>
+#include <Graphics/yzCamera.hpp>
+#include <Graphics/yzShader.hpp>
+#include <Math/yzTransform.hpp>
 
 namespace yz
 {
-Application::Application(const std::string& name, std::uint32_t width,
-                         std::uint32_t height):
-        m_name(name),
-        m_bounds(0, 0, width, height), m_window(*this, width, height),
-        m_graphics_device(m_graphics_params)
+Application::Application(AppSpecs& specs)
+        : m_specs(specs), m_window(*this), m_renderer(m_graphics_device)
 {
 }
 
-void Application::Execute()
+void Application::Run()
 {
 	Init();
-	Update();
-	Exit();
-	YZ_INFO("Application Closed.");
+
+	Timer timer;
+	float delta_time {0.0f};
+
+	m_graphics_device.SetClearColor(Color::YELLOW);
+
+	while(m_running)
+	{
+		// TODO: may be convert Color class to abgr?
+		// Game loop timing
+		timer.Stop();
+		delta_time = timer.Elapsed();
+		timer.Reset();
+
+		if(!m_suspended)
+		{
+			// TODO: begin whitout camera sets camera to wrong position
+			m_renderer.Begin();
+
+			Vec2 pos(0.0f, -270.0f);
+			for(unsigned int i = 0; i < 200; ++i)
+			{
+				pos.x = -480.0f;
+				for(unsigned int j = 0; j < 200; ++j)
+				{
+					m_renderer.DrawQuad(Color::BLACK, pos, {4}, 0.0f);
+					pos.x += 5;
+				}
+				pos.y += 5;
+			}
+			float s = (float)SDL_GetTicks64() * 0.004f;
+			m_renderer.DrawQuad(Color::AZURE, {0, 0},
+			                    {128.0f * std::sin(s), 128.0f * std::sin(s)},
+			                    (float)SDL_GetTicks64() * 0.05f);
+
+			m_renderer.End();
+
+			/*YZ_TRACE("Draw Calls: %d  Quads: %d", m_renderer.GetStats().draw_calls,
+			         m_renderer.GetStats().quads);*/
+
+			m_graphics_device.SwapBuffers();
+		}
+
+		m_window.Update();
+	}
+
+	Destroy();
 }
-
-void Application::Close()
-{
-	m_running = false;
-	YZ_INFO("Closing Application...");
-}
-void Application::Kill() { std::exit(EXIT_SUCCESS); }
-
-rectu Application::GetBounds() const { return m_bounds; }
-
-const std::string Application::GetName() const { return m_name; }
-
-GraphicsDevice Application::GetGraphicsDevice() const
-{
-	return m_graphics_device;
-}
-
-Window Application::GetWindow() const { return m_window; }
-
-bool Application::IsCursorVisible() const { return m_show_cursor; }
-void Application::ShowCursor(bool show) { SDL_ShowCursor(show); }
 
 void Application::Init()
 {
-	if(m_inited) return;
+	YZ_ASSERT(!m_inited);
+
 	m_platform.Init();
 
-	m_graphics_device.BeforeInit();
+	m_window.CloseEvent.Add(this, &Application::OnWindowClose);
+	m_window.ActiveEvent.Add(this, &Application::OnWindowActive);
+	m_window.DeactiveEvent.Add(this, &Application::OnWindowDeactive);
+	m_window.ResizeEvent.Add(this, &Application::OnWindowResize);
 
-	m_window.Init();
-	m_window.ClosingEvent.Add(this, &Application::Close);
+	m_graphics_device.Init(m_specs.graphics_params, m_window);
 
-	m_graphics_device.GetParams().SetWindowHandle(m_window.GetHandle());
-	m_graphics_device.Init();
-	m_graphics_device.SetColorBufferColor(Color::CYAN);
-
-
+	m_renderer.Init();
 
 	m_inited = true;
 }
 
-void Application::Update()
+void Application::Destroy()
 {
-	while(m_running)
-	{
-		m_window.Update();
+	YZ_ASSERT(m_inited);
 
-		m_graphics_device.BeforeUpdate();
-		m_graphics_device.Update();
-	}
-}
+	m_renderer.Destroy();
 
-void Application::Exit()
-{
-	if(!m_inited) return;
 	m_graphics_device.Destroy();
+
 	m_window.Destroy();
+
 	m_platform.Shutdown();
+
+	m_inited = false;
 }
 
+const AppSpecs& Application::GetSpecs() const
+{
+	return m_specs;
+}
+
+Platform& Application::GetPlatform()
+{
+	return m_platform;
+}
+
+Window& Application::GetWindow()
+{
+	return m_window;
+}
+
+GraphicsDevice& Application::GetGraphicsDevice()
+{
+	return m_graphics_device;
+}
+
+bool Application::IsActive() const
+{
+	return !m_suspended;
+}
+
+bool Application::IsCursorVisible() const
+{
+	return m_show_cursor;
+}
+
+void Application::ShowCursor(bool show)
+{
+	SDL_ShowCursor(show ? SDL_ENABLE : SDL_DISABLE);
+}
+
+void Application::OnWindowActive()
+{
+	m_suspended = false;
+}
+
+void Application::OnWindowDeactive()
+{
+	m_suspended = true;
+}
+
+void Application::OnWindowClose()
+{
+	m_running = false;
+}
+
+void Application::OnWindowResize(Vec2u size)
+{
+	m_graphics_device.UpdateViewport(size);
+
+	m_renderer.OnResize(size);
+}
 }  // namespace yz
