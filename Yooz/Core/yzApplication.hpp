@@ -1,51 +1,67 @@
 #pragma once
 
+#include <Core/yzAssert.hpp>
 #include <Core/yzWindow.hpp>
 #include <Graphics/yzGraphicsDevice.hpp>
 #include <Graphics/yzGraphicsParams.hpp>
+#include <Graphics/yzRenderer.hpp>
 #include <Math/yzRectangle.hpp>
 #include <Platform/yzPlatform.hpp>
 
-#include <yzStds.hpp>
+#include <yzDeps.hpp>
+#include <yzSTD.hpp>
 
 namespace yz
 {
+struct AppSpecs
+{
+	std::string    name;
+	fs::path       working_dir;
+	GraphicsParams graphics_params;
+};
+
 class Application
 {
 public:
-	Application(const std::string& name, std::uint32_t width,
-	            std::uint32_t height);
+	Application(AppSpecs& specs);
 
-	void Execute();
-	void Close();
-	void Kill();
 
-	Rectu GetBounds() const;
+	const AppSpecs& GetSpecs() const;
 
-	const std::string GetName() const;
+	Platform& GetPlatform();
 
-	GraphicsDevice GetGraphicsDevice() const;
+	Window& GetWindow();
 
-	Window GetWindow() const;
+	GraphicsDevice& GetGraphicsDevice();
+
+	bool IsActive() const;
 
 	bool IsCursorVisible() const;
 	void ShowCursor(bool show);
 
 private:
+	void Run();
 	void Init();
-	void Update();
-	void Exit();
+	void Destroy();
+	friend int ::main(int argc, char** argv);
+
 
 private:
-	bool           m_inited {false};
-	bool           m_show_cursor {true};
-	bool           m_running {true};
-	bool           m_suspended {false};
+	void OnWindowActive();
+	void OnWindowDeactive();
+	void OnWindowClose();
+	void OnWindowResize(Vec2u size);
+
+private:
+	bool m_inited {false};
+	bool m_running {true};
+	bool m_suspended {false};
+	bool m_show_cursor {true};
+
+	AppSpecs       m_specs;
 	Platform       m_platform;
-	std::string    m_name;
 	Window         m_window;
 	GraphicsDevice m_graphics_device;
-	GraphicsParams m_graphics_params;
-	Rectu          m_bounds;
+	Renderer       m_renderer;
 };
 }  // namespace yz

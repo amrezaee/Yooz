@@ -2,45 +2,63 @@
 
 #include <Core/yzBase.hpp>
 #include <Graphics/yzGraphicsStates.hpp>
+#include <Math/yzVector2.hpp>
 
-#include <yzStds.hpp>
+#include <yzSTD.hpp>
 
 namespace yz
 {
 class GraphicsParams
 {
 public:
-	GraphicsParams() { Reset(); }
+	GraphicsParams();
 
-	void Reset()
-	{
-		m_window_handle = nullptr;
-		m_fs_mode       = FullscreenMode::WINDOWED;
-		m_msaa_level    = 0;
-		m_vsync         = true;
-	}
+	GraphicsParams(const GraphicsParams&)            = default;
+	GraphicsParams& operator=(const GraphicsParams&) = default;
 
-	std::uint32_t GetDefaultFPS() const { return m_default_fps; }
+	GraphicsParams(GraphicsParams&&)            = default;
+	GraphicsParams& operator=(GraphicsParams&&) = default;
 
-	Handle GetWindowHandle() const { return m_window_handle; }
-	void   SetWindowHandle(Handle handle) { m_window_handle = handle; }
+	void Reset();
 
-	FullscreenMode GetFullscreenMode() const { return m_fs_mode; }
-	void SetFullscreenMode(FullscreenMode fsmode) { m_fs_mode = fsmode; }
+	std::uint32_t GetDefaultFPS() const;
 
-	std::uint8_t GetMSAALevel() const { return m_msaa_level; }
-	void         SetMSAALevel(std::uint8_t level) { m_msaa_level = level; }
+	std::uint32_t GetDefaultBufferWidth() const;
+	std::uint32_t GetDefaultBufferHeight() const;
+	float         GetDefaultAspectRatio() const;
 
-	bool GetVsyncState() const { return m_vsync; }
+	std::uint32_t GetBufferWidth() const;
+	std::uint32_t GetBufferHeight() const;
+	Vec2u         GetBufferSize() const;
+	float         GetAspectRatio() const;
+
+	void SetBufferWidth(std::uint32_t width);
+	void SetBufferHeight(std::uint32_t height);
+	void SetBufferSize(Vec2u size);
+
+	Handle GetWindowHandle() const;
+	void   SetWindowHandle(Handle handle);
+
+	FullscreenMode GetFullscreenMode() const;
+	void           SetFullscreenMode(FullscreenMode fsmode);
+
+	MSAALevel GetMSAALevel() const;
+	void      SetMSAALevel(MSAALevel level);
+
+	bool GetVsync() const;
+	void SetVsync(bool enable);
 
 private:
-	const std::uint32_t m_default_fps = 60;
-	Handle              m_window_handle;
-	FullscreenMode      m_fs_mode;
-	std::uint8_t        m_msaa_level;
-	std::uint32_t       m_buffer_width;
-	std::uint32_t       m_buffer_height;
-	float               m_buffer_aspect_ratio;
-	bool                m_vsync;
+	static const std::uint32_t m_default_fps;
+	static const std::uint32_t m_default_buffer_width;
+	static const std::uint32_t m_default_buffer_height;
+	static const float         m_default_aspect_ratio;
+
+	Handle         m_window_handle;
+	FullscreenMode m_fs_mode;
+	MSAALevel      m_msaa_level;
+	bool           m_vsync;
+	std::uint32_t  m_buffer_width;
+	std::uint32_t  m_buffer_height;
 };
 }  // namespace yz
