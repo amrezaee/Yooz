@@ -3,73 +3,92 @@
 
 namespace yz
 {
-Camera::Camera() { Calculate(); }
-
-Camera::Camera(const Vec2 origin, const Vec2 position, const float rotation,
-               const float zoom):
-        m_origin(origin),
-        m_position(position), m_rotation(rotation), m_zoom(zoom)
+Camera::Camera(float l, float r, float t, float b)
+        : m_projection(l, r, t, b), m_offset((r - l) * 0.5f, (b - t) * 0.5f)
 {
 	Calculate();
 }
 
-void Camera::Update(const Vec2 origin, const Vec2 pos, const float rot,
-                    const float zoom)
+Vec2 Camera::GetPosition() const
 {
-	if((m_position == pos) && (m_rotation == rot) && (m_origin == origin) &&
-	   (m_zoom == zoom))
+	return m_position;
+}
+
+void Camera::SetPosition(Vec2 position)
+{
+	if(position == m_position)
 		return;
-
-	m_origin   = origin;
-	m_position = pos;
-	m_rotation = rot;
-	m_zoom     = zoom;
+	m_position = position;
 	Calculate();
 }
 
-void Camera::SetOrigin(const Vec2 v)
+float Camera::GetRotation() const
 {
-	if(v == m_origin) return;
-	m_origin = v;
-	Calculate();
+	return m_rotation;
 }
 
-void Camera::SetPosition(const Vec2 pos)
+void Camera::SetRotation(float angle)
 {
-	if(pos == m_position) return;
-	m_position = pos;
-	Calculate();
-}
-
-void Camera::SetRotation(const float angle)
-{
-	if(angle == m_rotation) return;
+	if(angle == m_rotation)
+		return;
 	m_rotation = angle;
 	Calculate();
 }
 
-void Camera::SetZoom(const float zoom)
+float Camera::GetZoom() const
 {
-	if(zoom == m_zoom) return;
+	return m_zoom;
+}
+
+void Camera::SetZoom(float zoom)
+{
+	if(zoom == m_zoom)
+		return;
 	m_zoom = zoom;
 	Calculate();
 }
 
-Vec2 Camera::GetOrigin() const { return m_origin; }
+Vec2 Camera::GetOffset() const
+{
+	return m_offset;
+}
 
-Vec2 Camera::GetPosition() const { return m_position; }
+void Camera::SetOffset(Vec2 offset)
+{
+	if(offset == m_offset)
+		return;
+	m_offset = offset;
+	Calculate();
+}
 
-float Camera::GetRotation() const { return m_rotation; }
+void Camera::SetProjection(float l, float r, float t, float b)
+{
+	m_projection.Reset();
+	m_projection.Project(l, r, t, b);
+	SetOffset({(r - l) * 0.5f, (b - t) * 0.5f});
+}
 
-float Camera::GetZoom() const { return m_zoom; }
+const Transform& Camera::GetView() const
+{
+	return m_view;
+}
 
-const Transform& Camera::GetTransform() const { return m_view; }
+const Transform& Camera::GetProjection() const
+{
+	return m_projection;
+}
+
+Transform Camera::GetViewProjection() const
+{
+	return m_projection * m_view;
+}
 
 void Camera::Calculate()
 {
-	m_view.Translate(-m_position.x, -m_position.y)
-	        .Scale(m_zoom)
-	        .RotateDegree(m_rotation)
-	        .Translate(m_origin);
+	m_view.Reset();
+	m_view.Translate(m_offset)
+	        .Scale(1.0f / m_zoom)
+	        .RotateDegree(-m_rotation)
+	        .Translate(-m_position);
 }
 }  // namespace yz
