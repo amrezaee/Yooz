@@ -1,5 +1,7 @@
 #include <Graphics/yzShader.hpp>
 
+#include <Core/yzLogger.hpp>
+
 #include <yzDeps.hpp>
 
 namespace yz
@@ -13,11 +15,24 @@ struct GLShaderData
 
 static GLShaderData data;
 
-Shader::Shader(const std::string& vsrc, const std::string& fsrc)
+void CreateShader()
 {
 	data.vertex_shader   = glCreateShader(GL_VERTEX_SHADER);
 	data.fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
 	data.program         = glCreateProgram();
+}
+
+Shader::~Shader()
+{
+	glDeleteProgram(data.program);
+	data.vertex_shader   = 0;
+	data.fragment_shader = 0;
+	data.program         = 0;
+}
+
+void Shader::Compile(const std::string& vsrc, const std::string& fsrc)
+{
+	CreateShader();
 
 	const char* vsrc_ptr = vsrc.c_str();
 	const char* fsrc_ptr = fsrc.c_str();
@@ -35,10 +50,42 @@ Shader::Shader(const std::string& vsrc, const std::string& fsrc)
 	glDeleteShader(data.fragment_shader);
 }
 
-Shader::~Shader() { glDeleteProgram(data.program); }
+void Shader::LoadAndCompileSourceFiles(const std::string& vpath,
+                                       const std::string& fpath)
+{
+	std::stringstream vss, fss;
 
-void Shader::Bind() const { glUseProgram(data.program); }
-void Shader::Unbind() const { glUseProgram(0); }
+	std::ifstream vfile(vpath);
+	if(!vfile.is_open())
+	{
+		YZ_ERROR("Shader %s not found.", vpath);
+		return;
+	}
+	vss << vfile.rdbuf();
+	vfile.close();
+
+	std::ifstream ffile(fpath);
+	if(!ffile.is_open())
+	{
+		YZ_ERROR("Shader %s not found.", fpath);
+		return;
+	}
+	fss << ffile.rdbuf();
+	ffile.close();
+
+
+	Compile(vss.str(), fss.str());
+}
+
+void Shader::Bind() const
+{
+	glUseProgram(data.program);
+}
+
+void Shader::Unbind() const
+{
+	glUseProgram(0);
+}
 
 void Shader::SetFloat(const std::string& name, const float f) const
 {
@@ -85,7 +132,8 @@ void Shader::SetTransform(const std::string& name, const Transform& t) const
 void Shader::SetColor(const std::string& name, const Color color) const
 {
 	GLuint loc = glGetUniformLocation(data.program, name.c_str());
-	glUniform4f(loc, color.GetRed(), color.GetGreen(), color.GetBlue(),
-	            color.GetAlpha());
+	float  t[4];
+	color.GetColors(t);
+	glUniform4fv(loc, 4, t);
 }
 }  // namespace yz

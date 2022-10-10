@@ -4,7 +4,7 @@
 #include <Math/yzTransform.hpp>
 #include <Math/yzVector2.hpp>
 
-#include <yzStds.hpp>
+#include <yzSTD.hpp>
 
 
 namespace yz
@@ -12,11 +12,15 @@ namespace yz
 class Shader
 {
 public:
-	Shader(const std::string& vsrc, const std::string& fsrc);
+	Shader() = default;
 	~Shader();
 
 	void Bind() const;
 	void Unbind() const;
+
+	void Compile(const std::string& vsrc, const std::string& fsrc);
+	void LoadAndCompileSourceFiles(const std::string& vpath,
+	                               const std::string& fpath);
 
 	void SetFloat(const std::string& name, const float f) const;
 	void SetVec2(const std::string& name, const Vec2 v) const;
