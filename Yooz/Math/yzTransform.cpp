@@ -12,14 +12,14 @@ void Transform::Reset()
 	m[5] = 0.0f;
 }
 
-Transform& Transform::Translate(const float x, const float y)
+Transform& Transform::Translate(float x, float y)
 {
 	m[2] += x * m[0] + y * m[1];
 	m[5] += x * m[3] + y * m[4];
 	return *this;
 }
 
-Transform& Transform::Scale(const float x, const float y)
+Transform& Transform::Scale(float x, float y)
 {
 	m[0] *= x;
 	m[1] *= y;
@@ -28,7 +28,7 @@ Transform& Transform::Scale(const float x, const float y)
 	return *this;
 }
 
-Transform& Transform::Shear(const float x, const float y)
+Transform& Transform::Shear(float x, float y)
 {
 	float a = m[0];
 	float b = m[1];
@@ -42,7 +42,7 @@ Transform& Transform::Shear(const float x, const float y)
 	return *this;
 }
 
-Transform& Transform::Rotate(const float angle)
+Transform& Transform::Rotate(float angle)
 {
 	float c = std::cos(angle);
 	float s = std::sin(angle);
@@ -58,8 +58,7 @@ Transform& Transform::Rotate(const float angle)
 	return *this;
 }
 
-Transform& Transform::Project(const float l, const float r, const float t,
-                              const float b)
+Transform& Transform::Project(float l, float r, float t, float b)
 {
 	float dx = (r - l);
 	float dy = (t - b);
@@ -94,12 +93,12 @@ Transform Transform::operator*(const Transform& r) const
 	                 m[3] * r.m[2] + m[4] * r.m[5] + m[5]);
 }
 
-Vec2 Transform::operator*(const Vec2 v) const
+Vec2 Transform::operator*(Vec2 v) const
 {
 	return Vec2(v.x * m[0] + v.y * m[1] + m[2], v.x * m[3] + v.y * m[4] + m[5]);
 }
 
-void Transform::TransformVec2(const Vec2 v, Vec2& out) const
+void Transform::TransformVec2(Vec2 v, Vec2& out) const
 {
 	out.x = v.x * m[0] + v.y * m[1] + m[2];
 	out.y = v.x * m[3] + v.y * m[4] + m[5];
