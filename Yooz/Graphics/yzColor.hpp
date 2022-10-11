@@ -11,16 +11,15 @@ private:
 	std::uint32_t m_value {0u};
 
 public:
-	constexpr Color()                        = default;
-	constexpr Color(const Color&)            = default;
-	constexpr Color(Color&&)                 = default;
-	constexpr Color& operator=(const Color&) = default;
-	constexpr Color& operator=(Color&&)      = default;
+	constexpr Color()              = default;
+	constexpr Color(const Color&)  = default;
+	constexpr Color(Color&&)       = default;
+	Color& operator=(const Color&) = default;
+	Color& operator=(Color&&)      = default;
 
-	constexpr Color(const std::uint32_t color): m_value(color) {}
+	constexpr Color(std::uint32_t color): m_value(color) {}
 
-	constexpr Color(const std::uint8_t r, const std::uint8_t g, const std::uint8_t b,
-	                const std::uint8_t a)
+	constexpr Color(std::uint8_t r, std::uint8_t g, std::uint8_t b, std::uint8_t a)
 	        :
 
 	          m_value(static_cast<std::uint32_t>(r << 24u) |
@@ -30,7 +29,7 @@ public:
 	{
 	}
 
-	constexpr Color(const float r, const float g, const float b, const float a)
+	constexpr Color(float r, float g, float b, float a)
 	        : Color(static_cast<std::uint8_t>(r * 255u),
 	                static_cast<std::uint8_t>(g * 255u),
 	                static_cast<std::uint8_t>(b * 255u),
@@ -38,53 +37,30 @@ public:
 	{
 	}
 
-	constexpr Color(const std::uint8_t r, const std::uint8_t g, const std::uint8_t b)
+	constexpr Color(std::uint8_t r, std::uint8_t g, std::uint8_t b)
 	        : Color(r, g, b, 255u)
 	{
 	}
 
-	constexpr Color(const float r, const float g, const float b)
-	        : Color(r, g, b, 1.0f)
-	{
-	}
+	constexpr Color(float r, float g, float b): Color(r, g, b, 1.0f) {}
 
-	constexpr Color(const Color color, const std::uint8_t alpha)
+	constexpr Color(Color color, std::uint8_t alpha)
 	        : m_value((color.m_value << 8) | alpha)
 	{
 	}
 
-	constexpr Color(const Color color, const float alpha)
+	constexpr Color(Color color, float alpha)
 	        : Color(color, static_cast<std::uint8_t>(alpha * 255u))
 	{
 	}
 
-	constexpr void Set(const std::uint8_t r, const std::uint8_t g,
-	                   const std::uint8_t b, const std::uint8_t a)
-	{
-		m_value = static_cast<std::uint32_t>(r << 24u) |
-		          static_cast<std::uint32_t>(g << 16u) |
-		          static_cast<std::uint32_t>(b << 8u) |
-		          static_cast<std::uint32_t>(a);
-	}
+	void Set(std::uint8_t r, std::uint8_t g, std::uint8_t b, std::uint8_t a);
 
-	constexpr void Set(const float r, const float g, const float b, const float a)
-	{
-		m_value = static_cast<std::uint8_t>(r * 255u) |
-		          static_cast<std::uint8_t>(g * 255u) |
-		          static_cast<std::uint8_t>(b * 255u) |
-		          static_cast<std::uint8_t>(a * 255u);
-	}
+	void Set(float r, float g, float b, float a);
 
-	constexpr void Set(const std::uint8_t r, const std::uint8_t g,
-	                   const std::uint8_t b)
-	{
-		Set(r, g, b, 255u);
-	}
+	void Set(std::uint8_t r, std::uint8_t g, std::uint8_t b);
 
-	constexpr void Set(const float r, const float g, const float b)
-	{
-		Set(r, g, b, 1.0f);
-	}
+	void Set(float r, float g, float b);
 
 	void GetColors(float* const out) const;
 
@@ -108,54 +84,21 @@ public:
 		return static_cast<std::uint8_t>(m_value);
 	}
 
-	constexpr void SetRed(const std::uint8_t r)
-	{
-		m_value = static_cast<std::uint32_t>(m_value & 0x00ffffff) |
-		          static_cast<std::uint32_t>(r << 24u);
-	}
+	void SetRed(std::uint8_t r);
+	void SetGreen(std::uint8_t g);
+	void SetBlue(std::uint8_t b);
+	void SetAlpha(std::uint8_t a);
 
-	constexpr void SetGreen(const std::uint8_t g)
-	{
-		m_value = static_cast<std::uint32_t>(m_value & 0xff00ffff) |
-		          static_cast<std::uint32_t>(g << 16u);
-	}
+	void SetRed(float r);
+	void SetGreen(float g);
+	void SetBlue(float b);
+	void SetAlpha(float a);
 
-	constexpr void SetBlue(const std::uint8_t b)
-	{
-		m_value = static_cast<std::uint32_t>(m_value & 0xffff00ff) |
-		          static_cast<std::uint32_t>(b << 8u);
-	}
-
-	constexpr void SetAlpha(const std::uint8_t a)
-	{
-		m_value = (m_value & 0xffffff00) | a;
-	}
-
-	constexpr void SetRed(const float r)
-	{
-		SetRed(static_cast<std::uint8_t>(r * 255));
-	}
-
-	constexpr void SetGreen(const float g)
-	{
-		SetGreen(static_cast<std::uint8_t>(g * 255));
-	}
-
-	constexpr void SetBlue(const float b)
-	{
-		SetBlue(static_cast<std::uint8_t>(b * 255));
-	}
-
-	constexpr void SetAlpha(const float a)
-	{
-		SetAlpha(static_cast<std::uint8_t>(a * 255));
-	}
-
-	constexpr void          SetPacked(const std::uint32_t pack) { m_value = pack; }
+	void                    SetPacked(const std::uint32_t pack);
 	constexpr std::uint32_t GetPacked() const { return m_value; }
 
-	bool operator==(const Color rhs) const;
-	bool operator!=(const Color rhs) const { return !operator==(rhs); }
+	bool operator==(Color rhs) const;
+	bool operator!=(Color rhs) const { return !operator==(rhs); }
 
 public:
 	static const Color WHITE;
