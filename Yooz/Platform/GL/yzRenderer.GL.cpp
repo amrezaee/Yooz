@@ -79,8 +79,8 @@ void Renderer::OnResize(Vec2u size)
 	                       static_cast<float>(size.y));
 }
 
-void Renderer::DrawQuad(const Texture& texture, const Color color, const Vec2 pos,
-                        const Vec2 scale, const float angle, const Vec2 origin)
+void Renderer::DrawQuad(const Texture& texture, Color color, Vec2 pos, Vec2 scale,
+                        float angle, Vec2 origin)
 {
 	BatchData b {texture,
 	             {{0.0f, 0.0f}, {1.0f, 0.0f}, {1.0f, 1.0f}, {0.0f, 1.0f}},
@@ -101,29 +101,27 @@ void Renderer::DrawQuad(const Texture& texture, const Color color, const Vec2 po
 	++m_stats.total_quads;
 }
 
-void Renderer::DrawQuad(const Texture& texture, const Color color, const Vec2 pos,
-                        const Vec2 scale, const float angle)
+void Renderer::DrawQuad(const Texture& texture, Color color, Vec2 pos, Vec2 scale,
+                        float angle)
 {
 	DrawQuad(texture, color, pos, scale, angle, {0.0f});
 }
 
-void Renderer::DrawQuad(const Texture& texture, const Vec2 pos)
+void Renderer::DrawQuad(const Texture& texture, Vec2 pos)
 {
 	DrawQuad(texture, Color::TRANS_WHITE, pos, {1.0f, 1.0f}, 0.0f, {0.0f});
 }
 
-void Renderer::DrawQuad(const Color color, const Vec2 pos, const Vec2 scale,
-                        const float angle, const Vec2 origin)
+void Renderer::DrawQuad(Color color, Vec2 pos, Vec2 scale, float angle, Vec2 origin)
 {
 	DrawQuad(m_batcher.GetDefaultTexture(), color, pos, scale, angle, origin);
 }
 
-void Renderer::DrawQuad(const Color color, const Vec2 pos, const Vec2 scale,
-                        const float angle)
+void Renderer::DrawQuad(Color color, Vec2 pos, Vec2 scale, float angle)
 {
 	DrawQuad(color, pos, scale, angle, {0.0f});
 }
-void Renderer::DrawQuad(const Color color, const Vec2 pos)
+void Renderer::DrawQuad(Color color, Vec2 pos)
 {
 	DrawQuad(color, pos, {1.0f}, {0.0f}, {0.0f});
 }

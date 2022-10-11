@@ -11,10 +11,10 @@ private:
 	float m[6];
 
 public:
-	constexpr Transform(const Transform&)            = default;
-	constexpr Transform(Transform&&)                 = default;
-	constexpr Transform& operator=(const Transform&) = default;
-	constexpr Transform& operator=(Transform&&)      = default;
+	constexpr Transform(const Transform&)  = default;
+	constexpr Transform(Transform&&)       = default;
+	Transform& operator=(const Transform&) = default;
+	Transform& operator=(Transform&&)      = default;
 
 	constexpr Transform(): m {1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f} {}
 

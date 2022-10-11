@@ -22,7 +22,7 @@ public:
 		m_is_stopped = false;
 	}
 
-	void Timer::Stop()
+	void Stop()
 	{
 		m_stop       = clock_type::now();
 		m_is_stopped = true;

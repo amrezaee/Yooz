@@ -10,11 +10,10 @@ struct Vector2
 {
 	T x, y;
 
-	constexpr Vector2(const Vector2<T>&)               = default;
-	constexpr Vector2(Vector2<T>&&)                    = default;
-	constexpr Vector2<T>& operator=(const Vector2<T>&) = default;
-	constexpr Vector2<T>& operator=(Vector2<T>&&)      = default;
-	~Vector2()                                         = default;
+	constexpr Vector2(const Vector2<T>&)     = default;
+	constexpr Vector2(Vector2<T>&&)          = default;
+	Vector2<T>& operator=(const Vector2<T>&) = default;
+	Vector2<T>& operator=(Vector2<T>&&)      = default;
 
 	template<typename A>
 	constexpr Vector2(const Vector2<A>& v): Vector2(v.x, v.y)

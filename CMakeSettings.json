@@ -11,30 +11,18 @@
             "buildCommandArgs": "",
             "ctestCommandArgs": "",
             "intelliSenseMode": "windows-msvc-x64",
-            "cmakeToolchain": "C:/vcpkg/scripts/buildsystems/vcpkg.cmake",
-            "variables": [
-                {
-                    "name": "VCPKG_VERBOSE",
-                    "value": "False",
-                    "type": "BOOL"
-                },
-                {
-                    "name": "VCPKG_INSTALL_OPTIONS",
-                    "value": "",
-                    "type": "STRING"
-                }
-            ]
+            "cmakeToolchain": "C:/vcpkg/scripts/buildsystems/vcpkg.cmake"
         },
         {
             "name": "x64-msvc-Release",
             "generator": "Ninja",
             "configurationType": "Release",
+            "inheritEnvironments": [ "msvc_x64_x64" ],
             "buildRoot": "${projectDir}\\Build\\${name}",
             "installRoot": "${projectDir}\\Install\\${name}",
             "cmakeCommandArgs": "-DVCPKG_OVERLAY_TRIPLETS:PATH=${projectDir}\\Triplets\\ -DVCPKG_TARGET_TRIPLET:STRING=x64-windows-yooz-md --log-level=WARNING",
             "buildCommandArgs": "",
             "ctestCommandArgs": "",
-            "inheritEnvironments": [ "msvc_x64_x64" ],
             "intelliSenseMode": "windows-msvc-x64",
             "cmakeToolchain": "C:/vcpkg/scripts/buildsystems/vcpkg.cmake"
         },
@@ -42,12 +30,12 @@
             "name": "x64-msvc-Profile",
             "generator": "Ninja",
             "configurationType": "RelWithDebInfo",
+            "inheritEnvironments": [ "msvc_x64_x64" ],
             "buildRoot": "${projectDir}\\Build\\${name}",
             "installRoot": "${projectDir}\\Install\\${name}",
             "cmakeCommandArgs": "-DVCPKG_OVERLAY_TRIPLETS:PATH=${projectDir}\\Triplets\\ -DVCPKG_TARGET_TRIPLET:STRING=x64-windows-yooz-md --log-level=WARNING",
             "buildCommandArgs": "",
             "ctestCommandArgs": "",
-            "inheritEnvironments": [ "msvc_x64_x64" ],
             "cmakeToolchain": "C:/vcpkg/scripts/buildsystems/vcpkg.cmake"
         }
     ]
