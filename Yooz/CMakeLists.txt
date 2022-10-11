@@ -21,7 +21,7 @@ endif(YZ_GL_PLATFORM)
 #--------------------------------------------------------------------------------------------------
 # YOOZ CONFIGS
 #--------------------------------------------------------------------------------------------------
-set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT "Yooz")
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT Yooz)
 
 target_precompile_headers(Yooz PRIVATE "yzSTD.hpp" "yzDeps.hpp")
 
@@ -59,11 +59,12 @@ target_compile_definitions(Yooz PRIVATE
 	$<$<BOOL:${YZ_COMPILER_EMSCRIPTEN}>:YZ_COMPILER_EMSCRIPTEN>)
 
 if(YZ_COMPILER_MSVC)
-	target_compile_options(Yooz PRIVATE /W4 /MP)
 
-	target_compile_definitions(Yooz PRIVATE _HAS_EXCEPTIONS=0 
+	target_compile_options(Yooz PRIVATE /options:strict /permissive- /W4 /MP /GR- /nologo)
+
+	target_compile_definitions(Yooz PRIVATE _ITERATOR_DEBUG_LEVEL=0 
+											_HAS_EXCEPTIONS=0 
 											_CRT_SECURE_NO_WARNINGS
-											_CRT_SECURE_NO_DEPRECATE
 											WIN32_LEAN_AND_MEAN
 											NOMINMAX
 											NOCOMM
