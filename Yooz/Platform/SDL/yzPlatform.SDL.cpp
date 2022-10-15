@@ -7,14 +7,13 @@ namespace yz
 {
 void Platform::Init()
 {
-	if(m_inited) return;
+	if(m_inited)
+		return;
 
 	int code = SDL_Init(SDL_INIT_EVERYTHING);
 	YZ_ASSERT(code == 0, SDL_GetError());
 
-	SDL_SetHint("SDL_VIDEO_MINIMIZE_ON_FOCUS_LOSS", "0");
-	SDL_SetHint("SDL_HINT_WINDOWS_NO_CLOSE_ON_ALT_F4", "1");
-	SDL_SetHint("SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS", "1");
+	SDL_SetHint(SDL_HINT_WINDOWS_NO_CLOSE_ON_ALT_F4, "1");
 
 	m_name = SDL_GetPlatform();
 
@@ -47,23 +46,59 @@ void Platform::Init()
 
 void Platform::Shutdown()
 {
-	if(!m_inited) return;
+	if(!m_inited)
+		return;
 
 	SDL_Quit();
 
 	m_inited = false;
 }
 
-const char* Platform::GetPlatformName() const { return m_name; }
+const char* Platform::GetPlatformName() const
+{
+	return m_name;
+}
 
-bool Platform::HasSSE3() const { return m_sse3; }
-bool Platform::HasSSE41() const { return m_sse41; }
-bool Platform::HasSSE42() const { return m_sse42; }
-bool Platform::HasAVX1() const { return m_avx1; }
-bool Platform::HasAVX2() const { return m_avx2; }
-bool Platform::HasAVX512F() const { return m_avx512f; }
+bool Platform::HasSSE3() const
+{
+	return m_sse3;
+}
+bool Platform::HasSSE41() const
+{
+	return m_sse41;
+}
+bool Platform::HasSSE42() const
+{
+	return m_sse42;
+}
+bool Platform::HasAVX1() const
+{
+	return m_avx1;
+}
+bool Platform::HasAVX2() const
+{
+	return m_avx2;
+}
+bool Platform::HasAVX512F() const
+{
+	return m_avx512f;
+}
 
-std::uint32_t Platform::GetCPUCount() const { return m_cpu_count; }
-std::uint32_t Platform::GetRamSize() const { return m_ram_size; }
-std::uint32_t Platform::GetCacheLineSize() const { return m_cache_line_size; }
+std::uint32_t Platform::GetCPUCount() const
+{
+	return m_cpu_count;
+}
+std::uint32_t Platform::GetRamSize() const
+{
+	return m_ram_size;
+}
+std::uint32_t Platform::GetCacheLineSize() const
+{
+	return m_cache_line_size;
+}
+
+std::uint64_t Platform::GetTime() const
+{
+	return SDL_GetTicks64();
+}
 }  // namespace yz

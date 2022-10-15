@@ -24,6 +24,8 @@ public:
 	std::uint32_t GetRamSize() const;
 	std::uint32_t GetCacheLineSize() const;
 
+	std::uint64_t GetTime() const;
+
 private:
 	bool m_inited {false};
 
