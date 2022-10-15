@@ -2,6 +2,7 @@
 
 #include <Core/yzBase.hpp>
 #include <Core/yzEvent.hpp>
+#include <Input/yzInputCodes.hpp>
 #include <Math/yzVector2.hpp>
 
 #include <yzSTD.hpp>
@@ -14,18 +15,28 @@ class Window
 {
 public:
 	Event<Vec2u> ResizeEvent;
-	Event<Vec2u> MoveEvent;
 	Event<>      CloseEvent;
 	Event<>      ActiveEvent;
 	Event<>      DeactiveEvent;
 
+	Event<std::bitset<static_cast<std::size_t>(Key::Count)>&,
+	      std::bitset<static_cast<std::size_t>(Key::Count)>&>
+	        KeyEvent;
+
+	Event<std::bitset<static_cast<std::size_t>(MouseButton::Count)>&,
+	      std::bitset<static_cast<std::size_t>(MouseButton::Count)>&>
+	        MouseButtonEvent;
+
+	Event<Vec2> MouseMotionEvent;
+	Event<Vec2> MouseWheelEvent;
+
 public:
 	Window(Application& app);
 
-	Window(const Window&)            = delete;
+	Window(const Window&) = delete;
 	Window& operator=(const Window&) = delete;
 
-	Window(Window&&)            = delete;
+	Window(Window&&) = delete;
 	Window& operator=(Window&&) = delete;
 
 	void Init(bool resizable = true, bool borderless = false);
@@ -75,5 +86,11 @@ private:
 	Application&  m_app;
 	std::string   m_title;
 	std::uint32_t m_id;
+
+	std::bitset<static_cast<std::size_t>(Key::Count)> m_key_downs;
+	std::bitset<static_cast<std::size_t>(Key::Count)> m_key_presses;
+
+	std::bitset<static_cast<std::size_t>(MouseButton::Count)> m_mouse_downs;
+	std::bitset<static_cast<std::size_t>(MouseButton::Count)> m_mouse_presses;
 };
 }  // namespace yz

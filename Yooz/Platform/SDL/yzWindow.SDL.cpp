@@ -75,8 +75,12 @@ void Window::Destroy()
 
 void Window::Update()
 {
-	SDL_Event   e {0};
-	SDL_Keycode key {0}, lastkey {0};
+	SDL_Event    e {0};
+	SDL_Scancode sc {SDL_SCANCODE_UNKNOWN};
+
+	std::bitset<static_cast<std::size_t>(Key::Count)> last_states = m_key_downs;
+	std::bitset<static_cast<std::size_t>(MouseButton::Count)> last_mouse_states =
+	        m_mouse_downs;
 
 	while(SDL_PollEvent(&e))
 	{
@@ -86,24 +90,59 @@ void Window::Update()
 
 		case SDL_KEYDOWN:
 		{
-			// this does not work
-			// is this a bug in SDL?
+			SDL_Keysym ks = e.key.keysym;
+
+			sc = ks.scancode;
+			if(sc > 255)
+				break;
+
 			if(m_allow_alt_f4)
 			{
-				lastkey = key;
-				key     = e.key.keysym.sym;
-				if((lastkey == SDLK_LALT || lastkey == SDLK_RALT) && key == SDLK_F4)
+				if(((ks.mod & KMOD_LALT) || (ks.mod & KMOD_RALT)) &&
+				   ks.scancode == SDL_SCANCODE_F4)
 				{
 					e.type = SDL_QUIT;
 					SDL_PushEvent(&e);
 				}
 			}
+
+			m_key_downs[sc] = 1;
 		}
 		break;
 
 		case SDL_KEYUP:
 		{
-			// nothing here
+			sc = e.key.keysym.scancode;
+
+			if(sc > 255)
+				break;
+
+			m_key_downs[sc] = 0;
+		}
+		break;
+
+		case SDL_MOUSEBUTTONUP:
+		{
+			m_mouse_downs[e.button.button] = 1;
+		}
+		break;
+
+		case SDL_MOUSEBUTTONDOWN:
+		{
+			m_mouse_downs[e.button.button] = 0;
+		}
+		break;
+
+		case SDL_MOUSEMOTION:
+		{
+			MouseMotionEvent.Raise(Vec2 {static_cast<float>(e.button.x),
+			                             static_cast<float>(e.button.y)});
+		}
+		break;
+
+		case SDL_MOUSEWHEEL:
+		{
+			MouseWheelEvent.Raise(Vec2 {e.wheel.preciseX, e.wheel.preciseY});
 		}
 		break;
 
@@ -116,10 +155,6 @@ void Window::Update()
 			case SDL_WINDOWEVENT_RESIZED:
 			case SDL_WINDOWEVENT_SIZE_CHANGED:
 				ResizeEvent.Raise(Vec2u {e.window.data1, e.window.data2});
-				break;
-
-			case SDL_WINDOWEVENT_MOVED:
-				MoveEvent.Raise(Vec2u {e.window.data1, e.window.data2});
 				break;
 
 			case SDL_WINDOWEVENT_FOCUS_GAINED:
@@ -139,6 +174,13 @@ void Window::Update()
 			}
 		}
 	}
+
+	m_key_presses   = ~last_states & m_key_downs;
+	m_mouse_presses = ~last_mouse_states & m_mouse_downs;
+
+	KeyEvent.Raise(m_key_downs, m_key_presses);
+
+	MouseButtonEvent.Raise(m_mouse_downs, m_mouse_presses);
 }
 
 Handle Window::GetHandle() const
@@ -194,7 +236,6 @@ Vec2u Window::GetPosition() const
 void Window::SetPosition(Vec2u pos)
 {
 	SDL_SetWindowPosition(static_cast<SDL_Window*>(m_handle), pos.x, pos.y);
-	MoveEvent.Raise(pos);
 }
 
 const std::string& Window::GetTitle() const
