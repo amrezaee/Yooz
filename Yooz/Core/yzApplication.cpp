@@ -1,65 +1,39 @@
 #include <Core/yzApplication.hpp>
 
+#include <Core/yzAssert.hpp>
 #include <Core/yzLogger.hpp>
 #include <Core/yzTimer.hpp>
-#include <Graphics/yzCamera.hpp>
-#include <Graphics/yzShader.hpp>
 #include <Math/yzTransform.hpp>
 
 namespace yz
 {
-Application::Application(AppSpecs& specs)
-        : m_specs(specs), m_window(*this), m_renderer(m_graphics_device)
+Application::Application(AppSpecs& specs): m_specs(specs), m_window(*this)
 {
 }
 
 void Application::Run()
 {
+	Timer timer;
+
 	Init();
 
-	Timer timer;
-	float delta_time {0.0f};
-
-	m_graphics_device.SetClearColor(Color::YELLOW);
+	OnInit();
 
 	while(m_running)
 	{
-		// TODO: may be convert Color class to abgr?
-		// Game loop timing
 		timer.Stop();
-		delta_time = timer.Elapsed();
+		m_delta_time = timer.Elapsed();
 		timer.Reset();
+
+		m_window.Update();
 
 		if(!m_suspended)
 		{
-			// TODO: begin whitout camera sets camera to wrong position
-			m_renderer.Begin();
-
-			Vec2 pos(0.0f, -270.0f);
-			for(unsigned int i = 0; i < 200; ++i)
-			{
-				pos.x = -480.0f;
-				for(unsigned int j = 0; j < 200; ++j)
-				{
-					m_renderer.DrawQuad(Color::BLACK, pos, {4}, 0.0f);
-					pos.x += 5;
-				}
-				pos.y += 5;
-			}
-			float s = (float)SDL_GetTicks64() * 0.004f;
-			m_renderer.DrawQuad(Color::AZURE, {0, 0},
-			                    {128.0f * std::sin(s), 128.0f * std::sin(s)},
-			                    (float)SDL_GetTicks64() * 0.05f);
-
-			m_renderer.End();
-
-			/*YZ_TRACE("Draw Calls: %d  Quads: %d", m_renderer.GetStats().draw_calls,
-			         m_renderer.GetStats().quads);*/
+			OnUpdate(m_delta_time);
+			OnRender(m_delta_time);
 
 			m_graphics_device.SwapBuffers();
 		}
-
-		m_window.Update();
 	}
 
 	Destroy();
@@ -68,6 +42,14 @@ void Application::Run()
 void Application::Init()
 {
 	YZ_ASSERT(!m_inited);
+
+	std::error_code code;
+
+	if(!m_specs.working_dir.empty())
+	{
+		fs::current_path(m_specs.working_dir, code);
+		// YZ_ERROR(code, code.message().c_str());
+	}
 
 	m_platform.Init();
 
@@ -78,8 +60,6 @@ void Application::Init()
 
 	m_graphics_device.Init(m_specs.graphics_params, m_window);
 
-	m_renderer.Init();
-
 	m_inited = true;
 }
 
@@ -87,9 +67,12 @@ void Application::Destroy()
 {
 	YZ_ASSERT(m_inited);
 
-	m_renderer.Destroy();
-
 	m_graphics_device.Destroy();
+
+	m_window.CloseEvent.Remove(this, &Application::OnWindowClose);
+	m_window.ActiveEvent.Remove(this, &Application::OnWindowActive);
+	m_window.DeactiveEvent.Remove(this, &Application::OnWindowDeactive);
+	m_window.ResizeEvent.Remove(this, &Application::OnWindowResize);
 
 	m_window.Destroy();
 
@@ -151,7 +134,6 @@ void Application::OnWindowClose()
 void Application::OnWindowResize(Vec2u size)
 {
 	m_graphics_device.UpdateViewport(size);
-
-	m_renderer.OnResize(size);
+	OnResize(size.x, size.y);
 }
 }  // namespace yz

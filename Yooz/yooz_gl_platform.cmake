@@ -3,7 +3,7 @@ add_library(yooz_gl STATIC ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/glad/gl.c)
 
 target_include_directories(yooz_gl PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/glad/)
 
-target_link_libraries(Yooz PRIVATE yooz_gl)
+target_link_libraries(Yooz PUBLIC yooz_gl)
 
 target_sources(Yooz PRIVATE
 

@@ -13,6 +13,7 @@ set(VCPKG_INSTALL_OPTIONS "--no-print-usage")
 #--------------------------------------------------------------------------------------------------
 option(YZ_STATIC_CRT  "Use static CRT. (msvc only)" OFF)
 option(YZ_BUILD_TESTS "Build tests"                 OFF)
+option(YZ_BUILD_SANDBOX "Build Sandbox project"     ON)
 
 if(YZ_BUILD_TEST)
 	list(APPEND VCPKG_MANIFEST_FEATURES "tests")
@@ -122,4 +123,8 @@ add_subdirectory(Yooz)
 
 if(YZ_BUILD_TESTS)
 	add_subdirectory(Tests)
-endif()
+endif(YZ_BUILD_TESTS)
+
+if(YZ_BUILD_SANDBOX)
+	add_subdirectory(Sandbox)
+endif(YZ_BUILD_SANDBOX)

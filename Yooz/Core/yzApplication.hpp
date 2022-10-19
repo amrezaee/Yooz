@@ -1,11 +1,8 @@
 #pragma once
 
-#include <Core/yzAssert.hpp>
 #include <Core/yzWindow.hpp>
 #include <Graphics/yzGraphicsDevice.hpp>
 #include <Graphics/yzGraphicsParams.hpp>
-#include <Graphics/yzRenderer.hpp>
-#include <Math/yzRectangle.hpp>
 #include <Platform/yzPlatform.hpp>
 
 #include <yzDeps.hpp>
@@ -25,6 +22,10 @@ class Application
 public:
 	Application(AppSpecs& specs);
 
+	virtual void OnInit()                                 = 0;
+	virtual void OnUpdate(float dt)                       = 0;
+	virtual void OnRender(float dt)                       = 0;
+	virtual void OnResize(unsigned int w, unsigned int h) = 0;
 
 	const AppSpecs& GetSpecs() const;
 
@@ -58,10 +59,14 @@ private:
 	bool m_suspended {false};
 	bool m_show_cursor {true};
 
+	float m_delta_time {0.0f};
+
+protected:
 	AppSpecs       m_specs;
 	Platform       m_platform;
 	Window         m_window;
 	GraphicsDevice m_graphics_device;
-	Renderer       m_renderer;
 };
+
+std::unique_ptr<Application> CreateApp();
 }  // namespace yz

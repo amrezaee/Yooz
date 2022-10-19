@@ -4,11 +4,10 @@
 find_package(SDL2 REQUIRED QUIET)
 find_package(ghc_filesystem REQUIRED QUIET)
 
-
 #--------------------------------------------------------------------------------------------------
 # SETUP YOOZ TARGET
 #--------------------------------------------------------------------------------------------------
-add_executable(Yooz)
+add_library(Yooz STATIC)
 
 #--------------------------------------------------------------------------------------------------
 # OPENGL SPECIFIC
@@ -17,23 +16,18 @@ if(YZ_GL_PLATFORM)
 	include(yooz_gl_platform.cmake)
 endif(YZ_GL_PLATFORM)
 
-
 #--------------------------------------------------------------------------------------------------
 # YOOZ CONFIGS
 #--------------------------------------------------------------------------------------------------
-set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT Yooz)
-
 target_precompile_headers(Yooz PRIVATE "yzSTD.hpp" "yzDeps.hpp")
 
-target_include_directories(Yooz PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/)
+target_include_directories(Yooz PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/)
 
-target_link_libraries(Yooz PRIVATE 
+target_link_libraries(Yooz PUBLIC 
 							SDL2::SDL2 SDL2::SDL2main SDL2::SDL2-static
 							ghcFilesystem::ghc_filesystem)
 
-set_target_properties(Yooz PROPERTIES WIN32_EXECUTABLE $<IF:$<CONFIG:Release>,TRUE,FALSE>)
-
-target_compile_definitions(Yooz PRIVATE
+target_compile_definitions(Yooz PUBLIC
 	$<$<CONFIG:Debug>:YZ_DEBUG_BUILD>
 	$<$<CONFIG:RelWithDebInfo>:YZ_PROFILE_BUILD>
 	$<$<CONFIG:Release>:YZ_RELEASE_BUILD>
@@ -60,10 +54,13 @@ target_compile_definitions(Yooz PRIVATE
 
 if(YZ_COMPILER_MSVC)
 
-	target_compile_options(Yooz PRIVATE /options:strict /permissive- /W4 /MP /GR- /nologo)
+	target_compile_options(Yooz PUBLIC  /GR-
+								PRIVATE /options:strict /permissive- /W4 /MP /nologo)
 
-	target_compile_definitions(Yooz PRIVATE _ITERATOR_DEBUG_LEVEL=0 
-											_HAS_EXCEPTIONS=0 
+	target_compile_definitions(Yooz PUBLIC _ITERATOR_DEBUG_LEVEL=0 
+											_HAS_EXCEPTIONS=0
+
+									PRIVATE
 											_CRT_SECURE_NO_WARNINGS
 											WIN32_LEAN_AND_MEAN
 											NOMINMAX

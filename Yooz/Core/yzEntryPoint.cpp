@@ -1,17 +1,18 @@
 #include <Core/yzApplication.hpp>
 
-#include <yzDeps.hpp>
-#include <yzSTD.hpp>
+#include <yzDeps.hpp>  // for SDL_main
+#include <yzSTD.hpp>   // for unique_ptr
 
+
+extern std::unique_ptr<yz::Application> yz::CreateApp();
 
 extern "C" int main(int argc, char** argv)
 {
 	(void)argc;
 	(void)argv;
 
-	yz::AppSpecs as {"Yooz Engine", "/"};
 
-	std::unique_ptr<yz::Application> app = xtd::make_unique<yz::Application>(as);
+	std::unique_ptr<yz::Application> app = yz::CreateApp();
 
 	app->Run();
 
