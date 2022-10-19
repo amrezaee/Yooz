@@ -1,5 +1,6 @@
 #pragma once
 
+#include <yzDeps.hpp>
 #include <yzSTD.hpp>
 
 #define LOGURU_RTTI 0
@@ -25,23 +26,52 @@ public:
 	static void Init(int argc, char** argv);
 
 	static void SetVerbosity(Verbosity v);
-
 	static void SetFilePreamble(bool enable);
 	static void SetVerbosityPreamble(bool enable);
-};
 
+	template<typename... Args>
+	static void Log(Verbosity v, const char* fmt, const Args&... args)
+	{
+		VLOG_F(static_cast<int>(v), fmt, Argument(args)...);
+	}
+
+	template<typename... Args>
+	static void LogDebug(const char* fmt, const Args&... args)
+	{
+		DVLOG_F(static_cast<int>(Verbosity::Debug), fmt, Argument(args)...);
+	}
+
+private:
+	template<typename T>
+	static T Argument(T t)
+	{
+		return t;
+	}
+
+	template<typename T>
+	static const T* Argument(const std::basic_string<T>& s)
+	{
+		return s.c_str();
+	}
+
+	template<typename T>
+	static const T* Argument(const fs::path& p)
+	{
+		return p.generic_string().c_str();
+	}
+};
 }  // namespace yz
 
-#define YZ_DEBUG(...) DLOG_F(1, "\033[38;5;248m" __VA_ARGS__)
+#define YZ_DEBUG(...) yz::Logger::LogDebug(__VA_ARGS__)
 
-#define YZ_INFO(...)  LOG_F(INFO, "\033[38;5;2m" __VA_ARGS__)
-#define YZ_SINFO(...) LOG_SCOPE_F(INFO, "\033[38;5;2m" __VA_ARGS__)
+#define YZ_INFO(...)  yz::Logger::Log(yz::Verbosity::Info, __VA_ARGS__)
+#define YZ_SINFO(...) LOG_SCOPE_F(INFO, __VA_ARGS__)
 
-#define YZ_WARN(...)  LOG_F(WARNING, __VA_ARGS__)
-#define YZ_SWARN(...) LOG_SCOPE_F(WARNING, __VA_ARGS__)
+#define YZ_WARN(...)  yz::Logger::Log(yz::Verbosity::Warn, __VA_ARGS__)
+#define YZ_SWARN(...) LOG_SCOPE_F(WARN, __VA_ARGS__)
 
-#define YZ_ERROR(...)  LOG_F(ERROR, __VA_ARGS__)
+#define YZ_ERROR(...)  yz::Logger::Log(yz::Verbosity::Error, __VA_ARGS__)
 #define YZ_SERROR(...) LOG_SCOPE_F(ERROR, __VA_ARGS__)
 
-#define YZ_FATAL(...)  LOG_F(FATAL, __VA_ARGS__)
+#define YZ_FATAL(...)  yz::Logger::Log(yz::Verbosity::Fatal, __VA_ARGS__)
 #define YZ_SFATAL(...) LOG_SCOPE_F(FATAL, __VA_ARGS__)
