@@ -99,6 +99,8 @@ std::uint32_t Platform::GetCacheLineSize() const
 
 std::uint64_t Platform::GetTime() const
 {
-	return SDL_GetTicks64();
+	// convert frequency resolution from seconds to microseconds
+	static const std::uint64_t freq = SDL_GetPerformanceFrequency() / 1000000;
+	return SDL_GetPerformanceCounter() / freq;
 }
 }  // namespace yz
