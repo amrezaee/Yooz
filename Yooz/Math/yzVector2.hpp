@@ -80,10 +80,12 @@ struct Vector2
 		return v.Normalize();
 	}
 
-	constexpr bool IsNorm() const { return Length() == static_cast<T>(1); }
+	bool IsNorm() const { return Length() == static_cast<T>(1); }
 
 	constexpr const T* GetPtr() const { return &x; }
 
+	void Zero() { y = x = static_cast<T>(0); }
+	void One() { y = x = static_cast<T>(1); }
 
 	inline T& operator[](int i) { return i ? y : x; }
 	inline T  operator[](int i) const { return i ? y : x; }
