@@ -10,6 +10,8 @@ void Platform::Init()
 	if(m_inited)
 		return;
 
+	YZ_SINFO("Platform initialization.");
+
 	int code = SDL_Init(SDL_INIT_EVERYTHING);
 	YZ_ASSERT(code == 0, SDL_GetError());
 
@@ -28,18 +30,16 @@ void Platform::Init()
 	m_cache_line_size = static_cast<std::uint32_t>(SDL_GetCPUCacheLineSize());
 	m_ram_size        = static_cast<std::uint32_t>(SDL_GetSystemRAM());
 
-	YZ_INFO("Initializing platform...");
-	YZ_INFO("\tPlatform: %s", m_name);
-	YZ_INFO("\t#CPUs:    %u", m_cpu_count);
-	YZ_INFO("\tL1 line:  %d bytes", m_cache_line_size);
-	YZ_INFO("\tRam size: %u Mib", m_ram_size);
-	YZ_INFO("\tSSE3:     %s", m_sse3 ? "Supported" : "Not supported");
-	YZ_INFO("\tSSE4.1:   %s", m_sse41 ? "Supported" : "Not supported");
-	YZ_INFO("\tSSE4.2:   %s", m_sse42 ? "Supported" : "Not supported");
-	YZ_INFO("\tAVX1:     %s", m_avx1 ? "Supported" : "Not supported");
-	YZ_INFO("\tAVX2:     %s", m_avx2 ? "Supported" : "Not supported");
-	YZ_INFO("\tAVX512F:  %s", m_avx512f ? "Supported" : "Not supported");
-	YZ_INFO("Platform Initialized.");
+	YZ_INFO("Platform: %s", m_name);
+	YZ_INFO("#CPUs:    %u", m_cpu_count);
+	YZ_INFO("L1 line:  %d bytes", m_cache_line_size);
+	YZ_INFO("Ram size: %u Mib", m_ram_size);
+	YZ_INFO("SSE3:     %s", m_sse3 ? "Supported" : "Not supported");
+	YZ_INFO("SSE4.1:   %s", m_sse41 ? "Supported" : "Not supported");
+	YZ_INFO("SSE4.2:   %s", m_sse42 ? "Supported" : "Not supported");
+	YZ_INFO("AVX1:     %s", m_avx1 ? "Supported" : "Not supported");
+	YZ_INFO("AVX2:     %s", m_avx2 ? "Supported" : "Not supported");
+	YZ_INFO("AVX512F:  %s", m_avx512f ? "Supported" : "Not supported");
 
 	m_inited = true;
 }

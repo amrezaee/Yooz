@@ -1,34 +1,23 @@
 #include <Core/yzAssert.hpp>
 
-#include <Platform/yzMessageBox.hpp>
+#include <Core/yzLogger.hpp>
 
 #include <yzSTD.hpp>
 
 #ifndef YZ_DISABLE_ASSERTION
 
-constexpr std::size_t buffer_size         = 256;
-char                  buffer[buffer_size] = {'\0'};
-
-void yzOutputAssertionFailure(const char* const expr, const char* const msg,
-                              const char* const file, const int line)
+void yzOutputAssertionFailure(const char* expr, const char* msg, const char* file,
+                              const int line)
 {
-	if(*msg != '\0')  // with message
+	if(*msg)  // with message
 	{
-		std::snprintf(buffer, buffer_size, "ASSERTION FAILED\n %s", msg);
-		yz::MessageBoxFatal(buffer);
+		YZ_FATAL("%s", msg);
 	}
 	else  // without message
 	{
-		// TODO: REMOVE THIS
-		const char* filename = std::strrchr(file, '/');
-		if(!filename)
-			filename = std::strrchr(file, '\\') + 1;
-		else
-			++filename;
-
-		std::snprintf(buffer, buffer_size, "ASSERTION %s FAILED at  %s:%d", expr,
-		              ++filename, line);
-		yz::MessageBoxFatal(buffer);
+		fs::path p(file);
+		YZ_FATAL("Assertion %s Failed at  %s:%d", expr,
+		         p.filename().generic_string().c_str(), line);
 	}
 }
 

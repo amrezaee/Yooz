@@ -1,60 +1,39 @@
 #include <Core/yzLogger.hpp>
 
+#include <loguru/loguru.cpp>
+
+#include <Platform/yzMessageBox.hpp>
+
 namespace yz
 {
-Logger::~Logger()
+void Logger::Init(int argc, char** argv)
 {
-	if(!m_filename.empty()) std::fclose(m_file);
+	loguru::g_preamble_date    = false;
+	loguru::g_preamble_time    = false;
+	loguru::g_preamble_thread  = false;
+	loguru::g_preamble_verbose = false;
+	loguru::g_stderr_verbosity = loguru::Verbosity_1;
+
+	loguru::init(argc, argv);
+
+	loguru::set_fatal_handler(
+	        [](const loguru::Message& message)
+	        {
+		        MessageBoxFatal(message.message);
+	        });
 }
 
-Logger& Logger::Get()
+void Logger::SetVerbosity(Verbosity v)
 {
-	static Logger logger;
-	return logger;
+	loguru::g_stderr_verbosity = static_cast<int>(v);
 }
 
-void Logger::EnableFileLogging(const std::string& file)
+void Logger::SetFilePreamble(bool enable)
 {
-	m_filename     = file;
-	m_file_logging = true;
-
-	m_file = std::fopen(file.c_str(), "w");
+	loguru::g_preamble_file = enable;
 }
-
-void Logger::DisableFileLogging()
+void Logger::SetVerbosityPreamble(bool enable)
 {
-	m_file_logging = false;
-	if(!m_filename.empty()) std::fclose(m_file);
-}
-
-void Logger::SetConsoleLogging(bool on) { m_console_logging = on; }
-
-void Logger::SetLevel(LogLevel target) { m_level = target; }
-
-LogLevel Logger::GetLevel() const { return m_level; }
-
-void Logger::SetLevelPreamble(bool on) { m_preamble_level = on; }
-
-void Logger::SetFuncPreamble(bool on) { m_preamble_func = on; }
-
-void Logger::SetFilePreamble(bool on) { m_preamble_file = on; }
-
-void Logger::SetLinePreamble(bool on) { m_preamble_line = on; }
-
-bool Logger::IsLevelDisabled(const LogLevel level)
-{
-	return (m_level == LogLevel::None || level < m_level ||
-	        level <= LogLevel::Max || level >= LogLevel::None);
-}
-
-// TODO: remove this and use path type
-
-const char* Logger::GetBaseName(const char* path)
-{
-	const char* filename = std::strrchr(path, '/');
-	if(!filename)
-		return std::strrchr(path, '\\') + 1;
-	else
-		return ++filename;
+	loguru::g_preamble_verbose = enable;
 }
 }  // namespace yz

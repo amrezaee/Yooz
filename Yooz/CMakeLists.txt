@@ -21,11 +21,13 @@ endif(YZ_GL_PLATFORM)
 #--------------------------------------------------------------------------------------------------
 target_precompile_headers(Yooz PRIVATE "yzSTD.hpp" "yzDeps.hpp")
 
-target_include_directories(Yooz PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/)
+target_include_directories(Yooz PUBLIC	${CMAKE_CURRENT_SOURCE_DIR}/
+										${CMAKE_CURRENT_SOURCE_DIR}/Thirdparty/)
 
 target_link_libraries(Yooz PUBLIC 
 							SDL2::SDL2 SDL2::SDL2main SDL2::SDL2-static
-							ghcFilesystem::ghc_filesystem)
+							ghcFilesystem::ghc_filesystem
+)
 
 target_compile_definitions(Yooz PUBLIC
 	$<$<CONFIG:Debug>:YZ_DEBUG_BUILD>

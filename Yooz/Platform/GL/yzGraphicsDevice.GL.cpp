@@ -85,7 +85,7 @@ void GraphicsDevice::Init(GraphicsParams& params, Window& window)
 {
 	YZ_ASSERT(!m_inited);
 
-	YZ_INFO("Initializing graphics device...");
+	YZ_SINFO("Graphics Device Initialization.");
 
 	m_params = params;
 
@@ -116,37 +116,27 @@ void GraphicsDevice::Init(GraphicsParams& params, Window& window)
 
 	m_features.Init();
 
-	YZ_INFO("\tVendor:       %s", glGetString(GL_VENDOR));
-	YZ_INFO("\tRenderer:     %s", glGetString(GL_RENDERER));
-	YZ_INFO("\tProfile:      Core");
-	YZ_INFO("\tVersion:      %s", glGetString(GL_VERSION));
-	YZ_INFO("\tGLSL Version: %s", glGetString(GL_SHADING_LANGUAGE_VERSION));
+	YZ_INFO("Vendor:    %s", glGetString(GL_VENDOR));
+	YZ_INFO("Renderer:  %s", glGetString(GL_RENDERER));
+	YZ_INFO("Version:   %s", glGetString(GL_VERSION));
+	YZ_INFO("GLSL Ver.: %s", glGetString(GL_SHADING_LANGUAGE_VERSION));
 
-	YZ_INFO("\tDriver:       %s", m_features.GetDriverName());
+	YZ_INFO("Driver:    %s", m_features.GetDriverName());
 
-	YZ_INFO("\tTotal texture units: %i", m_features.TotalTextureUnits());
-	YZ_INFO("\tTotal texture units available in fragment shader: %i",
-	        m_features.FragmentShaderTextureUnits());
+	YZ_INFO("Texture Units:        %i", m_features.TotalTextureUnits());
+	YZ_INFO("Shader Texture Units: %i", m_features.FragmentShaderTextureUnits());
 
-	YZ_INFO("\tDXT1:         %s",
-	        m_features.HasDXT1() ? "Supported" : "Not supported");
+	YZ_INFO("DXT1:  %s", m_features.HasDXT1() ? "Supported" : "Not supported");
 
-	YZ_INFO("\tS3TC:         %s",
-	        m_features.HasS3TC() ? "Supported" : "Not supported");
+	YZ_INFO("S3TC:  %s", m_features.HasS3TC() ? "Supported" : "Not supported");
 
-	YZ_INFO("\tPVRTC:        %s",
-	        m_features.HasPVRTC() ? "Supported" : "Not supported");
+	YZ_INFO("PVRTC: %s", m_features.HasPVRTC() ? "Supported" : "Not supported");
 
-	YZ_INFO("\tETC1:         %s",
-	        m_features.HasETC1() ? "Supported" : "Not supported");
+	YZ_INFO("ETC1:  %s", m_features.HasETC1() ? "Supported" : "Not supported");
 
-	YZ_INFO("\tETC2:         %s",
-	        m_features.HasETC2() ? "Supported" : "Not supported");
+	YZ_INFO("ETC2:  %s", m_features.HasETC2() ? "Supported" : "Not supported");
 
-	YZ_INFO("\tATITC:        %s",
-	        m_features.HasATITC() ? "Supported" : "Not supported");
-
-	YZ_INFO("Graphics device created.");
+	YZ_INFO("ATITC: %s", m_features.HasATITC() ? "Supported" : "Not supported");
 
 	m_inited = true;
 }
@@ -240,10 +230,7 @@ void GLDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severity,
 	}
 
 	if(type == GL_DEBUG_TYPE_ERROR || type == GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR)
-	{
-		YZ_ERROR("OpenGL %s in %s: %s", tp, src, message);
-		YZ_ASSERT(0);
-	}
+		YZ_FATAL("OpenGL %s in %s: %s", tp, src, message);
 	else
 		YZ_WARN("OpenGL %s in %s: %s", tp, src, message);
 }

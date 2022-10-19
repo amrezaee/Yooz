@@ -4,27 +4,25 @@
 
 #ifndef YZ_DISABLE_ASSERTION
 
-void yzOutputAssertionFailure(const char* const expr, const char* const msg,
-                              const char* const file, const int line);
+void yzOutputAssertionFailure(const char* expr, const char* msg, const char* file,
+                              const int line);
 
-	#define YZ_ASSERT_IMPL_(expr)                                    \
-		{                                                            \
-			if(!(expr))                                              \
-			{                                                        \
-				yzOutputAssertionFailure(YZ_STR(expr), "", __FILE__, \
-				                         __LINE__);                  \
-				YZ_DEBUGBREAK();                                     \
-			}                                                        \
+	#define YZ_ASSERT_IMPL_(expr)                                               \
+		{                                                                       \
+			if(!(expr))                                                         \
+			{                                                                   \
+				yzOutputAssertionFailure(YZ_STR(expr), "", __FILE__, __LINE__); \
+				YZ_DEBUGBREAK();                                                \
+			}                                                                   \
 		}
 
-	#define YZ_ASSERT_MSG_IMPL_(expr, msg)                              \
-		{                                                               \
-			if(!(expr))                                                 \
-			{                                                           \
-				yzOutputAssertionFailure(YZ_STR(expr), (msg), __FILE__, \
-				                         __LINE__);                     \
-				YZ_DEBUGBREAK();                                        \
-			}                                                           \
+	#define YZ_ASSERT_MSG_IMPL_(expr, msg)                                         \
+		{                                                                          \
+			if(!(expr))                                                            \
+			{                                                                      \
+				yzOutputAssertionFailure(YZ_STR(expr), (msg), __FILE__, __LINE__); \
+				YZ_DEBUGBREAK();                                                   \
+			}                                                                      \
 		}
 
 	#define YZ_GET_MACRO_NAME_(_1, _2, macro, ...) macro

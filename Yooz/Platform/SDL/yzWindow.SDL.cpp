@@ -16,7 +16,7 @@ void Window::Init(bool resizable, bool borderless)
 {
 	YZ_ASSERT(!m_inited);
 
-	YZ_INFO("Creating window...");
+	YZ_SINFO("Window Creation.");
 
 	m_title              = m_app.GetSpecs().name;
 	std::uint32_t width  = m_app.GetGraphicsDevice().GetParams().GetBufferWidth();
@@ -52,7 +52,8 @@ void Window::Init(bool resizable, bool borderless)
 
 	ActiveEvent.Raise();
 
-	YZ_INFO("Window created.");
+	YZ_INFO("Width:  %u", width);
+	YZ_INFO("Height: %u", height);
 
 	m_inited = true;
 }
