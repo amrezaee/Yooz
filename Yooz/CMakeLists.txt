@@ -19,7 +19,7 @@ endif(YZ_GL_PLATFORM)
 #--------------------------------------------------------------------------------------------------
 # YOOZ CONFIGS
 #--------------------------------------------------------------------------------------------------
-target_precompile_headers(Yooz PRIVATE "yzSTD.hpp" "yzDeps.hpp")
+target_precompile_headers(Yooz PRIVATE "yzpch.hpp")
 
 target_include_directories(Yooz PUBLIC	${CMAKE_CURRENT_SOURCE_DIR}/
 										${CMAKE_CURRENT_SOURCE_DIR}/Thirdparty/)

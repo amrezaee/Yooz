@@ -1,6 +1,6 @@
 #pragma once
 
-#include <yzDeps.hpp>
+#include <yzpch.hpp>
 
 namespace yz
 {

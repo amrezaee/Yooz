@@ -4,7 +4,7 @@
 #include <Core/yzAssert.hpp>
 #include <Core/yzLogger.hpp>
 
-#include <yzDeps.hpp>
+#include <yzpch.hpp>
 
 namespace yz
 {

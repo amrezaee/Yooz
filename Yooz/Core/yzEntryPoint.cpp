@@ -1,7 +1,6 @@
 #include <Core/yzApplication.hpp>
 
-#include <yzDeps.hpp>  // for SDL_main
-#include <yzSTD.hpp>   // for unique_ptr
+#include <yzpch.hpp>
 
 extern std::unique_ptr<yz::Application> yz::CreateApp();
 

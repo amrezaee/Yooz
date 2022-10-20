@@ -1,4 +1,3 @@
-// Precompiled header for standard library
 #pragma once
 
 #include <algorithm>
@@ -63,3 +62,12 @@ typename _Unique_if<T>::_Known_bound make_unique(Args&&...) = delete;
 #else
 namespace xtd = std;
 #endif
+
+#ifdef YZ_GL_PLATFORM
+	#include <glad/gl.h>
+#endif
+
+#include <SDL.h>
+
+#include <ghc/filesystem.hpp>
+namespace fs = ghc::filesystem;

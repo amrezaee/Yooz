@@ -2,7 +2,7 @@
 
 // C++ 11 Delegate Based on Don Clugston's FastDelegate
 
-#include <yzSTD.hpp>
+#include <yzpch.hpp>
 
 #if defined(_MSC_VER)
 	#define FASTDLGT_MICROSOFT_MFP

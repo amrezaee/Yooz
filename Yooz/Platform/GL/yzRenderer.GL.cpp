@@ -2,7 +2,7 @@
 
 #include <Core/yzAssert.hpp>
 
-#include <yzDeps.hpp>
+#include <yzpch.hpp>
 
 namespace yz
 {

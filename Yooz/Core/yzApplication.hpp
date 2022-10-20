@@ -5,8 +5,7 @@
 #include <Graphics/yzGraphicsParams.hpp>
 #include <Platform/yzPlatform.hpp>
 
-#include <yzDeps.hpp>
-#include <yzSTD.hpp>
+#include <yzpch.hpp>
 
 namespace yz
 {

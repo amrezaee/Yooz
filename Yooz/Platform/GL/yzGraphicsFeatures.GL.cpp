@@ -2,13 +2,14 @@
 
 #include <Core/yzLogger.hpp>
 
-#include <yzDeps.hpp>
+#include <yzpch.hpp>
 
 namespace yz
 {
 void GraphicsFeatures::Init()
 {
-	if(m_inited) return;
+	if(m_inited)
+		return;
 
 	m_driver = SDL_GetCurrentVideoDriver();
 	m_s3tc   = GLAD_GL_EXT_texture_compression_s3tc;
@@ -24,13 +25,34 @@ void GraphicsFeatures::Init()
 	m_inited = true;
 }
 
-const char* GraphicsFeatures::GetDriverName() const { return m_driver; }
-bool        GraphicsFeatures::HasDXT1() const { return m_dxt1; }
-bool        GraphicsFeatures::HasS3TC() const { return m_s3tc; }
-bool        GraphicsFeatures::HasPVRTC() const { return m_pvrtc; }
-bool        GraphicsFeatures::HasETC1() const { return m_etc1; }
-bool        GraphicsFeatures::HasETC2() const { return m_etc2; }
-bool        GraphicsFeatures::HasATITC() const { return m_atitc; }
+const char* GraphicsFeatures::GetDriverName() const
+{
+	return m_driver;
+}
+bool GraphicsFeatures::HasDXT1() const
+{
+	return m_dxt1;
+}
+bool GraphicsFeatures::HasS3TC() const
+{
+	return m_s3tc;
+}
+bool GraphicsFeatures::HasPVRTC() const
+{
+	return m_pvrtc;
+}
+bool GraphicsFeatures::HasETC1() const
+{
+	return m_etc1;
+}
+bool GraphicsFeatures::HasETC2() const
+{
+	return m_etc2;
+}
+bool GraphicsFeatures::HasATITC() const
+{
+	return m_atitc;
+}
 
 std::int32_t GraphicsFeatures::TotalTextureUnits() const
 {

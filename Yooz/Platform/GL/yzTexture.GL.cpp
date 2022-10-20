@@ -1,6 +1,6 @@
 #include <Graphics/yzTexture.hpp>
 
-#include <yzDeps.hpp>
+#include <yzpch.hpp>
 
 namespace yz
 {

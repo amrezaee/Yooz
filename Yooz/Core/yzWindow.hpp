@@ -5,7 +5,7 @@
 #include <Input/yzInputCodes.hpp>
 #include <Math/yzVector2.hpp>
 
-#include <yzSTD.hpp>
+#include <yzpch.hpp>
 
 namespace yz
 {
@@ -33,10 +33,10 @@ public:
 public:
 	Window(Application& app);
 
-	Window(const Window&) = delete;
+	Window(const Window&)            = delete;
 	Window& operator=(const Window&) = delete;
 
-	Window(Window&&) = delete;
+	Window(Window&&)            = delete;
 	Window& operator=(Window&&) = delete;
 
 	void Init(bool resizable = true, bool borderless = false);
