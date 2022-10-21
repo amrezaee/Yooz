@@ -1,8 +1,8 @@
 #include <Graphics/yzGraphicsFeatures.hpp>
 
-#include <Core/yzLogger.hpp>
-
 #include <yzpch.hpp>
+
+#include <Core/yzLogger.hpp>
 
 namespace yz
 {

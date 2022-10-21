@@ -1,8 +1,8 @@
 #pragma once
 
-#include <Math/yzConstants.hpp>
-
 #include <yzpch.hpp>
+
+#include <Math/yzConstants.hpp>
 
 namespace yz
 {

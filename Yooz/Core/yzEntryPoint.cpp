@@ -1,6 +1,6 @@
-#include <Core/yzApplication.hpp>
-
 #include <yzpch.hpp>
+
+#include <Core/yzApplication.hpp>
 
 extern std::unique_ptr<yz::Application> yz::CreateApp();
 

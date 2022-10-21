@@ -1,8 +1,8 @@
 #include <Core/yzAssert.hpp>
 
-#include <Core/yzLogger.hpp>
-
 #include <yzpch.hpp>
+
+#include <Core/yzLogger.hpp>
 
 #ifndef YZ_DISABLE_ASSERTION
 

@@ -1,8 +1,8 @@
 #include <Graphics/yzRenderer.hpp>
 
-#include <Core/yzAssert.hpp>
-
 #include <yzpch.hpp>
+
+#include <Core/yzAssert.hpp>
 
 namespace yz
 {

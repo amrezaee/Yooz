@@ -1,11 +1,11 @@
 #pragma once
 
+#include <yzpch.hpp>
+
 #include <Core/yzWindow.hpp>
 #include <Graphics/yzGraphicsDevice.hpp>
 #include <Graphics/yzGraphicsParams.hpp>
 #include <Platform/yzPlatform.hpp>
-
-#include <yzpch.hpp>
 
 namespace yz
 {
@@ -45,12 +45,8 @@ private:
 	void Destroy();
 	friend int ::main(int argc, char** argv);
 
-
 private:
-	void OnWindowActive();
-	void OnWindowDeactive();
-	void OnWindowClose();
-	void OnWindowResize(Vec2u size);
+	bool OnEvent(const EventArg& arg);
 
 private:
 	bool m_inited {false};

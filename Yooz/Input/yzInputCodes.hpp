@@ -1,11 +1,10 @@
 #pragma once
-#pragma once
 
 #include <yzpch.hpp>
 
 namespace yz
 {
-enum class Key
+enum class Key : std::uint16_t
 {
 	None = 0,
 
@@ -159,7 +158,7 @@ enum class Key
 	Count = 256
 };
 
-enum class MouseButton
+enum class MouseButton : std::uint8_t
 {
 	None,
 	Left,
@@ -171,7 +170,7 @@ enum class MouseButton
 };
 
 // Controller button
-enum class CButton
+enum class CButton : std::int8_t
 {
 	None = -1,
 	A,
@@ -199,7 +198,7 @@ enum class CButton
 };
 
 // Controller axis
-enum class CAxis
+enum class CAxis : std::uint8_t
 {
 	None,
 	LeftX,

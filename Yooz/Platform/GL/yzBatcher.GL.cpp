@@ -1,9 +1,9 @@
 #include <Graphics/yzBatcher.hpp>
 
+#include <yzpch.hpp>
+
 #include <Core/yzAssert.hpp>
 #include <Math/yzTransform.hpp>
-
-#include <yzpch.hpp>
 
 namespace yz
 {

@@ -1,10 +1,10 @@
 #include <Graphics/yzGraphicsDevice.hpp>
 
+#include <yzpch.hpp>
+
 #include <Core/yzApplication.hpp>
 #include <Core/yzAssert.hpp>
 #include <Core/yzLogger.hpp>
-
-#include <yzpch.hpp>
 
 namespace yz
 {
