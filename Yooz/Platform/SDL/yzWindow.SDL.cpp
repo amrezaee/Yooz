@@ -1,10 +1,11 @@
 #include <Core/yzWindow.hpp>
 
+#include <yzpch.hpp>
+
 #include <Core/yzApplication.hpp>
 #include <Core/yzAssert.hpp>
 #include <Core/yzLogger.hpp>
-
-#include <yzpch.hpp>
+#include <Input/yzInputCodes.hpp>
 
 namespace yz
 {
@@ -50,8 +51,6 @@ void Window::Init(bool resizable, bool borderless)
 	else
 		SDL_ShowCursor(SDL_DISABLE);
 
-	ActiveEvent.Raise();
-
 	YZ_INFO("Width:  %u", width);
 	YZ_INFO("Height: %u", height);
 
@@ -76,18 +75,21 @@ void Window::Destroy()
 
 void Window::Update()
 {
+	EventArg earg {};
+
 	SDL_Event    e {0};
 	SDL_Scancode sc {SDL_SCANCODE_UNKNOWN};
-
-	std::bitset<static_cast<std::size_t>(Key::Count)> last_states = m_key_downs;
-	std::bitset<static_cast<std::size_t>(MouseButton::Count)> last_mouse_states =
-	        m_mouse_downs;
 
 	while(SDL_PollEvent(&e))
 	{
 		switch(e.type)
 		{
-		case SDL_QUIT: CloseEvent.Raise(); break;
+		case SDL_QUIT:
+		{
+			earg.type = EventType::Quit;
+			window_event.Push(earg);
+		}
+		break;
 
 		case SDL_KEYDOWN:
 		{
@@ -107,7 +109,9 @@ void Window::Update()
 				}
 			}
 
-			m_key_downs[sc] = 1;
+			earg.type   = EventType::KeyPress;
+			earg.u16[0] = static_cast<std::uint16_t>(e.key.keysym.scancode);
+			keyboard_event.Push(earg);
 		}
 		break;
 
@@ -118,32 +122,43 @@ void Window::Update()
 			if(sc > 255)
 				break;
 
-			m_key_downs[sc] = 0;
-		}
-		break;
-
-		case SDL_MOUSEBUTTONUP:
-		{
-			m_mouse_downs[e.button.button] = 1;
+			earg.type   = EventType::KeyRelease;
+			earg.u16[0] = static_cast<std::uint16_t>(e.key.keysym.scancode);
+			keyboard_event.Push(earg);
 		}
 		break;
 
 		case SDL_MOUSEBUTTONDOWN:
 		{
-			m_mouse_downs[e.button.button] = 0;
+			earg.type  = EventType::MousePress;
+			earg.u8[0] = static_cast<std::uint8_t>(e.button.button);
+			mouse_event.Push(earg);
+		}
+		break;
+
+		case SDL_MOUSEBUTTONUP:
+		{
+			earg.type  = EventType::MouseRelease;
+			earg.u8[0] = static_cast<std::uint8_t>(e.button.button);
+			mouse_event.Push(earg);
 		}
 		break;
 
 		case SDL_MOUSEMOTION:
 		{
-			MouseMotionEvent.Raise(Vec2 {static_cast<float>(e.button.x),
-			                             static_cast<float>(e.button.y)});
+			earg.type   = EventType::MouseMove;
+			earg.f32[0] = static_cast<float>(e.motion.x);
+			earg.f32[1] = static_cast<float>(e.motion.y);
+			mouse_event.Push(earg);
 		}
 		break;
 
 		case SDL_MOUSEWHEEL:
 		{
-			MouseWheelEvent.Raise(Vec2 {e.wheel.preciseX, e.wheel.preciseY});
+			earg.type   = EventType::MouseWheel;
+			earg.f32[0] = e.wheel.preciseX;
+			earg.f32[1] = e.wheel.preciseY;
+			mouse_event.Push(earg);
 		}
 		break;
 
@@ -155,18 +170,31 @@ void Window::Update()
 			{
 			case SDL_WINDOWEVENT_RESIZED:
 			case SDL_WINDOWEVENT_SIZE_CHANGED:
-				ResizeEvent.Raise(Vec2u {e.window.data1, e.window.data2});
-				break;
+			{
+				earg.type   = EventType::Resize;
+				earg.u16[0] = static_cast<std::uint16_t>(e.window.data1);
+				earg.u16[1] = static_cast<std::uint16_t>(e.window.data2);
+				window_event.Push(earg);
+			}
+			break;
 
 			case SDL_WINDOWEVENT_FOCUS_GAINED:
-				m_active = true;
-				ActiveEvent.Raise();
-				break;
+			{
+				m_active   = true;
+				earg.type  = EventType::Focus;
+				earg.u8[0] = m_active;
+				window_event.Push(earg);
+			}
+			break;
 
 			case SDL_WINDOWEVENT_FOCUS_LOST:
-				m_active = false;
-				DeactiveEvent.Raise();
-				break;
+			{
+				m_active   = false;
+				earg.type  = EventType::Focus;
+				earg.u8[0] = m_active;
+				window_event.Push(earg);
+			}
+			break;
 
 			case SDL_WINDOWEVENT_CLOSE:
 				e.type = SDL_QUIT;
@@ -176,12 +204,9 @@ void Window::Update()
 		}
 	}
 
-	m_key_presses   = ~last_states & m_key_downs;
-	m_mouse_presses = ~last_mouse_states & m_mouse_downs;
-
-	KeyEvent.Raise(m_key_downs, m_key_presses);
-
-	MouseButtonEvent.Raise(m_mouse_downs, m_mouse_presses);
+	window_event.Raise();
+	mouse_event.Raise();
+	keyboard_event.Raise();
 }
 
 Handle Window::GetHandle() const
@@ -211,10 +236,17 @@ Vec2u Window::GetSize() const
 	return {w, h};
 }
 
-void Window::SetSize(Vec2u size)
+void Window::SetSize(std::uint16_t w, std::uint16_t h)
 {
-	SDL_SetWindowSize(static_cast<SDL_Window*>(m_handle), size.x, size.y);
-	ResizeEvent.Raise(size);
+	SDL_SetWindowSize(static_cast<SDL_Window*>(m_handle), static_cast<int>(w),
+	                  static_cast<int>(h));
+
+	EventArg a {};
+	a.type   = EventType::Resize;
+	a.u16[0] = w;
+	a.u16[1] = h;
+	window_event.Push(a);
+	window_event.Raise();
 }
 
 std::uint32_t Window::GetPosX() const
@@ -234,9 +266,9 @@ Vec2u Window::GetPosition() const
 	return {x, y};
 }
 
-void Window::SetPosition(Vec2u pos)
+void Window::SetPosition(std::uint16_t x, std::uint16_t y)
 {
-	SDL_SetWindowPosition(static_cast<SDL_Window*>(m_handle), pos.x, pos.y);
+	SDL_SetWindowPosition(static_cast<SDL_Window*>(m_handle), x, y);
 }
 
 const std::string& Window::GetTitle() const

@@ -1,9 +1,11 @@
 #pragma once
-
-#include <Input/yzInputCodes.hpp>
-#include <Math/yzVector2.hpp>
+#pragma once
 
 #include <yzpch.hpp>
+
+#include <Core/yzEvent.hpp>
+#include <Input/yzInputCodes.hpp>
+#include <Math/yzVector2.hpp>
 
 namespace yz
 {
@@ -29,15 +31,7 @@ public:
 	Vec2 MouseWheel() const;
 
 private:
-	void OnKey(std::bitset<static_cast<std::size_t>(Key::Count)>& down,
-	           std::bitset<static_cast<std::size_t>(Key::Count)>& press);
-
-	void OnMouseButton(
-	        std::bitset<static_cast<std::size_t>(MouseButton::Count)>& down,
-	        std::bitset<static_cast<std::size_t>(MouseButton::Count)>& press);
-
-	void OnMouseMotion(Vec2 pos);
-	void OnMouseWheel(Vec2 state);
+	bool OnEvent(const EventArg& arg);
 
 private:
 	bool m_inited {false};
@@ -47,10 +41,10 @@ private:
 	Vec2 m_mouse_pos;
 	Vec2 m_mouse_wheel;
 
-	std::bitset<static_cast<std::size_t>(Key::Count)> m_key_press_states;
-	std::bitset<static_cast<std::size_t>(Key::Count)> m_key_down_states;
+	std::bitset<static_cast<std::size_t>(Key::Count)> m_key_current_states;
+	std::bitset<static_cast<std::size_t>(Key::Count)> m_key_last_states;
 
-	std::bitset<static_cast<std::size_t>(MouseButton::Count)> m_mouse_press_states;
-	std::bitset<static_cast<std::size_t>(MouseButton::Count)> m_mouse_down_states;
+	std::bitset<static_cast<std::size_t>(MouseButton::Count)> m_mouse_current_states;
+	std::bitset<static_cast<std::size_t>(MouseButton::Count)> m_mouse_last_states;
 };
 }  // namespace yz

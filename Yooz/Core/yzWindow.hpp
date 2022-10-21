@@ -1,11 +1,10 @@
 #pragma once
 
+#include <yzpch.hpp>
+
 #include <Core/yzBase.hpp>
 #include <Core/yzEvent.hpp>
-#include <Input/yzInputCodes.hpp>
 #include <Math/yzVector2.hpp>
-
-#include <yzpch.hpp>
 
 namespace yz
 {
@@ -14,21 +13,9 @@ class Application;
 class Window
 {
 public:
-	Event<Vec2u> ResizeEvent;
-	Event<>      CloseEvent;
-	Event<>      ActiveEvent;
-	Event<>      DeactiveEvent;
-
-	Event<std::bitset<static_cast<std::size_t>(Key::Count)>&,
-	      std::bitset<static_cast<std::size_t>(Key::Count)>&>
-	        KeyEvent;
-
-	Event<std::bitset<static_cast<std::size_t>(MouseButton::Count)>&,
-	      std::bitset<static_cast<std::size_t>(MouseButton::Count)>&>
-	        MouseButtonEvent;
-
-	Event<Vec2> MouseMotionEvent;
-	Event<Vec2> MouseWheelEvent;
+	EventQueue window_event;
+	EventQueue keyboard_event;
+	EventQueue mouse_event;
 
 public:
 	Window(Application& app);
@@ -53,13 +40,13 @@ public:
 	std::uint32_t GetHeight() const;
 	Vec2u         GetSize() const;
 
-	void SetSize(Vec2u size);
+	void SetSize(std::uint16_t w, std::uint16_t h);
 
 	std::uint32_t GetPosX() const;
 	std::uint32_t GetPosY() const;
 	Vec2u         GetPosition() const;
 
-	void SetPosition(Vec2u pos);
+	void SetPosition(std::uint16_t x, std::uint16_t);
 
 	const std::string& GetTitle() const;
 	void               SetTitle(const std::string& title);
@@ -86,11 +73,5 @@ private:
 	Application&  m_app;
 	std::string   m_title;
 	std::uint32_t m_id;
-
-	std::bitset<static_cast<std::size_t>(Key::Count)> m_key_downs;
-	std::bitset<static_cast<std::size_t>(Key::Count)> m_key_presses;
-
-	std::bitset<static_cast<std::size_t>(MouseButton::Count)> m_mouse_downs;
-	std::bitset<static_cast<std::size_t>(MouseButton::Count)> m_mouse_presses;
 };
 }  // namespace yz

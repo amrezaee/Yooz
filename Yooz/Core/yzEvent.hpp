@@ -1,70 +1,96 @@
 #pragma once
 
+#include <yzpch.hpp>
+
 #include <Core/yzDelegate.hpp>
 #include <Core/yzLogger.hpp>
-
-#include <yzpch.hpp>
+#include <Input/yzInputCodes.hpp>
 
 namespace yz
 {
-template<typename... SigArgs>
-class Event
+enum class EventType
+{
+	None,
+
+	Quit,
+	Focus,
+	Resize,
+
+	KeyPress,
+	KeyRelease,
+	KeyText,
+
+	MousePress,
+	MouseRelease,
+	MouseMove,
+	MouseWheel
+};
+
+struct EventArg
+{
+	EventType type;
+
+	union
+	{
+		std::int64_t  i64[2];
+		std::uint64_t u64[2];
+
+		double f64[2];
+		float  f32[4];
+
+		std::int32_t  i32[4];
+		std::uint32_t u32[4];
+
+		std::int16_t  i16[8];
+		std::uint16_t u16[8];
+
+		std::int8_t  i8[16];
+		std::uint8_t u8[16];
+
+		char c[16];
+	};
+};
+
+class EventQueue
 {
 public:
-	using signature_type = void(SigArgs...);
-	using handler_type   = Delegate<signature_type>;
-	using container_type = std::vector<handler_type>;
-	using this_type      = Event<SigArgs...>;
+	using handler_type            = Delegate<bool(const EventArg&)>;
+	using handler_collection_type = std::vector<handler_type>;
+	using queue_collection_type   = std::vector<EventArg>;
 
-	Event()  = default;
-	~Event() = default;
+	EventQueue()  = default;
+	~EventQueue() = default;
 
-	Event(const this_type&) {}
+	EventQueue(const EventQueue&)            = default;
+	EventQueue& operator=(const EventQueue&) = default;
 
-	this_type& operator=(const this_type& rhs)
-	{
-		if(this != &rhs)
-			Clear();
-		return *this;
-	}
-
-	Event(this_type&& other): m_handlers(std::move(other.m_handlers)) {}
-
-	this_type& operator=(this_type&& other)
-	{
-		if(this != &other)
-			m_handlers = std::move(other.m_handlers);
-		return *this;
-	}
-
-	inline void Swap(this_type& other) { std::swap<this_type>(*this, other); }
+	EventQueue(EventQueue&&)            = default;
+	EventQueue& operator=(EventQueue&&) = default;
 
 	// Romoves all handlers.
-	void Clear()
+	void Reset()
 	{
-		if(!m_handlers.empty())
-			m_handlers.clear();
+		ClearQueue();
+		ClearHandlers();
 	}
 
-	// Adds a new handler.
+	void ClearQueue() { m_queue.clear(); }
+	void ClearHandlers() { m_handlers.clear(); }
+
+	void Push(const EventArg& arg) { m_queue.push_back(arg); }
+
+	void Push(EventArg&& arg) { m_queue.push_back(arg); }
+
 	template<typename... Args>
-	void Add(Args&&... args)
+	void AddHandler(Args&&... args)
 	{
 		m_handlers.emplace_back(std::forward<Args>(args)...);
-	}
-
-	// add the handler n times
-	template<typename... Args>
-	void AddN(std::uint32_t n, Args&&... args)
-	{
-		for(std::uint32_t i = 0u; i < n; ++i)
-			m_handlers.emplace_back(std::forward<Args>(args)...);
 	}
 
 	// Removes a handler.
 	// if there are more than one copy of a handler, use RemoveAll.
 	template<typename... Args>
-	void Remove(Args&&... args)
+	void RemoveHandler(Args&&... args)
 	{
 		auto end_it   = m_handlers.cend();
 		auto begin_it = m_handlers.cbegin();
@@ -78,46 +104,36 @@ public:
 			YZ_WARN("No such event handler found.");
 	}
 
-	// removes all copies of a handler.
-	template<typename... Args>
-	void RemoveAll(Args&&... args)
-	{
-		handler_type toremove = handler_type(std::forward<Args>(args)...);
-		const auto it = std::remove(m_handlers.begin(), m_handlers.end(), toremove);
-
-		if(it != m_handlers.end())
-			m_handlers.erase(it, m_handlers.cend());
-		else
-			YZ_WARN("No such event handler found.");
-	}
-
-	// Raise event. calls all handlers with specified parameters.
-	template<typename... Args>
-	inline void Raise(Args... args)
-	{
-		operator()(args...);
-	}
-
-	// same as Raise
-	template<typename... Args>
-	void operator()(Args... args) const
+	// Constant raise.
+	void CRaise() const
 	{
 		if(m_handlers.empty())
 		{
 			YZ_WARN("Event's handler list is empty.");
 			return;
 		}
-		for(const auto& i : m_handlers) i(args...);
+
+		for(const auto& e : m_queue)
+		{
+			for(const auto& handler : m_handlers)
+			{
+				// if handler returns true it means that event is handled.
+				// so, don't call other handlers.
+				if(handler(e))
+					break;
+			}
+		}
 	}
 
-	inline bool operator==(const this_type& rhs) const
+	// Raise event and clear the queue.
+	void Raise()
 	{
-		return m_handlers == rhs.m_handlers;
+		CRaise();
+		ClearQueue();
 	}
-
-	inline bool operator!=(const this_type& rhs) const { return !operator==(rhs); }
 
 private:
-	container_type m_handlers;
+	handler_collection_type m_handlers;
+	queue_collection_type   m_queue;
 };
 }  // namespace yz

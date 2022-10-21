@@ -14,10 +14,8 @@ void InputManager::Init()
 {
 	YZ_ASSERT(!m_inited);
 
-	m_window.KeyEvent.Add(this, &InputManager::OnKey);
-	m_window.MouseButtonEvent.Add(this, &InputManager::OnMouseButton);
-	m_window.MouseMotionEvent.Add(this, &InputManager::OnMouseMotion);
-	m_window.MouseWheelEvent.Add(this, &InputManager::OnMouseWheel);
+	m_window.mouse_event.AddHandler(this, &InputManager::OnEvent);
+	m_window.keyboard_event.AddHandler(this, &InputManager::OnEvent);
 
 	m_inited = true;
 }
@@ -26,10 +24,8 @@ void InputManager::Shutdown()
 {
 	YZ_ASSERT(m_inited);
 
-	m_window.KeyEvent.Remove(this, &InputManager::OnKey);
-	m_window.MouseButtonEvent.Remove(this, &InputManager::OnMouseButton);
-	m_window.MouseMotionEvent.Remove(this, &InputManager::OnMouseMotion);
-	m_window.MouseWheelEvent.Remove(this, &InputManager::OnMouseWheel);
+	m_window.mouse_event.RemoveHandler(this, &InputManager::OnEvent);
+	m_window.keyboard_event.RemoveHandler(this, &InputManager::OnEvent);
 
 	m_inited = false;
 }
@@ -37,37 +33,37 @@ void InputManager::Shutdown()
 bool InputManager::KeyPressed(Key key) const
 {
 	int k = static_cast<int>(key);
-	return m_key_press_states[k];
+	return m_key_current_states[k];
 }
 
 bool InputManager::KeyReleased(Key key) const
 {
 	int k = static_cast<int>(key);
-	return !m_key_press_states[k];
+	return !m_key_current_states[k];
 }
 
 bool InputManager::KeyDown(Key key) const
 {
 	int k = static_cast<int>(key);
-	return m_key_down_states[k];
+	return m_key_current_states[k] && !m_key_last_states[k];
 }
 
 bool InputManager::MousePressed(MouseButton button) const
 {
 	int b = static_cast<int>(button);
-	return m_mouse_press_states[b];
+	return m_mouse_current_states[b];
 }
 
 bool InputManager::MouseReleased(MouseButton button) const
 {
 	int b = static_cast<int>(button);
-	return !m_mouse_press_states[b];
+	return !m_mouse_current_states[b];
 }
 
 bool InputManager::MouseDown(MouseButton button) const
 {
 	int b = static_cast<int>(button);
-	return m_mouse_down_states[b];
+	return m_mouse_current_states[b] && !m_mouse_last_states[b];
 }
 
 Vec2 InputManager::MousePos() const
@@ -80,28 +76,57 @@ Vec2 InputManager::MouseWheel() const
 	return m_mouse_wheel;
 }
 
-void InputManager::OnKey(std::bitset<static_cast<std::size_t>(Key::Count)>& down,
-                         std::bitset<static_cast<std::size_t>(Key::Count)>& press)
+bool InputManager::OnEvent(const EventArg& ea)
 {
-	m_key_down_states  = down;
-	m_key_press_states = press;
-}
+	switch(ea.type)
+	{
+	case EventType::KeyPress:
+	{
+		std::uint16_t i         = ea.u16[0];
+		m_key_last_states[i]    = m_key_current_states[i];
+		m_key_current_states[i] = 1;
+		return true;
+	}
 
-void InputManager::OnMouseButton(
-        std::bitset<static_cast<std::size_t>(MouseButton::Count)>& down,
-        std::bitset<static_cast<std::size_t>(MouseButton::Count)>& press)
-{
-	m_mouse_down_states  = down;
-	m_mouse_press_states = press;
-}
+	case EventType::KeyRelease:
+	{
+		std::uint16_t i         = ea.u16[0];
+		m_key_last_states[i]    = m_key_current_states[i];
+		m_key_current_states[i] = 0;
+		return true;
+	}
 
-void InputManager::OnMouseMotion(Vec2 pos)
-{
-	m_mouse_pos = pos;
-}
+	case EventType::MousePress:
+	{
+		std::uint8_t i            = ea.u8[0];
+		m_mouse_last_states[i]    = m_mouse_current_states[i];
+		m_mouse_current_states[i] = 1;
+		return true;
+	}
 
-void InputManager::OnMouseWheel(Vec2 state)
-{
-	m_mouse_wheel = state;
+	case EventType::MouseRelease:
+	{
+		std::uint8_t i            = ea.u8[0];
+		m_mouse_last_states[i]    = m_mouse_current_states[i];
+		m_mouse_current_states[i] = 0;
+		return true;
+	}
+
+	case EventType::MouseMove:
+	{
+		m_mouse_pos.x = ea.f32[0];
+		m_mouse_pos.y = ea.f32[1];
+		return true;
+	}
+
+	case EventType::MouseWheel:
+	{
+		m_mouse_wheel.x = ea.f32[0];
+		m_mouse_wheel.y = ea.f32[1];
+		return true;
+	}
+
+	default: YZ_WARN("unknown event."); return false;
+	}
 }
 }  // namespace yz

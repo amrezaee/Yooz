@@ -2,8 +2,8 @@
 
 #include <Core/yzAssert.hpp>
 #include <Core/yzLogger.hpp>
-#include <Core/yzTimer.hpp>
-#include <Math/yzTransform.hpp>
+
+
 
 namespace yz
 {
@@ -13,7 +13,12 @@ Application::Application(AppSpecs& specs): m_specs(specs), m_window(*this)
 
 void Application::Run()
 {
-	Timer timer;
+	constexpr unsigned int delta_times_size = 4;
+	float                  delta_times[delta_times_size] {};
+	std::size_t            dti = 0;
+
+	std::uint64_t current_time = m_platform.GetTime();
+	std::uint64_t last_time    = 0;
 
 	Init();
 
@@ -21,9 +26,15 @@ void Application::Run()
 
 	while(m_running)
 	{
-		timer.Stop();
-		m_delta_time = timer.Elapsed();
-		timer.Reset();
+		last_time    = current_time;
+		current_time = m_platform.GetTime();
+
+		delta_times[dti & (delta_times_size - 1)] =
+		        static_cast<float>(current_time - last_time) * 0.000001f;
+		dti++;
+		m_delta_time =
+		        std::accumulate(delta_times, delta_times + delta_times_size, 0.0f) /
+		        delta_times_size;
 
 		m_window.Update();
 
@@ -53,10 +64,7 @@ void Application::Init()
 
 	m_platform.Init();
 
-	m_window.CloseEvent.Add(this, &Application::OnWindowClose);
-	m_window.ActiveEvent.Add(this, &Application::OnWindowActive);
-	m_window.DeactiveEvent.Add(this, &Application::OnWindowDeactive);
-	m_window.ResizeEvent.Add(this, &Application::OnWindowResize);
+	m_window.window_event.AddHandler(this, &Application::OnEvent);
 
 	m_graphics_device.Init(m_specs.graphics_params, m_window);
 
@@ -69,10 +77,7 @@ void Application::Destroy()
 
 	m_graphics_device.Destroy();
 
-	m_window.CloseEvent.Remove(this, &Application::OnWindowClose);
-	m_window.ActiveEvent.Remove(this, &Application::OnWindowActive);
-	m_window.DeactiveEvent.Remove(this, &Application::OnWindowDeactive);
-	m_window.ResizeEvent.Remove(this, &Application::OnWindowResize);
+	m_window.window_event.RemoveHandler(this, &Application::OnEvent);
 
 	m_window.Destroy();
 
@@ -116,24 +121,30 @@ void Application::ShowCursor(bool show)
 	SDL_ShowCursor(show ? SDL_ENABLE : SDL_DISABLE);
 }
 
-void Application::OnWindowActive()
+bool Application::OnEvent(const EventArg& arg)
 {
-	m_suspended = false;
-}
+	switch(arg.type)
+	{
+	case EventType::Quit:
+	{
+		m_running = false;
+		return true;
+	}
 
-void Application::OnWindowDeactive()
-{
-	m_suspended = true;
-}
+	case EventType::Resize:
+	{
+		m_graphics_device.UpdateViewport({arg.u16[0], arg.u16[1]});
+		OnResize(arg.u16[0], arg.u16[1]);
+		return false;
+	}
 
-void Application::OnWindowClose()
-{
-	m_running = false;
-}
+	case EventType::Focus:
+	{
+		m_suspended = !arg.u8[0];
+		return true;
+	}
 
-void Application::OnWindowResize(Vec2u size)
-{
-	m_graphics_device.UpdateViewport(size);
-	OnResize(size.x, size.y);
+	default: YZ_WARN("unknown event."); return false;
+	}
 }
 }  // namespace yz
