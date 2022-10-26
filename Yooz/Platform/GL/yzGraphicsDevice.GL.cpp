@@ -206,7 +206,6 @@ void GraphicsDevice::ApplyChanges()
 
 	std::uint16_t ws = static_cast<std::uint16_t>(w);
 	std::uint16_t hs = static_cast<std::uint16_t>(h);
-	OnResize(ws, hs);
 
 	EventArg e;
 	e.type   = EventType::Resize;
