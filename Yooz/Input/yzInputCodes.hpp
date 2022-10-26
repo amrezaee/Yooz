@@ -155,7 +155,7 @@ enum class Key : std::uint16_t
 	RAlt   = 230,
 	RGui   = 231, /* Windows, command (apple), meta, super */
 
-	Count = 256
+	Count = 512
 };
 
 enum class MouseButton : std::uint8_t

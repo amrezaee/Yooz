@@ -102,6 +102,8 @@ target_sources(Yooz PRIVATE
 	"Math/yzFunctions.cpp"
 	"Math/yzTransform.cpp"
 
+	"Platform/SDL/yzKeyboard.SDL.cpp"
 	"Platform/SDL/yzMessageBox.SDL.cpp"
+	"Platform/SDL/yzMouse.SDL.cpp"
 	"Platform/SDL/yzPlatform.SDL.cpp"
 	"Platform/SDL/yzWindow.SDL.cpp")
