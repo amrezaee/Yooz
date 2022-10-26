@@ -14,8 +14,6 @@ class Window
 {
 public:
 	EventQueue window_event;
-	EventQueue keyboard_event;
-	EventQueue mouse_event;
 
 public:
 	Window(Application& app);
@@ -31,6 +29,8 @@ public:
 	void Destroy();
 
 	void Update();
+
+	Application& GetApp() { return m_app; }
 
 	Handle GetHandle() const;
 

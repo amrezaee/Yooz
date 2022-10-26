@@ -41,13 +41,29 @@ void Application::Run()
 		if(!m_suspended)
 		{
 			OnUpdate(m_delta_time);
-			OnRender(m_delta_time);
+			OnRender();
 
 			m_graphics_device.SwapBuffers();
 		}
 	}
 
 	Destroy();
+}
+
+void Application::OnRedraw()
+{
+	OnRender();
+	m_graphics_device.SwapBuffers();
+}
+
+void Application::Close()
+{
+	m_running = false;
+}
+
+void Application::Kill()
+{
+	std::exit(EXIT_SUCCESS);
 }
 
 void Application::Init()

@@ -23,8 +23,13 @@ public:
 
 	virtual void OnInit()                                 = 0;
 	virtual void OnUpdate(float dt)                       = 0;
-	virtual void OnRender(float dt)                       = 0;
+	virtual void OnRender()                               = 0;
 	virtual void OnResize(unsigned int w, unsigned int h) = 0;
+
+	void OnRedraw();
+
+	void Close();
+	void Kill();
 
 	const AppSpecs& GetSpecs() const;
 
