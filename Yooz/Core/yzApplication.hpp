@@ -21,12 +21,13 @@ class Application
 public:
 	Application(AppSpecs& specs);
 
-	virtual void OnInit()                                 = 0;
-	virtual void OnUpdate(float dt)                       = 0;
-	virtual void OnRender()                               = 0;
-	virtual void OnResize(unsigned int w, unsigned int h) = 0;
+	virtual void OnInit()           = 0;
+	virtual void OnUpdate(float dt) = 0;
+	virtual void OnRender()         = 0;
+	virtual void OnExit()           = 0;
 
-	void OnRedraw();
+	virtual void OnResize(std::uint16_t, std::uint16_t) {};
+	virtual void OnRedraw();
 
 	void Close();
 	void Kill();

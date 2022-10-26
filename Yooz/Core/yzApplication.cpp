@@ -75,7 +75,7 @@ void Application::Init()
 	if(!m_specs.working_dir.empty())
 	{
 		fs::current_path(m_specs.working_dir, code);
-		// YZ_ERROR(code, code.message().c_str());
+		YZ_ASSERT(code, code.message().c_str());
 	}
 
 	m_platform.Init();
