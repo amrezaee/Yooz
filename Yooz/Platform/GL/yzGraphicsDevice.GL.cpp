@@ -168,10 +168,52 @@ void GraphicsDevice::SwapBuffers() const
 	SDL_GL_SwapWindow(static_cast<SDL_Window*>(m_params.GetWindowHandle()));
 }
 
-void GraphicsDevice::UpdateViewport(Vec2u size)
+void GraphicsDevice::OnResize(std::uint16_t w, std::uint16_t h)
 {
-	m_params.SetBufferSize(size);
-	glViewport(0, 0, size.x, size.y);
+	m_params.SetBufferSize(w, h);
+	glViewport(0, 0, w, h);
+}
+
+void GraphicsDevice::ApplyChanges()
+{
+	SDL_Window* sw = reinterpret_cast<SDL_Window*>(m_params.GetWindowHandle());
+
+	switch(m_params.GetFullscreenMode())
+	{
+	case FullscreenMode::Windowed:
+	{
+		SDL_SetWindowFullscreen(sw, 0);
+	}
+	break;
+
+	case FullscreenMode::Borderless:
+	{
+		SDL_SetWindowFullscreen(sw, SDL_WINDOW_FULLSCREEN_DESKTOP);
+	}
+	break;
+
+	case FullscreenMode::Exclusive:
+	{
+		SDL_SetWindowFullscreen(sw, SDL_WINDOW_FULLSCREEN);
+	}
+	break;
+	}
+
+	SDL_GL_SetSwapInterval(static_cast<int>(m_params.GetVsyncMode()));
+
+	int w, h;
+	SDL_GetWindowSize(sw, &w, &h);
+
+	std::uint16_t ws = static_cast<std::uint16_t>(w);
+	std::uint16_t hs = static_cast<std::uint16_t>(h);
+	OnResize(ws, hs);
+
+	EventArg e;
+	e.type   = EventType::Resize;
+	e.u16[0] = ws;
+	e.u16[1] = hs;
+	graphics_event.Push(e);
+	graphics_event.Raise();
 }
 
 Handle GraphicsDevice::GetHandle() const

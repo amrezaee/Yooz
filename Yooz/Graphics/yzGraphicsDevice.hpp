@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Core/yzBase.hpp>
+#include <Core/yzEvent.hpp>
 #include <Core/yzWindow.hpp>
 #include <Graphics/yzColor.hpp>
 #include <Graphics/yzGraphicsFeatures.hpp>
@@ -13,6 +14,9 @@ namespace yz
 class GraphicsDevice
 {
 public:
+	EventQueue graphics_event;
+
+public:
 	GraphicsDevice();
 
 	void Init(GraphicsParams& params, Window& window);
@@ -22,7 +26,7 @@ public:
 	void ClearBuffers() const;
 	void SwapBuffers() const;
 
-	void UpdateViewport(Vec2u size);
+	void OnResize(std::uint16_t w, std::uint16_t h);
 
 	void ApplyChanges();
 

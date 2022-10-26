@@ -23,18 +23,18 @@ public:
 
 	std::uint32_t GetDefaultFPS() const;
 
-	std::uint32_t GetDefaultBufferWidth() const;
-	std::uint32_t GetDefaultBufferHeight() const;
+	std::uint16_t GetDefaultBufferWidth() const;
+	std::uint16_t GetDefaultBufferHeight() const;
 	float         GetDefaultAspectRatio() const;
 
-	std::uint32_t GetBufferWidth() const;
-	std::uint32_t GetBufferHeight() const;
+	std::uint16_t GetBufferWidth() const;
+	std::uint16_t GetBufferHeight() const;
 	Vec2u         GetBufferSize() const;
 	float         GetAspectRatio() const;
 
-	void SetBufferWidth(std::uint32_t width);
-	void SetBufferHeight(std::uint32_t height);
-	void SetBufferSize(Vec2u size);
+	void SetBufferWidth(std::uint16_t width);
+	void SetBufferHeight(std::uint16_t height);
+	void SetBufferSize(std::uint16_t w, std::uint16_t h);
 
 	Handle GetWindowHandle() const;
 	void   SetWindowHandle(Handle handle);
@@ -43,22 +43,22 @@ public:
 	void           SetFullscreenMode(FullscreenMode fsmode);
 
 	MSAALevel GetMSAALevel() const;
-	void      SetMSAALevel(MSAALevel level);
+	void      SetMSAALevel(MSAALevel level);  // TODO: impl. this
 
-	bool GetVsync() const;
-	void SetVsync(bool enable);
+	VsyncMode GetVsyncMode() const;
+	void      SetVsyncMode(VsyncMode vm);
 
 private:
 	static const std::uint32_t m_default_fps;
-	static const std::uint32_t m_default_buffer_width;
-	static const std::uint32_t m_default_buffer_height;
+	static const std::uint16_t m_default_buffer_width;
+	static const std::uint16_t m_default_buffer_height;
 	static const float         m_default_aspect_ratio;
 
 	Handle         m_window_handle;
 	FullscreenMode m_fs_mode;
 	MSAALevel      m_msaa_level;
-	bool           m_vsync;
-	std::uint32_t  m_buffer_width;
-	std::uint32_t  m_buffer_height;
+	VsyncMode      m_vsync;
+	std::uint16_t  m_buffer_width;
+	std::uint16_t  m_buffer_height;
 };
 }  // namespace yz

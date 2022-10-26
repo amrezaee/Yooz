@@ -82,6 +82,8 @@ void Application::Init()
 
 	m_window.window_event.AddHandler(this, &Application::OnEvent);
 
+	m_graphics_device.graphics_event.AddHandler(this, &Application::OnEvent);
+
 	m_graphics_device.Init(m_specs.graphics_params, m_window);
 
 	m_inited = true;
@@ -94,6 +96,7 @@ void Application::Destroy()
 	m_graphics_device.Destroy();
 
 	m_window.window_event.RemoveHandler(this, &Application::OnEvent);
+	m_graphics_device.graphics_event.RemoveHandler(this, &Application::OnEvent);
 
 	m_window.Destroy();
 
@@ -149,7 +152,7 @@ bool Application::OnEvent(const EventArg& arg)
 
 	case EventType::Resize:
 	{
-		m_graphics_device.UpdateViewport({arg.u16[0], arg.u16[1]});
+		m_graphics_device.OnResize(arg.u16[0], arg.u16[1]);
 		OnResize(arg.u16[0], arg.u16[1]);
 		return false;
 	}

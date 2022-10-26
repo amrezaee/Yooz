@@ -104,4 +104,11 @@ enum class MSAALevel
 	Level16 = 16,
 	Level32 = 32
 };
+
+enum class VsyncMode
+{
+	Immediate    = 0,
+	Synchronized = 1,
+	Adaptive     = -1
+};
 }  // namespace yz
