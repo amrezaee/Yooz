@@ -9,25 +9,65 @@ void Sandbox::OnInit()
 
 void Sandbox::OnUpdate(float dt)
 {
-	float speed = 400.0f;
+	m_input.Update();
 
-	if(m_input.KeyDown(yz::Key::Left))
+	float speed = 500.0f;
+
+	if(m_input.GetKeyboard().KeyDown(yz::Key::Left))
 		pos.x -= speed * dt;
-	else if(m_input.KeyDown(yz::Key::Right))
+	if(m_input.GetKeyboard().KeyDown(yz::Key::Right))
 		pos.x += speed * dt;
-	else if(m_input.KeyDown(yz::Key::Up))
+	if(m_input.GetKeyboard().KeyDown(yz::Key::Up))
 		pos.y -= speed * dt;
-	else if(m_input.KeyDown(yz::Key::Down))
+	if(m_input.GetKeyboard().KeyDown(yz::Key::Down))
 		pos.y += speed * dt;
+
+	if(m_input.GetKeyboard().KeyReleased(yz::Key::Esc))
+		Close();
+
+	if(m_input.GetKeyboard().KeyPressed(yz::Key::F1))
+		m_graphics_device.GetRasterizer().ToggleFillMode();
+
+	if(m_input.GetKeyboard().KeyPressed(yz::Key::F11))
+	{
+		if(m_graphics_device.GetParams().GetFullscreenMode() ==
+		   yz::FullscreenMode::Windowed)
+			m_graphics_device.GetParams().SetFullscreenMode(
+			        yz::FullscreenMode::Exclusive);
+		else
+			m_graphics_device.GetParams().SetFullscreenMode(
+			        yz::FullscreenMode::Windowed);
+
+		m_graphics_device.ApplyChanges();
+	}
+
+	if(m_input.GetKeyboard().KeyPressed(yz::Key::F9))
+	{
+		if(m_graphics_device.GetParams().GetVsyncMode() == yz::VsyncMode::Immediate)
+			m_graphics_device.GetParams().SetVsyncMode(yz::VsyncMode::Synchronized);
+		else
+			m_graphics_device.GetParams().SetVsyncMode(yz::VsyncMode::Immediate);
+
+		m_graphics_device.ApplyChanges();
+	}
+	YZ_INFO("dt: %f", dt);
 }
 
-void Sandbox::OnRender(float dt)
+void Sandbox::OnRender()
 {
 	m_renderer.Begin();
-	m_renderer.DrawQuad(yz::Color::AZURE, pos, {128.0f, 128.0f}, 0.0f);
+
+	m_renderer.DrawQuad(yz::Color::BLUE_VIOLET, pos, {32.0f, 32.0f}, 0.0f);
+
+	m_renderer.DrawQuad(yz::Color::AZURE, {40.0f, 100.0f}, {128.0f, 128.0f}, 0.0f);
+
+	m_renderer.DrawQuad(yz::Color::DEEP_PINK, pos + yz::Vec2 {128.0f},
+	                    {128.0f, 128.0f}, 0.0f);
 	m_renderer.End();
 }
 
-void Sandbox::OnResize(unsigned int w, unsigned int h)
+void Sandbox::OnExit()
 {
+	m_input.Shutdown();
+	m_renderer.Destroy();
 }

@@ -8,19 +8,18 @@ class Sandbox final: public yz::Application
 {
 public:
 	Sandbox(yz::AppSpecs& specs)
-	        : yz::Application(specs), m_renderer(m_graphics_device),
-	          m_input(m_window)
+	        : yz::Application(specs), m_renderer(m_graphics_device)
 	{
 	}
 
 	void OnInit() override;
 	void OnUpdate(float dt) override;
-	void OnRender(float dt) override;
-	void OnResize(unsigned int w, unsigned int h) override;
+	void OnRender() override;
+	void OnExit() override;
 
 private:
 	yz::Renderer     m_renderer;
-	yz::InputManager m_input;
+	yz::InputManager m_input {m_window};
 
 	yz::Vec2 pos;
 };
