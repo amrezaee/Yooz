@@ -47,17 +47,10 @@ enum class BlendFunction
 	Max
 };
 
-enum class CullMode
-{
-	None,  // don't cull
-	CW,    // clock wise
-	CCW    // counter clock wise
-};
-
 enum class FillMode
 {
 	Fill,
-	Wire_Frame
+	Line
 };
 
 enum class TextureFilter

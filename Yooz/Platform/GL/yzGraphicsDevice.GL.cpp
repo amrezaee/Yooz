@@ -194,6 +194,11 @@ const GraphicsFeatures& GraphicsDevice::GetFeatures() const
 	return m_features;
 }
 
+Rasterizer& GraphicsDevice::GetRasterizer()
+{
+	return m_rasterizer;
+}
+
 #ifdef YZ_DEBUG_BUILD
 void GLDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severity,
                    GLsizei length, const char* message, const void* userparam)

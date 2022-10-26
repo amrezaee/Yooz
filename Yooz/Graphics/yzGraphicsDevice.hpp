@@ -6,6 +6,7 @@
 #include <Graphics/yzGraphicsFeatures.hpp>
 #include <Graphics/yzGraphicsParams.hpp>
 #include <Graphics/yzGraphicsStates.hpp>
+#include <Graphics/yzRasterizer.hpp>
 
 namespace yz
 {
@@ -29,6 +30,7 @@ public:
 	GraphicsAPI             GetAPI() const;
 	GraphicsParams&         GetParams();
 	const GraphicsFeatures& GetFeatures() const;
+	Rasterizer&             GetRasterizer();
 
 private:
 	void SetupParams();
@@ -42,5 +44,6 @@ private:
 	GraphicsFeatures  m_features;
 	GraphicsParams    m_params;
 	Color             m_clear_color;
+	Rasterizer        m_rasterizer;
 };
 }  // namespace yz
