@@ -26,7 +26,7 @@ public:
 	void ClearBuffers() const;
 	void SwapBuffers() const;
 
-	void OnResize(std::uint16_t w, std::uint16_t h);
+	void OnResize(uint16_t w, uint16_t h);
 
 	void ApplyChanges();
 

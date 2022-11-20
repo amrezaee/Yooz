@@ -51,22 +51,19 @@ const Color Color::TURQUOISE {0x30d5c8ff};
 const Color Color::WHITE_SMOKE {0xf5f5f5ff};
 const Color Color::YELLOW_GREEN {0x9acd32ff};
 
-void Color::Set(std::uint8_t r, std::uint8_t g, std::uint8_t b, std::uint8_t a)
+void Color::Set(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
 {
-	m_value = static_cast<std::uint32_t>(r << 24u) |
-	          static_cast<std::uint32_t>(g << 16u) |
-	          static_cast<std::uint32_t>(b << 8u) | static_cast<std::uint32_t>(a);
+	m_value = static_cast<uint32_t>(r << 24u) | static_cast<uint32_t>(g << 16u) |
+	          static_cast<uint32_t>(b << 8u) | static_cast<uint32_t>(a);
 }
 
 void Color::Set(float r, float g, float b, float a)
 {
-	m_value = static_cast<std::uint8_t>(r * 255u) |
-	          static_cast<std::uint8_t>(g * 255u) |
-	          static_cast<std::uint8_t>(b * 255u) |
-	          static_cast<std::uint8_t>(a * 255u);
+	m_value = static_cast<uint8_t>(r * 255u) | static_cast<uint8_t>(g * 255u) |
+	          static_cast<uint8_t>(b * 255u) | static_cast<uint8_t>(a * 255u);
 }
 
-void Color::Set(std::uint8_t r, std::uint8_t g, std::uint8_t b)
+void Color::Set(uint8_t r, uint8_t g, uint8_t b)
 {
 	Set(r, g, b, 255u);
 }
@@ -77,50 +74,50 @@ void Color::Set(float r, float g, float b)
 }
 
 
-void Color::SetRed(std::uint8_t r)
+void Color::SetRed(uint8_t r)
 {
-	m_value = static_cast<std::uint32_t>(m_value & 0x00ffffff) |
-	          static_cast<std::uint32_t>(r << 24u);
+	m_value = static_cast<uint32_t>(m_value & 0x00ffffff) |
+	          static_cast<uint32_t>(r << 24u);
 }
 
-void Color::SetGreen(std::uint8_t g)
+void Color::SetGreen(uint8_t g)
 {
-	m_value = static_cast<std::uint32_t>(m_value & 0xff00ffff) |
-	          static_cast<std::uint32_t>(g << 16u);
+	m_value = static_cast<uint32_t>(m_value & 0xff00ffff) |
+	          static_cast<uint32_t>(g << 16u);
 }
 
-void Color::SetBlue(std::uint8_t b)
+void Color::SetBlue(uint8_t b)
 {
-	m_value = static_cast<std::uint32_t>(m_value & 0xffff00ff) |
-	          static_cast<std::uint32_t>(b << 8u);
+	m_value = static_cast<uint32_t>(m_value & 0xffff00ff) |
+	          static_cast<uint32_t>(b << 8u);
 }
 
-void Color::SetAlpha(std::uint8_t a)
+void Color::SetAlpha(uint8_t a)
 {
 	m_value = (m_value & 0xffffff00) | a;
 }
 
 void Color::SetRed(float r)
 {
-	SetRed(static_cast<std::uint8_t>(r * 255));
+	SetRed(static_cast<uint8_t>(r * 255));
 }
 
 void Color::SetGreen(float g)
 {
-	SetGreen(static_cast<std::uint8_t>(g * 255));
+	SetGreen(static_cast<uint8_t>(g * 255));
 }
 
 void Color::SetBlue(float b)
 {
-	SetBlue(static_cast<std::uint8_t>(b * 255));
+	SetBlue(static_cast<uint8_t>(b * 255));
 }
 
 void Color::SetAlpha(float a)
 {
-	SetAlpha(static_cast<std::uint8_t>(a * 255));
+	SetAlpha(static_cast<uint8_t>(a * 255));
 }
 
-void Color::SetPacked(std::uint32_t pack)
+void Color::SetPacked(uint32_t pack)
 {
 	m_value = pack;
 }

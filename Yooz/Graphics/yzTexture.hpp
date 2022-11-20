@@ -12,14 +12,14 @@ class Texture
 {
 public:
 	// TODO: change this to something generic
-	using handle_type = std::uint32_t;
+	using handle_type = uint32_t;
 
 	void Create(Vec2u size, TextureFilter filter, TextureWrapMode wrap_mode,
-	            const std::uint8_t* data, Color border_color = Color::BLACK);
+	            const uint8_t* data, Color border_color = Color::BLACK);
 
 	void Destroy();
 
-	void Bind(std::uint32_t unit) const;
+	void Bind(uint32_t unit) const;
 
 	handle_type     GetHandle() const;
 	Vec2u           GetSize() const;

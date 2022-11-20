@@ -168,7 +168,7 @@ void GraphicsDevice::SwapBuffers() const
 	SDL_GL_SwapWindow(static_cast<SDL_Window*>(m_params.GetWindowHandle()));
 }
 
-void GraphicsDevice::OnResize(std::uint16_t w, std::uint16_t h)
+void GraphicsDevice::OnResize(uint16_t w, uint16_t h)
 {
 	m_params.SetBufferSize(w, h);
 	glViewport(0, 0, w, h);
@@ -204,8 +204,8 @@ void GraphicsDevice::ApplyChanges()
 	int w, h;
 	SDL_GetWindowSize(sw, &w, &h);
 
-	std::uint16_t ws = static_cast<std::uint16_t>(w);
-	std::uint16_t hs = static_cast<std::uint16_t>(h);
+	uint16_t ws = static_cast<uint16_t>(w);
+	uint16_t hs = static_cast<uint16_t>(h);
 
 	EventArg e;
 	e.type   = EventType::Resize;

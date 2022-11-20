@@ -26,7 +26,7 @@ public:
 	virtual void OnRender()         = 0;
 	virtual void OnExit()           = 0;
 
-	virtual void OnResize(std::uint16_t, std::uint16_t) {};
+	virtual void OnResize(uint16_t, uint16_t) {};
 	virtual void OnRedraw();
 
 	void Close();

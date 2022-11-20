@@ -24,8 +24,8 @@ static int resize_watch(void* userdata, SDL_Event* event)
 		{
 			EventArg earg;
 			earg.type   = EventType::Resize;
-			earg.u16[0] = static_cast<std::uint16_t>(event->window.data1);
-			earg.u16[1] = static_cast<std::uint16_t>(event->window.data2);
+			earg.u16[0] = static_cast<uint16_t>(event->window.data1);
+			earg.u16[1] = static_cast<uint16_t>(event->window.data2);
 			wp->window_event.Push(earg);
 			wp->window_event.Raise();
 		}
@@ -55,9 +55,9 @@ void Window::Init(bool resizable, bool borderless)
 
 	YZ_SINFO("Window Creation.");
 
-	m_title              = m_app.GetSpecs().name;
-	std::uint32_t width  = m_app.GetGraphicsDevice().GetParams().GetBufferWidth();
-	std::uint32_t height = m_app.GetGraphicsDevice().GetParams().GetBufferHeight();
+	m_title         = m_app.GetSpecs().name;
+	uint32_t width  = m_app.GetGraphicsDevice().GetParams().GetBufferWidth();
+	uint32_t height = m_app.GetGraphicsDevice().GetParams().GetBufferHeight();
 
 	m_resizable  = resizable;
 	m_borderless = borderless;
@@ -198,17 +198,17 @@ Handle Window::GetHandle() const
 	return m_handle;
 }
 
-std::uint32_t Window::GetID() const
+uint32_t Window::GetID() const
 {
 	return m_id;
 }
 
-std::uint32_t Window::GetWidth() const
+uint32_t Window::GetWidth() const
 {
 	return GetSize().x;
 }
 
-std::uint32_t Window::GetHeight() const
+uint32_t Window::GetHeight() const
 {
 	return GetSize().y;
 }
@@ -220,7 +220,7 @@ Vec2u Window::GetSize() const
 	return {w, h};
 }
 
-void Window::SetSize(std::uint16_t w, std::uint16_t h)
+void Window::SetSize(uint16_t w, uint16_t h)
 {
 	SDL_SetWindowSize(static_cast<SDL_Window*>(m_handle), static_cast<int>(w),
 	                  static_cast<int>(h));
@@ -233,12 +233,12 @@ void Window::SetSize(std::uint16_t w, std::uint16_t h)
 	window_event.Raise();
 }
 
-std::uint32_t Window::GetPosX() const
+uint32_t Window::GetPosX() const
 {
 	return GetPosition().x;
 }
 
-std::uint32_t Window::GetPosY() const
+uint32_t Window::GetPosY() const
 {
 	return GetPosition().y;
 }
@@ -250,7 +250,7 @@ Vec2u Window::GetPosition() const
 	return {x, y};
 }
 
-void Window::SetPosition(std::uint16_t x, std::uint16_t y)
+void Window::SetPosition(uint16_t x, uint16_t y)
 {
 	SDL_SetWindowPosition(static_cast<SDL_Window*>(m_handle), x, y);
 }

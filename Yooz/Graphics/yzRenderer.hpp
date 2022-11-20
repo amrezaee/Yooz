@@ -13,11 +13,11 @@ namespace yz
 {
 struct RenderStats
 {
-	std::uint32_t total_draw_calls {0};
-	std::uint32_t draw_calls {0};
+	uint32_t total_draw_calls {0};
+	uint32_t draw_calls {0};
 
-	std::uint32_t total_quads {0};
-	std::uint32_t quads {0};
+	uint32_t total_quads {0};
+	uint32_t quads {0};
 };
 
 class Renderer

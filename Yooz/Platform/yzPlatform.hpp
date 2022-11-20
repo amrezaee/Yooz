@@ -19,11 +19,11 @@ public:
 	bool HasAVX2() const;
 	bool HasAVX512F() const;
 
-	std::uint32_t GetCPUCount() const;
-	std::uint32_t GetRamSize() const;
-	std::uint32_t GetCacheLineSize() const;
+	uint32_t GetCPUCount() const;
+	uint32_t GetRamSize() const;
+	uint32_t GetCacheLineSize() const;
 
-	std::uint64_t GetTime() const;
+	uint64_t GetTime() const;
 
 private:
 	bool m_inited {false};
@@ -38,8 +38,8 @@ private:
 	bool m_avx2 {false};
 	bool m_avx512f {false};
 
-	std::uint32_t m_cpu_count {1};
-	std::uint32_t m_ram_size {0};
-	std::uint32_t m_cache_line_size {0};
+	uint32_t m_cpu_count {1};
+	uint32_t m_ram_size {0};
+	uint32_t m_cache_line_size {0};
 };
 }  // namespace yz

@@ -54,14 +54,13 @@ bool GraphicsFeatures::HasATITC() const
 	return m_atitc;
 }
 
-std::int32_t GraphicsFeatures::TotalTextureUnits() const
+uint32_t GraphicsFeatures::TotalTextureUnits() const
 {
-	return m_total_texture_units;
+	return static_cast<uint32_t>(m_total_texture_units);
 }
 
-std::int32_t GraphicsFeatures::FragmentShaderTextureUnits() const
+uint32_t GraphicsFeatures::FragmentShaderTextureUnits() const
 {
-	return m_fragment_shader_texture_units;
+	return static_cast<uint32_t>(m_fragment_shader_texture_units);
 }
-
 }  // namespace yz

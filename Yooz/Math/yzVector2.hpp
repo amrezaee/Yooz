@@ -222,9 +222,9 @@ inline Vector2<T>& operator/=(Vector2<T>& l, const Vector2<T>& r)
 using Vec2 = Vector2<float>;
 static_assert(sizeof(Vec2) == (2 * sizeof(float)), "wrong size");
 
-using Vec2i = Vector2<std::int32_t>;
-static_assert(sizeof(Vec2i) == (2 * sizeof(std::int32_t)), "wrong size");
+using Vec2i = Vector2<int32_t>;
+static_assert(sizeof(Vec2i) == (2 * sizeof(int32_t)), "wrong size");
 
-using Vec2u = Vector2<std::uint32_t>;
-static_assert(sizeof(Vec2u) == (2 * sizeof(std::uint32_t)), "wrong size");
+using Vec2u = Vector2<uint32_t>;
+static_assert(sizeof(Vec2u) == (2 * sizeof(uint32_t)), "wrong size");
 }  // namespace yz

@@ -1,11 +1,11 @@
 #pragma once
 
+#include <yzpch.hpp>
+
 #include <Graphics/yzColor.hpp>
 #include <Graphics/yzShader.hpp>
 #include <Graphics/yzTexture.hpp>
 #include <Math/yzVector2.hpp>
-
-#include <yzpch.hpp>
 
 namespace yz
 {
@@ -25,7 +25,7 @@ struct BatchData
 	Vec2           position;
 	Vec2           scale;
 	Vec2           origin;
-	float          angle {0.0f};
+	float          angle;
 };
 
 class Batcher
@@ -34,7 +34,7 @@ public:
 	using texture_handle_type = Texture::handle_type;
 
 public:
-	void Init(std::uint32_t max_quads, std::uint32_t total_texture_units);
+	void Init(uint32_t max_quads, uint32_t total_texture_units);
 	void Destroy();
 
 	// Returns false if it cannot add data.
@@ -43,8 +43,8 @@ public:
 	void Done();
 	void Reset();
 
-	std::uint32_t GetIndicesCount() const;
-	std::uint32_t GetQuadsCount() const;
+	uint32_t GetIndicesCount() const;
+	uint32_t GetQuadsCount() const;
 
 	const Texture& GetDefaultTexture() const;
 
@@ -52,7 +52,7 @@ private:
 	void InitBuffers();
 	void DestroyBuffers();
 
-	void AddQuad(const BatchData& data, const std::uint32_t texture_index);
+	void AddQuad(const BatchData& data, const uint32_t texture_index);
 
 private:
 	bool m_inited {false};
@@ -60,15 +60,16 @@ private:
 	Texture m_white_texture;
 
 	// Max texture units target GPU supports. (GPU dependent)
-	std::uint32_t m_total_texture_units {8};
+	uint32_t m_total_texture_units {8};
 	// Max quads in each batch.
-	std::uint32_t m_max_quads {1000};
-	std::uint32_t m_max_vertices {m_max_quads * 4};
-	std::uint32_t m_max_indices {m_max_quads * 6};
-	std::uint32_t m_quads_count {0};
+	uint32_t m_max_quads {100};
+	uint32_t m_max_vertices {m_max_quads * 4};
+	uint32_t m_max_indices {m_max_quads * 6};
+
+	uint32_t m_quad_count {0};
 
 	texture_handle_type* m_texture_units {nullptr};
-	std::uint32_t        m_texture_index {1};
+	uint32_t             m_texture_index {1};  // 0 is white texture
 
 	Vertex* m_vertices {nullptr};
 };

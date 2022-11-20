@@ -26,8 +26,8 @@ public:
 	void SetDoubleClickTime(float time);
 
 private:
-	std::uint32_t m_button_states {0};
-	std::uint32_t m_last_button_states {0};
+	uint32_t m_button_states {0};
+	uint32_t m_last_button_states {0};
 
 	Vec2 m_pos;
 	Vec2 m_wheel;

@@ -34,19 +34,19 @@ public:
 
 	Handle GetHandle() const;
 
-	std::uint32_t GetID() const;
+	uint32_t GetID() const;
 
-	std::uint32_t GetWidth() const;
-	std::uint32_t GetHeight() const;
-	Vec2u         GetSize() const;
+	uint32_t GetWidth() const;
+	uint32_t GetHeight() const;
+	Vec2u    GetSize() const;
 
-	void SetSize(std::uint16_t w, std::uint16_t h);
+	void SetSize(uint16_t w, uint16_t h);
 
-	std::uint32_t GetPosX() const;
-	std::uint32_t GetPosY() const;
-	Vec2u         GetPosition() const;
+	uint32_t GetPosX() const;
+	uint32_t GetPosY() const;
+	Vec2u    GetPosition() const;
 
-	void SetPosition(std::uint16_t x, std::uint16_t);
+	void SetPosition(uint16_t x, uint16_t);
 
 	const std::string& GetTitle() const;
 	void               SetTitle(const std::string& title);
@@ -69,9 +69,9 @@ private:
 	bool m_borderless {false};
 	bool m_allow_alt_f4 {false};
 
-	Handle        m_handle;
-	Application&  m_app;
-	std::string   m_title;
-	std::uint32_t m_id;
+	Application& m_app;
+	Handle       m_handle;
+	std::string  m_title;
+	uint32_t     m_id;
 };
 }  // namespace yz

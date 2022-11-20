@@ -26,9 +26,9 @@ void Platform::Init()
 	m_avx2    = SDL_HasAVX2();
 	m_avx512f = SDL_HasAVX512F();
 
-	m_cpu_count       = static_cast<std::uint32_t>(SDL_GetCPUCount());
-	m_cache_line_size = static_cast<std::uint32_t>(SDL_GetCPUCacheLineSize());
-	m_ram_size        = static_cast<std::uint32_t>(SDL_GetSystemRAM());
+	m_cpu_count       = static_cast<uint32_t>(SDL_GetCPUCount());
+	m_cache_line_size = static_cast<uint32_t>(SDL_GetCPUCacheLineSize());
+	m_ram_size        = static_cast<uint32_t>(SDL_GetSystemRAM());
 
 	YZ_INFO("Platform: %s", m_name);
 	YZ_INFO("#CPUs:    %u", m_cpu_count);
@@ -84,23 +84,23 @@ bool Platform::HasAVX512F() const
 	return m_avx512f;
 }
 
-std::uint32_t Platform::GetCPUCount() const
+uint32_t Platform::GetCPUCount() const
 {
 	return m_cpu_count;
 }
-std::uint32_t Platform::GetRamSize() const
+uint32_t Platform::GetRamSize() const
 {
 	return m_ram_size;
 }
-std::uint32_t Platform::GetCacheLineSize() const
+uint32_t Platform::GetCacheLineSize() const
 {
 	return m_cache_line_size;
 }
 
-std::uint64_t Platform::GetTime() const
+uint64_t Platform::GetTime() const
 {
 	// convert frequency resolution from seconds to microseconds
-	static const std::uint64_t freq = SDL_GetPerformanceFrequency() / 1000000;
+	static const uint64_t freq = SDL_GetPerformanceFrequency() / 1000000;
 	return SDL_GetPerformanceCounter() / freq;
 }
 }  // namespace yz

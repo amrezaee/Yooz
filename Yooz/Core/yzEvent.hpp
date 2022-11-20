@@ -32,20 +32,20 @@ struct EventArg
 
 	union
 	{
-		std::int64_t  i64[2];
-		std::uint64_t u64[2];
+		int64_t  i64[2];
+		uint64_t u64[2];
 
 		double f64[2];
 		float  f32[4];
 
-		std::int32_t  i32[4];
-		std::uint32_t u32[4];
+		int32_t  i32[4];
+		uint32_t u32[4];
 
-		std::int16_t  i16[8];
-		std::uint16_t u16[8];
+		int16_t  i16[8];
+		uint16_t u16[8];
 
-		std::int8_t  i8[16];
-		std::uint8_t u8[16];
+		int8_t  i8[16];
+		uint8_t u8[16];
 
 		char c[16];
 	};

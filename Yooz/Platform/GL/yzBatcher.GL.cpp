@@ -14,7 +14,7 @@ static struct
 	GLuint vao {0};
 } g_data;
 
-void Batcher::Init(std::uint32_t max_quads, std::uint32_t total_texture_units)
+void Batcher::Init(uint32_t max_quads, uint32_t total_texture_units)
 {
 	YZ_ASSERT(!m_inited);
 
@@ -28,9 +28,9 @@ void Batcher::Init(std::uint32_t max_quads, std::uint32_t total_texture_units)
 
 	InitBuffers();
 
-	std::uint32_t c = Color::WHITE.GetPacked();
+	uint32_t c = Color::WHITE.GetPacked();
 	m_white_texture.Create({1, 1}, TextureFilter::Linear, TextureWrapMode::Repeat,
-	                       reinterpret_cast<std::uint8_t*>(&c));
+	                       reinterpret_cast<uint8_t*>(&c));
 	m_texture_units[0] = m_white_texture.GetHandle();
 
 	m_inited = true;
@@ -39,7 +39,6 @@ void Batcher::Init(std::uint32_t max_quads, std::uint32_t total_texture_units)
 void Batcher::Destroy()
 {
 	YZ_ASSERT(m_inited);
-
 
 	DestroyBuffers();
 
@@ -58,7 +57,7 @@ void Batcher::Destroy()
 
 bool Batcher::Add(const BatchData& data)
 {
-	if(m_quads_count >= m_max_quads)
+	if(m_quad_count >= m_max_quads)
 		return false;
 
 	for(unsigned int i = 0; i < (m_total_texture_units - 1); ++i)
@@ -80,10 +79,10 @@ bool Batcher::Add(const BatchData& data)
 
 void Batcher::Done()
 {
-	if(m_quads_count == 0)
+	if(m_quad_count == 0)
 		return;
 
-	glNamedBufferSubData(g_data.vbo, 0, (m_quads_count * sizeof(Vertex)) << 2,
+	glNamedBufferSubData(g_data.vbo, 0, (m_quad_count * sizeof(Vertex)) << 2,
 	                     m_vertices);
 
 	for(unsigned int i = 0; i < m_texture_index; ++i)
@@ -97,17 +96,17 @@ void Batcher::Done()
 void Batcher::Reset()
 {
 	m_texture_index = 1;
-	m_quads_count   = 0;
+	m_quad_count    = 0;
 }
 
-std::uint32_t Batcher::GetIndicesCount() const
+uint32_t Batcher::GetIndicesCount() const
 {
-	return m_quads_count * 6u;
+	return m_quad_count * 6u;
 }
 
-std::uint32_t Batcher::GetQuadsCount() const
+uint32_t Batcher::GetQuadsCount() const
 {
-	return m_quads_count;
+	return m_quad_count;
 }
 
 const Texture& Batcher::GetDefaultTexture() const
@@ -115,7 +114,7 @@ const Texture& Batcher::GetDefaultTexture() const
 	return m_white_texture;
 }
 
-void Batcher::AddQuad(const BatchData& data, const std::uint32_t texture_index)
+void Batcher::AddQuad(const BatchData& data, const uint32_t texture_index)
 {
 	Transform model;
 
@@ -133,7 +132,7 @@ void Batcher::AddQuad(const BatchData& data, const std::uint32_t texture_index)
 	Vec2 oov3(1.0f - data.origin.x, 1.0f - data.origin.y);
 	Vec2 oov4(-data.origin.x, 1.0f - data.origin.y);
 
-	std::uint32_t vc = m_quads_count * 4;
+	uint32_t vc = m_quad_count * 4;
 
 	// Vertex 1
 	model.TransformVec2(oov1, m_vertices[vc].position);
@@ -159,7 +158,7 @@ void Batcher::AddQuad(const BatchData& data, const std::uint32_t texture_index)
 	m_vertices[vc].color    = data.colors[3];
 	m_vertices[vc].texid    = static_cast<float>(texture_index);
 
-	++m_quads_count;
+	++m_quad_count;
 }
 
 void Batcher::InitBuffers()
@@ -168,7 +167,7 @@ void Batcher::InitBuffers()
 	std::memset(&g_data, 0, sizeof(g_data));
 
 	{
-		std::uint32_t* indices = new std::uint32_t[m_max_indices];
+		uint32_t* indices = new uint32_t[m_max_indices];
 
 		// Fill index buffer.
 		// Its content is known and constant.

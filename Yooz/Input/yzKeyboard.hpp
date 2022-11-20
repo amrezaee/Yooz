@@ -20,7 +20,7 @@ public:
 	bool KeyReleased(Key key);
 
 private:
-	const std::uint8_t*                               m_down_states {nullptr};
-	std::bitset<static_cast<std::size_t>(Key::Count)> m_press_states;
+	const uint8_t*                               m_down_states {nullptr};
+	std::bitset<static_cast<size_t>(Key::Count)> m_press_states;
 };
 }  // namespace yz

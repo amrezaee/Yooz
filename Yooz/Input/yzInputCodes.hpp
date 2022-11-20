@@ -4,7 +4,7 @@
 
 namespace yz
 {
-enum class Key : std::uint16_t
+enum class Key : uint16_t
 {
 	None = 0,
 
@@ -158,7 +158,7 @@ enum class Key : std::uint16_t
 	Count = 512
 };
 
-enum class MouseButton : std::uint8_t
+enum class MouseButton : uint8_t
 {
 	None,
 	Left,
@@ -170,7 +170,7 @@ enum class MouseButton : std::uint8_t
 };
 
 // Controller button
-enum class CButton : std::int8_t
+enum class CButton : int8_t
 {
 	None = -1,
 	A,
@@ -198,7 +198,7 @@ enum class CButton : std::int8_t
 };
 
 // Controller axis
-enum class CAxis : std::uint8_t
+enum class CAxis : uint8_t
 {
 	None,
 	LeftX,

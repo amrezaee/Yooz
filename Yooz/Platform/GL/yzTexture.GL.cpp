@@ -5,7 +5,7 @@
 namespace yz
 {
 void Texture::Create(Vec2u size, TextureFilter filter, TextureWrapMode wrap_mode,
-                     const std::uint8_t* data, Color border_color)
+                     const uint8_t* data, Color border_color)
 {
 	m_size         = size;
 	m_filter       = filter;
@@ -26,7 +26,7 @@ void Texture::Destroy()
 	glDeleteTextures(1, &m_handle);
 }
 
-void Texture::Bind(std::uint32_t unit) const
+void Texture::Bind(uint32_t unit) const
 {
 	glBindTextureUnit(unit, m_handle);
 }

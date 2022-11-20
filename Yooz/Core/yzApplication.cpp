@@ -15,10 +15,10 @@ void Application::Run()
 {
 	constexpr unsigned int delta_times_size = 4;
 	float                  delta_times[delta_times_size] {};
-	std::size_t            dti = 0;
+	size_t                 dti = 0;
 
-	std::uint64_t current_time = m_platform.GetTime();
-	std::uint64_t last_time    = 0;
+	uint64_t current_time = m_platform.GetTime();
+	uint64_t last_time    = 0;
 
 	Init();
 
