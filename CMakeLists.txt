@@ -31,86 +31,86 @@ endif()
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-set(CMAKE_CXX_STANDARD          11  CACHE STRING "C++ standard to be used")
-set(CMAKE_CXX_STANDARD_REQUIRED ON  CACHE BOOL   "Force C++ standard required")
-set(CMAKE_CXX_EXTENSIONS        OFF CACHE BOOL   "C++ compiler extensions turn off")
+set(CMAKE_CXX_STANDARD          11  CACHE STRING "C++ standard to be used" FORCE)
+set(CMAKE_CXX_STANDARD_REQUIRED ON  CACHE BOOL   "Force C++ standard required" FORCE)
+set(CMAKE_CXX_EXTENSIONS        OFF CACHE BOOL   "C++ compiler extensions turn off" FORCE)
 
-set(CMAKE_C_STANDARD          11  CACHE STRING "C standard to be used")
-set(CMAKE_C_STANDARD_REQUIRED ON  CACHE BOOL   "Force C standard required")
-set(CMAKE_C_EXTENSIONS        OFF CACHE BOOL   "C compiler extensions")
+set(CMAKE_C_STANDARD          11  CACHE STRING "C standard to be used" FORCE)
+set(CMAKE_C_STANDARD_REQUIRED ON  CACHE BOOL   "Force C standard required" FORCE)
+set(CMAKE_C_EXTENSIONS        OFF CACHE BOOL   "C compiler extensions" FORCE)
 
 if(MSVC AND YZ_STATIC_CRT)
 	if(NOT (VCPKG_TARGET_TRIPLET MATCHES "windows-yooz-mt$"))
 		message(FATAL_ERROR "Incompatible triplet used.")
 	endif()
 	
-	set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>" CACHE STRING "MSVC runtime library type")
+	set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>" CACHE STRING "MSVC runtime library type" FORCE)
 endif()
 
 #--------------------------------------------------------------------------------------------------
 # PLATFORM INFO
 #--------------------------------------------------------------------------------------------------
 if(UNIX)
-	set(YZ_PLATFORM_UNIX TRUE CACHE BOOL "UNIX platform")
+	set(YZ_PLATFORM_UNIX TRUE)
 endif(UNIX)
 
 if(APPLE)
-	set(YZ_PLATFORM_APPLE TRUE CACHE BOOL "Apple platform")
+	set(YZ_PLATFORM_APPLE TRUE)
 endif(APPLE)
 
 if((CMAKE_SYSTEM_NAME STREQUAL "Windows") OR WIN32)
-	set(YZ_PLATFORM_WINDOWS TRUE CACHE BOOL "Windows platform")
+	set(YZ_PLATFORM_WINDOWS TRUE)
 
 elseif((CMAKE_SYSTEM_NAME STREQUAL "Android") OR ANDROID)
-	set(YZ_PLATFORM_ANDROID TRUE CACHE BOOL "Android platform")
+	set(YZ_PLATFORM_ANDROID TRUE)
 
 elseif((CMAKE_SYSTEM_NAME STREQUAL "Emscripten") OR EMSCRIPTEN)
-	set(YZ_PLATFORM_EMSCRIPTEN TRUE CACHE BOOL "Emscripten platform")
+	set(YZ_PLATFORM_EMSCRIPTEN TRUE)
 
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-	set(YZ_PLATFORM_OSX TRUE CACHE BOOL "MacOSX platform")
+	set(YZ_PLATFORM_OSX TRUE)
 
 elseif(CMAKE_SYSTEM_NAME STREQUAL "iOS")
-	set(YZ_PLATFORM_IOS TRUE CACHE BOOL "IOS platform")
+	set(YZ_PLATFORM_IOS TRUE)
 
 elseif(CMAKE_SYSTEM_NAME STREQUAL "MSYS")
-	set(YZ_PLATFORM_MSYS TRUE CACHE BOOL "MSYS platform")
+	set(YZ_PLATFORM_MSYS TRUE)
 
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-	set(YZ_PLATFORM_LINUX TRUE CACHE BOOL "Linux platform")
+	set(YZ_PLATFORM_LINUX TRUE)
 
 else()
 	message(FATAL_ERROR "Unsupported platform.")
 endif()
 
 if(YZ_PLATFORM_WINDOWS OR YZ_PLATFORM_LINUX OR YZ_PLATFORM_MYSYS OR YZ_PLATFORM_ANDROID OR YZ_PLATFORM_EMSCRIPTEN)
-	set(YZ_GL_PLATFORM TRUE CACHE BOOL "OpenGL supported platforms")
-	set(YZ_VK_PLATFORM TRUE CACHE BOOL "Vulkan supported platforms")
+	set(YZ_GL_PLATFORM TRUE)
+	set(YZ_VK_PLATFORM TRUE)
 endif()
 
 if(YZ_PLATFORM_WINDOWS OR YZ_PLATFORM_OSX OR YZ_PLATFORM_LINUX OR YZ_PLATFORM_MYSYS)
-	set(YZ_PLATFORM_DESKTOP TRUE CACHE BOOL "Desktop platforms")
+	set(YZ_PLATFORM_DESKTOP TRUE)
 else()
-	set(YZ_PLATFORM_MOBILE TRUE CACHE BOOL "Mobile platforms")
+	set(YZ_PLATFORM_MOBILE TRUE)
 endif()
 
 #--------------------------------------------------------------------------------------------------
 # COMPILER INFO
 #--------------------------------------------------------------------------------------------------
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-	set(YZ_COMPILER_MSVC TRUE CACHE BOOL "MSVC compiler")
+	set(YZ_COMPILER_MSVC TRUE)
 
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-	set(YZ_COMPILER_GCC TRUE CACHE BOOL "GNU compiler")
+	set(YZ_COMPILER_GCC TRUE)
 
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-	set(YZ_COMPILER_CLANG TRUE CACHE BOOL "Clang compiler")
+	set(YZ_COMPILER_CLANG TRUE)
 
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
-	set(YZ_COMPILER_INTEL TRUE CACHE BOOL "Intel compiler")
+	set(YZ_COMPILER_INTEL TRUE)
 
 elseif(YZ_PLATFORM_EMSCRIPTEN)
-	set(YZ_COMPILER_EMSCRIPTEN TRUE CACHE BOOL "Emscripten compiler")
+	set(YZ_COMPILER_EMSCRIPTEN TRUE)
 
 else()
 	message(FATAL_ERROR "Unsupported compiler.")
