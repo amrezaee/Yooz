@@ -1,13 +1,13 @@
 #pragma once
 
+#include <yzpch.hpp>
+
 #include <Graphics/yzBatcher.hpp>
 #include <Graphics/yzCamera.hpp>
 #include <Graphics/yzGraphicsDevice.hpp>
 #include <Graphics/yzShader.hpp>
 #include <Graphics/yzTexture.hpp>
 #include <Math/yzVector2.hpp>
-
-#include <yzpch.hpp>
 
 namespace yz
 {
@@ -34,7 +34,7 @@ public:
 
 	const RenderStats& GetStats() const;
 
-	void OnResize(Vec2u size);
+	void OnResize(uint16_t w, uint16_t h);
 
 	void DrawQuad(const Texture& texture, Color color, Vec2 pos, Vec2 scale,
 	              float angle, Vec2 origin);
@@ -51,6 +51,7 @@ public:
 	void DrawQuad(Color color, Vec2 pos);
 
 private:
+	bool m_inited {false};
 	bool m_begin {false};
 
 	GraphicsDevice& m_gd;

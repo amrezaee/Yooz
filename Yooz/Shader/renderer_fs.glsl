@@ -13,9 +13,5 @@ in VS_OUT
 
 void main()
 {
-	vec4 color = fs_in.aColor;
-	
-	color *= texture(uTextures[int(fs_in.aTexID)], fs_in.aTexCoord);
-
-	outColor = color;
+	outColor = fs_in.aColor * texture(uTextures[int(fs_in.aTexID)], fs_in.aTexCoord);
 }

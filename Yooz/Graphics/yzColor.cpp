@@ -1,6 +1,5 @@
 #include <Graphics/yzColor.hpp>
 
-
 namespace yz
 {
 const Color Color::WHITE {0xffffffff};
@@ -129,8 +128,6 @@ void Color::GetColors(float* const out) const
 
 bool Color::operator==(Color rhs) const
 {
-	return GetRed() == rhs.GetRed() && GetGreen() == rhs.GetGreen() &&
-	       GetBlue() == rhs.GetBlue() && GetAlpha() == rhs.GetAlpha();
+	return m_value == rhs.m_value;
 }
-
 }  // namespace yz

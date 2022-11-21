@@ -1,7 +1,5 @@
 #include <Graphics/yzRenderer.hpp>
 
-#include <yzpch.hpp>
-
 #include <Core/yzAssert.hpp>
 
 namespace yz
@@ -12,9 +10,11 @@ Renderer::Renderer(GraphicsDevice& gd): m_gd(gd)
 
 void Renderer::Init()
 {
+	YZ_ASSERT(!m_inited, "Renderer already initialized.");
+
 	m_gd.SetClearColor(Color::WHITE_SMOKE);
 
-	OnResize(m_gd.GetParams().GetBufferSize());
+	OnResize(m_gd.GetParams().GetBufferWidth(), m_gd.GetParams().GetBufferHeight());
 
 	m_batcher.Init(10000, m_gd.GetFeatures().FragmentShaderTextureUnits());
 
@@ -26,13 +26,15 @@ void Renderer::Init()
 
 void Renderer::Destroy()
 {
+	YZ_ASSERT(m_inited, "Renderer already destroyed.");
+
 	m_batcher.Destroy();
 	m_begin = false;
 }
 
 void Renderer::Begin()
 {
-	YZ_ASSERT(!m_begin, "Renderer wrong function order.");
+	YZ_ASSERT(!m_begin, "Renderer already begun.");
 
 	m_gd.ClearBuffers();
 
@@ -50,7 +52,7 @@ void Renderer::Begin(const Camera& camera)
 
 void Renderer::End()
 {
-	YZ_ASSERT(m_begin, "Renderer wrong function order.");
+	YZ_ASSERT(m_begin, "Renderer already ended.");
 
 	m_shader.Bind();
 
@@ -73,10 +75,9 @@ const RenderStats& Renderer::GetStats() const
 	return m_stats;
 }
 
-void Renderer::OnResize(Vec2u size)
+void Renderer::OnResize(uint16_t w, uint16_t h)
 {
-	m_camera.SetProjection(0.0f, static_cast<float>(size.x), 0.0f,
-	                       static_cast<float>(size.y));
+	m_camera.SetProjection(0.0f, static_cast<float>(w), 0.0f, static_cast<float>(h));
 }
 
 void Renderer::DrawQuad(const Texture& texture, Color color, Vec2 pos, Vec2 scale,

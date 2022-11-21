@@ -4,7 +4,7 @@
 
 namespace yz
 {
-// 32bit packed Color type in ABGR format
+// 32-bit packed color in ABGR layout
 class Color
 {
 private:
