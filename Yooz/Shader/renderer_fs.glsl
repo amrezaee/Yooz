@@ -13,7 +13,7 @@ in VS_OUT
 
 void main()
 {
-	vec4 color = fs_in.aColor.wzyx;
+	vec4 color = fs_in.aColor;
 	
 	color *= texture(uTextures[int(fs_in.aTexID)], fs_in.aTexCoord);
 

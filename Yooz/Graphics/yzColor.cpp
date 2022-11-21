@@ -53,48 +53,44 @@ const Color Color::YELLOW_GREEN {0x9acd32ff};
 
 void Color::Set(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
 {
-	m_value = static_cast<uint32_t>(r << 24u) | static_cast<uint32_t>(g << 16u) |
-	          static_cast<uint32_t>(b << 8u) | static_cast<uint32_t>(a);
+	m_value = static_cast<uint32_t>(a << 24u) | static_cast<uint32_t>(b << 16u) |
+	          static_cast<uint32_t>(g << 8u) | static_cast<uint32_t>(r);
 }
 
 void Color::Set(float r, float g, float b, float a)
 {
-	m_value = static_cast<uint8_t>(r * 255u) | static_cast<uint8_t>(g * 255u) |
-	          static_cast<uint8_t>(b * 255u) | static_cast<uint8_t>(a * 255u);
+	m_value = static_cast<uint8_t>(a * 255u) | static_cast<uint8_t>(b * 255u) |
+	          static_cast<uint8_t>(g * 255u) | static_cast<uint8_t>(r * 255u);
 }
 
 void Color::Set(uint8_t r, uint8_t g, uint8_t b)
 {
-	Set(r, g, b, 255u);
+	Set(255u, b, g, r);
 }
 
 void Color::Set(float r, float g, float b)
 {
-	Set(r, g, b, 1.0f);
+	Set(1.0f, b, g, r);
 }
-
 
 void Color::SetRed(uint8_t r)
 {
-	m_value = static_cast<uint32_t>(m_value & 0x00ffffff) |
-	          static_cast<uint32_t>(r << 24u);
+	m_value = (m_value & 0xffffff00) | static_cast<uint32_t>(r);
 }
 
 void Color::SetGreen(uint8_t g)
 {
-	m_value = static_cast<uint32_t>(m_value & 0xff00ffff) |
-	          static_cast<uint32_t>(g << 16u);
+	m_value = (m_value & 0xffff00ff) | (static_cast<uint32_t>(g) << 8u);
 }
 
 void Color::SetBlue(uint8_t b)
 {
-	m_value = static_cast<uint32_t>(m_value & 0xffff00ff) |
-	          static_cast<uint32_t>(b << 8u);
+	m_value = (m_value & 0xff00ffff) | (static_cast<uint32_t>(b) << 16u);
 }
 
 void Color::SetAlpha(uint8_t a)
 {
-	m_value = (m_value & 0xffffff00) | a;
+	m_value = (m_value & 0x00ffffff) | (static_cast<uint32_t>(a) << 24u);
 }
 
 void Color::SetRed(float r)
@@ -119,7 +115,8 @@ void Color::SetAlpha(float a)
 
 void Color::SetPacked(uint32_t pack)
 {
-	m_value = pack;
+	m_value = ((pack >> 24) & 0xff) | ((pack << 8) & 0xff0000) |
+	          ((pack >> 8) & 0xff00) | ((pack << 24) & 0xff000000);
 }
 
 void Color::GetColors(float* const out) const

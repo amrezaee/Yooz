@@ -4,7 +4,7 @@
 
 namespace yz
 {
-// 32bit packed Color type in RGBA format
+// 32bit packed Color type in ABGR format
 class Color
 {
 private:
@@ -17,29 +17,33 @@ public:
 	Color& operator=(const Color&) = default;
 	Color& operator=(Color&&)      = default;
 
-	constexpr Color(uint32_t color): m_value(color) {}
+	constexpr Color(uint32_t color)
+	        : m_value(((color >> 24) & 0xff) | ((color << 8) & 0xff0000) |
+	                  ((color >> 8) & 0xff00) | ((color << 24) & 0xff000000))
+	{
+	}
 
 	constexpr Color(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
 	        :
 
-	          m_value(static_cast<uint32_t>(r << 24u) |
-	                  static_cast<uint32_t>(g << 16u) |
-	                  static_cast<uint32_t>(b << 8u) | static_cast<uint32_t>(a))
+	          m_value(static_cast<uint32_t>(a << 24u) |
+	                  static_cast<uint32_t>(b << 16u) |
+	                  static_cast<uint32_t>(g << 8u) | static_cast<uint32_t>(r))
 	{
 	}
 
 	constexpr Color(float r, float g, float b, float a)
-	        : Color(static_cast<uint8_t>(r * 255u), static_cast<uint8_t>(g * 255u),
-	                static_cast<uint8_t>(b * 255u), static_cast<uint8_t>(a * 255u))
+	        : Color(static_cast<uint8_t>(a * 255u), static_cast<uint8_t>(b * 255u),
+	                static_cast<uint8_t>(g * 255u), static_cast<uint8_t>(r * 255u))
 	{
 	}
 
-	constexpr Color(uint8_t r, uint8_t g, uint8_t b): Color(r, g, b, 255u) {}
+	constexpr Color(uint8_t r, uint8_t g, uint8_t b): Color(255u, b, g, r) {}
 
-	constexpr Color(float r, float g, float b): Color(r, g, b, 1.0f) {}
+	constexpr Color(float r, float g, float b): Color(1.0f, b, g, r) {}
 
 	constexpr Color(Color color, uint8_t alpha)
-	        : m_value((color.m_value << 8) | alpha)
+	        : m_value((static_cast<uint32_t>(alpha) << 24) | color.m_value)
 	{
 	}
 
@@ -58,16 +62,22 @@ public:
 
 	void GetColors(float* const out) const;
 
-	constexpr uint8_t GetRed() const { return static_cast<uint8_t>(m_value >> 24u); }
+	constexpr uint8_t GetRed() const { return static_cast<uint8_t>(m_value); }
 
 	constexpr uint8_t GetGreen() const
+	{
+		return static_cast<uint8_t>(m_value >> 8u);
+	}
+
+	constexpr uint8_t GetBlue() const
 	{
 		return static_cast<uint8_t>(m_value >> 16u);
 	}
 
-	constexpr uint8_t GetBlue() const { return static_cast<uint8_t>(m_value >> 8u); }
-
-	constexpr uint8_t GetAlpha() const { return static_cast<uint8_t>(m_value); }
+	constexpr uint8_t GetAlpha() const
+	{
+		return static_cast<uint8_t>(m_value >> 24u);
+	}
 
 	void SetRed(uint8_t r);
 	void SetGreen(uint8_t g);
