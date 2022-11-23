@@ -1,21 +1,28 @@
 #pragma once
 
+#include <yzpch.hpp>
+
 #include <Graphics/yzColor.hpp>
 #include <Graphics/yzGraphicsStates.hpp>
 #include <Math/yzVector2.hpp>
 
-#include <yzpch.hpp>
-
 namespace yz
 {
+class Image;
+
 class Texture
 {
 public:
 	// TODO: change this to something generic
 	using handle_type = uint32_t;
 
+	~Texture();
+
 	void Create(Vec2u size, TextureFilter filter, TextureWrapMode wrap_mode,
 	            const uint8_t* data, Color border_color = Color::BLACK);
+
+	void Create(const Image& image, TextureFilter filter, TextureWrapMode wrap,
+	            Color border_color = Color::BLACK);
 
 	void Destroy();
 
@@ -39,6 +46,6 @@ private:
 	Vec2u           m_size;
 	TextureFilter   m_filter {TextureFilter::Nearest};
 	TextureWrapMode m_wrap_mode {TextureWrapMode::Repeat};
-	Color           m_border_color;  // for BORDER wrap mode.
+	Color           m_border_color;  // for Border wrap mode.
 };
 }  // namespace yz

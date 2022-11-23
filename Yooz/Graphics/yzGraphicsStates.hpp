@@ -67,19 +67,28 @@ enum class TextureWrapMode
 	Clamp
 };
 
-enum class SurfaceFormat
+enum class PixelFormat
 {
-	RGBA16,    // unsigned RGBA with 16 bits per channel.
-	RGBA8,     // unsigned RGBA with 8 bits per channel.
-	RGB8,      // unsigned RGB wtih 8 bits per channel.
-	RG8,       // unsigned RG with 8 bits per channel.
+	None,
+
 	R8,        // unsigned R with 8 bits per channel.
-	DXT1,      // DXT1 compressed format. dimensions must be a multiple of 4.
-	DXT1A,     // DXT1 with 1 bit channel.
-	DXT1SRGB,  // DXT1 sRGB format.
-	DXT3,      // DXT3 compressed format. dimensions must be a multiple of 4.
-	DXT3SRGB,  // DXT3 sRGB format.
-	DXT5,      // DXT5 compressed format. dimensions must be a multiple of 4.
+	RG8,       // unsigned RG with 8 bits per channel.
+	RGB565,    // unsigned RGB with 5, 6 and 5 bits for R, G and B channels.
+	RGB8,      // unsigned RGB wtih 8 bits per channel.
+	RGBA4,     // unsigned RGBA with 4 bits per channel.
+	RGBA8,     // unsigned RGBA with 8 bits per channel.
+
+	RF,        // float R (HDR)
+	RGF,       // float RG (HDR)
+	RGBF,      // float RGB (HDR)
+	RGBAF,     // float RGBA (HDR)
+	
+	DXT1,      // DXT1 (S3TC BC1) format. dimensions must be a multiple of 4. (compressed)
+	DXT1A,     // DXT1 with 1 bit alpha channel. (compressed)
+	DXT1SRGB,  // DXT1 sRGB format. (compressed)
+	DXT3,      // DXT3 (BC2) format. dimensions must be a multiple of 4. (compressed)
+	DXT3SRGB,  // DXT3 sRGB format. (compressed)
+	DXT5,      // DXT5 (BC3) format. dimensions must be a multiple of 4. (compressed)
 	DXT5SRGB,  // DXT5 sRGB format.
 };
 
