@@ -9,6 +9,7 @@
 #include <Graphics/yzGraphicsDevice.hpp>
 #include <Graphics/yzGraphicsParams.hpp>
 #include <Graphics/yzGraphicsStates.hpp>
+#include <Graphics/yzImage.hpp>
 #include <Graphics/yzRasterizer.hpp>
 #include <Graphics/yzRenderer.hpp>
 #include <Graphics/yzShader.hpp>

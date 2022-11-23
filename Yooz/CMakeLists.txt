@@ -99,6 +99,7 @@ target_sources(Yooz PRIVATE
 	"Graphics/yzCamera.cpp"
 	"Graphics/yzColor.cpp"
 	"Graphics/yzGraphicsParams.cpp"
+	"Graphics/yzImage.cpp"
 	
 	"Input/yzInputManager.cpp"
 
