@@ -80,7 +80,7 @@ void Batcher::Done()
 	if(m_quad_count == 0)
 		return;
 
-	glNamedBufferSubData(g_data.vbo, 0, (m_quad_count * sizeof(Vertex)) << 2,
+	glNamedBufferSubData(g_data.vbo, 0, m_quad_count * sizeof(Vertex) * 4,
 	                     m_vertices);
 
 	for(unsigned int i = 0; i < m_texture_index; ++i)
@@ -95,6 +95,10 @@ void Batcher::Reset()
 {
 	m_texture_index = 1;
 	m_quad_count    = 0;
+
+	for(unsigned int i = 0; i < m_texture_index; ++i) { glBindTextureUnit(i, 0); }
+
+	glBindVertexArray(0);
 }
 
 uint32_t Batcher::GetIndicesCount() const
