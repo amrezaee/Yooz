@@ -1,4 +1,14 @@
-Build/
-build/
+[Bb][Uu][Ii][Ll][Dd]/
 .vs/
 .vscode/
+*.[Pp][Nn][Gg]
+*.[Jj][Pp][Ee][Gg]
+*.[Hh][Dd][Rr]
+*.[Kk][Tt][Xx]
+*.[Dd][Dd][Ss]
+*.[Ww][Ee][Bb][Pp]
+*.[Aa][Pp][Nn][Gg]
+*.[Pp][Ss][Dd]
+*.[Tt][Gg][Aa]
+*.[Bb][Mm][Pp]
+*.[Gg][Ii][Ff]
