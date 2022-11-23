@@ -38,16 +38,15 @@ public:
 
 	void DrawQuad(const Texture& texture, Color color, Vec2 pos, Vec2 scale,
 	              float angle, Vec2 origin);
-
 	void DrawQuad(const Texture& texture, Color color, Vec2 pos, Vec2 scale,
 	              float angle);
-
+	void DrawQuad(const Texture& texture, Vec2 pos, Vec2 scale, float angle);
+	void DrawQuad(const Texture& texture, Vec2 pos, Vec2 scale);
 	void DrawQuad(const Texture& texture, Vec2 pos);
 
 	void DrawQuad(Color color, Vec2 pos, Vec2 scale, float angle, Vec2 origin);
-
 	void DrawQuad(Color color, Vec2 pos, Vec2 scale, float angle);
-
+	void DrawQuad(Color color, Vec2 pos, Vec2 scale);
 	void DrawQuad(Color color, Vec2 pos);
 
 private:

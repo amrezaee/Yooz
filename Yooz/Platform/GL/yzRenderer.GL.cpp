@@ -107,11 +107,21 @@ void Renderer::DrawQuad(const Texture& texture, Color color, Vec2 pos, Vec2 scal
 {
 	DrawQuad(texture, color, pos, scale, angle, {0.0f});
 }
+void Renderer::DrawQuad(const Texture& texture, Vec2 pos, Vec2 scale, float angle)
+{
+	DrawQuad(texture, Color::TRANS_WHITE, pos, scale, angle, {0.0f});
+}
+
+void Renderer::DrawQuad(const Texture& texture, Vec2 pos, Vec2 scale)
+{
+	DrawQuad(texture, Color::TRANS_WHITE, pos, scale, 0.0f, {0.0f});
+}
 
 void Renderer::DrawQuad(const Texture& texture, Vec2 pos)
 {
 	DrawQuad(texture, Color::TRANS_WHITE, pos, {1.0f, 1.0f}, 0.0f, {0.0f});
 }
+
 
 void Renderer::DrawQuad(Color color, Vec2 pos, Vec2 scale, float angle, Vec2 origin)
 {
@@ -122,6 +132,12 @@ void Renderer::DrawQuad(Color color, Vec2 pos, Vec2 scale, float angle)
 {
 	DrawQuad(color, pos, scale, angle, {0.0f});
 }
+
+void Renderer::DrawQuad(Color color, Vec2 pos, Vec2 scale)
+{
+	DrawQuad(color, pos, scale, {0.0f}, {0.0f});
+}
+
 void Renderer::DrawQuad(Color color, Vec2 pos)
 {
 	DrawQuad(color, pos, {1.0f}, {0.0f}, {0.0f});
