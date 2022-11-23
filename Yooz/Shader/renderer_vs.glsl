@@ -9,19 +9,20 @@ layout (location = 3) in float aTexID;
 // View-Projection matrix
 uniform mat3x2 uViewProj;
 
-// Interface block
-out VS_OUT
+struct VertexOutput
 {
-	vec2  aTexCoord;
-	vec4  aColor;
-	float aTexID;
-} vs_out;
+	vec2  texCoord;
+	vec4  color;
+	float texID;
+};
+
+layout (location = 0) out VertexOutput Output;
 
 void main()
 {
-	gl_Position = vec4(uViewProj * vec3(aPos, 1.0), 0.0, 1.0);
+	Output.color = aColor;
+	Output.texCoord = aTexCoord;
+	Output.texID = aTexID;
 
-	vs_out.aTexCoord = aTexCoord;
-	vs_out.aColor    = aColor;
-	vs_out.aTexID    = aTexID;
+	gl_Position = vec4(uViewProj * vec3(aPos, 1.0f), 0.0f, 1.0f);
 }
